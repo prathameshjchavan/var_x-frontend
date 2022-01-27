@@ -5,10 +5,13 @@ import { DataGrid } from "@mui/x-data-grid"
 import { Grid, Chip, IconButton, useTheme } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import BackwardsIcon from "../../images/BackwardsOutline"
+import detailsIcon from "../../images/details.svg"
+import OrderDetails from "./OrderDetails"
 
 const OrderHistory = ({ setSelectedSetting }) => {
   const theme = useTheme()
   const [orders, setOrders] = useState([])
+  const [open, setOpen] = useState(null)
   const { user } = useContext(UserContext)
 
   // sx prop
@@ -80,9 +83,6 @@ const OrderHistory = ({ setSelectedSetting }) => {
         width: "2rem",
         height: "2rem",
       },
-      "& .MuiDataGrid-selectedRowCount": {
-        fontWeight: 600,
-      },
     },
     chip: {
       "& .MuiChip-label": {
@@ -133,7 +133,17 @@ const OrderHistory = ({ setSelectedSetting }) => {
         <Chip label={`$${value}`} sx={sx.chip} color="secondary" />
       ),
     },
-    { field: "", flex: 1.5, disableColumnMenu: true, sortable: false },
+    {
+      field: "",
+      flex: 1.5,
+      disableColumnMenu: true,
+      sortable: false,
+      renderCell: () => (
+        <IconButton>
+          <img src={detailsIcon} alt="order details" />
+        </IconButton>
+      ),
+    },
   ]
   const rows = createData(orders)
 
@@ -166,7 +176,15 @@ const OrderHistory = ({ setSelectedSetting }) => {
           </Icon>
         </IconButton>
       </Grid>
-      <DataGrid sx={sx.dataGrid} columns={columns} rows={rows} pageSize={5} />
+      <DataGrid
+        hideFooterSelectedRowCount
+        onRowClick={event => setOpen(event.row.id)}
+        sx={sx.dataGrid}
+        columns={columns}
+        rows={rows}
+        pageSize={5}
+      />
+      <OrderDetails open={open} setOpen={setOpen} />
     </Grid>
   )
 }
