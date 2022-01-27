@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react"
 import axios from "axios"
 import { UserContext } from "../../contexts"
 import { DataGrid } from "@mui/x-data-grid"
-import { Grid } from "@mui/material"
+import { Grid, Chip } from "@mui/material"
 
 const OrderHistory = () => {
   const [orders, setOrders] = useState([])
@@ -46,9 +46,27 @@ const OrderHistory = () => {
         maxHeight: "100% !important",
         lineHeight: "initial !important",
         padding: "1rem",
+        justifyContent: "center",
+        alignItems: "center",
+        fontWeight: 600,
       },
       "& .MuiDataGrid-row": {
         maxHeight: undefined,
+      },
+      "& .MuiDataGrid-footerContainer": {
+        marginTop: "-12rem",
+        border: "none",
+      },
+      "& .MuiTablePagination-displayedRows": {
+        color: "#fff ",
+      },
+      "& .MuiSvgIcon-root": {
+        fill: "#fff",
+      },
+    },
+    chip: {
+      "& .MuiChip-label": {
+        fontWeight: 600,
       },
     },
   }
@@ -73,9 +91,23 @@ const OrderHistory = () => {
   const columns = [
     { field: "shipping", headerName: "Shipping", sortable: false, flex: 1 },
     { field: "order", headerName: "Order", flex: 1 },
-    { field: "status", headerName: "Status", flex: 1 },
+    {
+      field: "status",
+      headerName: "Status",
+      flex: 1,
+      renderCell: ({ value }) => (
+        <Chip label={value} sx={sx.chip} color="secondary" />
+      ),
+    },
     { field: "date", headerName: "Date", type: "date", flex: 1 },
-    { field: "total", headerName: "Total", flex: 1 },
+    {
+      field: "total",
+      headerName: "Total",
+      flex: 1,
+      renderCell: ({ value }) => (
+        <Chip label={`$${value}`} sx={sx.chip} color="secondary" />
+      ),
+    },
     { field: "", flex: 1.5, disableColumnMenu: true, sortable: false },
   ]
   const rows = createData(orders)
