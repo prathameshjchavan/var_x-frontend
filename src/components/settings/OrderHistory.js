@@ -2,9 +2,12 @@ import React, { useCallback, useContext, useEffect, useState } from "react"
 import axios from "axios"
 import { UserContext } from "../../contexts"
 import { DataGrid } from "@mui/x-data-grid"
-import { Grid, Chip } from "@mui/material"
+import { Grid, Chip, IconButton, useTheme } from "@mui/material"
+import { styled } from "@mui/material/styles"
+import BackwardsIcon from "../../images/BackwardsOutline"
 
-const OrderHistory = () => {
+const OrderHistory = ({ setSelectedSetting }) => {
+  const theme = useTheme()
   const [orders, setOrders] = useState([])
   const { user } = useContext(UserContext)
 
@@ -49,25 +52,47 @@ const OrderHistory = () => {
         justifyContent: "center",
         alignItems: "center",
         fontWeight: 600,
+        borderBottom: "3px solid #fff",
       },
       "& .MuiDataGrid-row": {
-        maxHeight: undefined,
+        maxHeight: "100% !important",
       },
       "& .MuiDataGrid-footerContainer": {
-        marginTop: "-12rem",
+        marginTop: "-11rem",
         border: "none",
       },
       "& .MuiTablePagination-displayedRows": {
         color: "#fff ",
+        fontWeight: 600,
       },
       "& .MuiSvgIcon-root": {
         fill: "#fff",
+      },
+      "& .MuiDataGrid-columnHeaders": {
+        backgroundColor: theme.palette.secondary.main,
+        border: "none",
+      },
+      "&.MuiDataGrid-root": {
+        border: "none !important",
+        borderRadius: 0,
+      },
+      "& .MuiTablePagination-actions .MuiButtonBase-root .MuiSvgIcon-root": {
+        width: "2rem",
+        height: "2rem",
+      },
+      "& .MuiDataGrid-selectedRowCount": {
+        fontWeight: 600,
       },
     },
     chip: {
       "& .MuiChip-label": {
         fontWeight: 600,
       },
+    },
+    header: {
+      height: "8rem",
+      width: "100%",
+      backgroundColor: theme.palette.secondary.main,
     },
   }
 
@@ -112,6 +137,12 @@ const OrderHistory = () => {
   ]
   const rows = createData(orders)
 
+  // styled components
+  const Icon = styled("div")(() => ({
+    height: "4rem",
+    width: "4rem",
+  }))
+
   // useEffect
   useEffect(() => {
     axios
@@ -127,7 +158,14 @@ const OrderHistory = () => {
   }, [])
 
   return (
-    <Grid item sx={sx.item}>
+    <Grid item container sx={sx.item}>
+      <Grid item sx={sx.header}>
+        <IconButton onClick={() => setSelectedSetting(null)}>
+          <Icon>
+            <BackwardsIcon color="#fff" />
+          </Icon>
+        </IconButton>
+      </Grid>
       <DataGrid sx={sx.dataGrid} columns={columns} rows={rows} pageSize={5} />
     </Grid>
   )
