@@ -8,17 +8,6 @@ const OrderHistory = () => {
   const [orders, setOrders] = useState([])
   const { user } = useContext(UserContext)
 
-  // DataGrid data
-  const columns = [
-    { field: "shipping", headerName: "Shipping", sortable: false, flex: 1 },
-    { field: "order", headerName: "Order", flex: 1 },
-    { field: "status", headerName: "Status", flex: 1 },
-    { field: "date", headerName: "Date", type: "date", flex: 1 },
-    { field: "total", headerName: "Total", flex: 1 },
-    { field: "", flex: 1.5, disableColumnMenu: true, sortable: false },
-  ]
-  const rows = []
-
   // sx prop
   const sx = {
     item: {
@@ -55,6 +44,28 @@ const OrderHistory = () => {
     },
   }
 
+  // functions
+  const createData = data =>
+    data.map(item => ({
+      id: item.id,
+      shipping: `${item.shippingInfo.name}\n${item.shippingAddress.street}\n${item.shippingAddress.city}, ${item.shippingAddress.state} ${item.shippingAddress.zip} `,
+      order: `#${item.id}`,
+      status: item.status,
+      date: item.createdAt,
+      total: item.total,
+    }))
+
+  // DataGrid data
+  const columns = [
+    { field: "shipping", headerName: "Shipping", sortable: false, flex: 1 },
+    { field: "order", headerName: "Order", flex: 1 },
+    { field: "status", headerName: "Status", flex: 1 },
+    { field: "date", headerName: "Date", type: "date", flex: 1 },
+    { field: "total", headerName: "Total", flex: 1 },
+    { field: "", flex: 1.5, disableColumnMenu: true, sortable: false },
+  ]
+  const rows = createData(orders)
+
   // useEffect
   useEffect(() => {
     axios
@@ -62,7 +73,7 @@ const OrderHistory = () => {
         headers: { Authorization: `Bearer ${user.jwt}` },
       })
       .then(response => {
-        console.log(response)
+        setOrders(response.data.data.attributes.orders)
       })
       .catch(error => {
         console.error(error)
