@@ -1,11 +1,18 @@
 import React from "react"
-import { SwipeableDrawer, useTheme } from "@mui/material"
+import {
+  Grid,
+  SwipeableDrawer,
+  Chip,
+  Typography,
+  useTheme,
+} from "@mui/material"
 
-const OrderDetails = ({ open, setOpen }) => {
+const OrderDetails = ({ orders, open, setOpen }) => {
   const theme = useTheme()
   const iOS =
     typeof navigator !== "undefined" &&
     /iPad|iPhone|iPod/.test(navigator.userAgent)
+  const order = orders.find(order => order.id === open)
 
   // sx prop
   const sx = {
@@ -15,6 +22,19 @@ const OrderDetails = ({ open, setOpen }) => {
         width: "30rem",
         backgroundColor: theme.palette.primary.main,
       },
+    },
+    id: {
+      fontSize: "2.5rem",
+      fontWeight: 600,
+    },
+    chip: {
+      "& .MuiChip-label": {
+        fontWeight: 600,
+      },
+    },
+    date: {
+      fontWeight: 600,
+      marginLeft: "1rem",
     },
   }
 
@@ -27,7 +47,27 @@ const OrderDetails = ({ open, setOpen }) => {
       anchor="right"
       disableBackdropTransition={!iOS}
       disableDiscovery={iOS}
-    ></SwipeableDrawer>
+    >
+      <Grid container direction="column">
+        <Grid item>
+          <Typography align="center" variant="h2" sx={sx.id}>
+            Order #{order?.id}
+          </Typography>
+        </Grid>
+        <Grid item container>
+          <Grid item>
+            <Chip label={order?.status} color="secondary" sx={sx.chip} />
+          </Grid>
+          <Grid item>
+            <Typography variant="body2" sx={sx.date}>{`${
+              order?.createdAt.split("-")[1]
+            }/${order?.createdAt.split("-")[2].split("T")[0]}/${
+              order?.createdAt.split("-")[0]
+            }`}</Typography>
+          </Grid>
+        </Grid>
+      </Grid>
+    </SwipeableDrawer>
   )
 }
 

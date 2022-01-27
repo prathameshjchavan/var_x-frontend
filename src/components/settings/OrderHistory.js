@@ -184,7 +184,7 @@ const OrderHistory = ({ setSelectedSetting }) => {
         rows={rows}
         pageSize={5}
       />
-      <OrderDetails open={open} setOpen={setOpen} />
+      <OrderDetails orders={orders} open={open} setOpen={setOpen} />
     </Grid>
   )
 }
