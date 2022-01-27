@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useCallback, useContext, useEffect, useState } from "react"
 import axios from "axios"
 import { UserContext } from "../../contexts"
 import { DataGrid } from "@mui/x-data-grid"
@@ -41,19 +41,33 @@ const OrderHistory = () => {
       "& .MuiDataGrid-columnHeader--moving": {
         backgroundColor: "transparent",
       },
+      "& .MuiDataGrid-cell": {
+        whiteSpace: "pre-wrap !important",
+        maxHeight: "100% !important",
+        lineHeight: "initial !important",
+        padding: "1rem",
+      },
+      "& .MuiDataGrid-row": {
+        maxHeight: undefined,
+      },
     },
   }
 
   // functions
-  const createData = data =>
-    data.map(item => ({
-      id: item.id,
-      shipping: `${item.shippingInfo.name}\n${item.shippingAddress.street}\n${item.shippingAddress.city}, ${item.shippingAddress.state} ${item.shippingAddress.zip} `,
-      order: `#${item.id}`,
-      status: item.status,
-      date: item.createdAt,
-      total: item.total,
-    }))
+  const createData = useCallback(
+    data =>
+      data.map(item => ({
+        id: item.id,
+        shipping: `${item.shippingInfo.name}\n${item.shippingAddress.street}\n${item.shippingAddress.city}, ${item.shippingAddress.state} ${item.shippingAddress.zip} `,
+        order: `#${item.id}`,
+        status: item.status,
+        date: `${item.createdAt.split("-")[1]}/${
+          item.createdAt.split("-")[2].split("T")[0]
+        }/${item.createdAt.split("-")[0]}`,
+        total: item.total,
+      })),
+    []
+  )
 
   // DataGrid data
   const columns = [
