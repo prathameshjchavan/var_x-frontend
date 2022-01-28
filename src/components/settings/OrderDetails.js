@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useMemo } from "react"
 import {
   Grid,
   SwipeableDrawer,
@@ -13,6 +13,25 @@ const OrderDetails = ({ orders, open, setOpen }) => {
     typeof navigator !== "undefined" &&
     /iPad|iPhone|iPod/.test(navigator.userAgent)
   const order = orders.find(order => order.id === open)
+  const prices = useMemo(
+    () => [
+      { label: "Subtotal", value: order?.subtotal },
+      { label: "Shipping", value: order?.shippingOption.price },
+      { label: "Tax", value: order?.tax },
+      { label: "Total", value: order?.total },
+      {
+        label: "Payment",
+        string: `${order?.paymentMethod.brand.toUpperCase()} ${
+          order?.paymentMethod.last4
+        }`,
+      },
+      {
+        label: "Transaction",
+        string: order?.transaction,
+      },
+    ],
+    [order]
+  )
 
   // sx prop
   const sx = {
@@ -50,6 +69,9 @@ const OrderDetails = ({ orders, open, setOpen }) => {
     },
     dark: {
       backgroundColor: theme.palette.secondary.main,
+    },
+    prices: {
+      padding: "0.5rem 1rem",
     },
   }
 
@@ -117,6 +139,32 @@ const OrderDetails = ({ orders, open, setOpen }) => {
             {order?.shippingAddress.zip}
           </Typography>
         </Grid>
+        {prices.map((price, index) => (
+          <Grid
+            key={index}
+            item
+            container
+            justifyContent="space-between"
+            sx={sx.prices}
+          >
+            <Grid item>
+              <Typography variant="body2" sx={sx.bold}>
+                {price.label}
+              </Typography>
+            </Grid>
+            <Grid item>
+              {price.string ? (
+                <Typography variant="body2">{price.string}</Typography>
+              ) : (
+                <Chip
+                  label={`$${price.value.toFixed(2)}`}
+                  color="secondary"
+                  sx={sx.bold}
+                />
+              )}
+            </Grid>
+          </Grid>
+        ))}
       </Grid>
     </SwipeableDrawer>
   )
