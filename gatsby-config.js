@@ -11,7 +11,6 @@ module.exports = {
   },
   plugins: [
     `gatsby-plugin-image`,
-    `gatsby-plugin-material-ui`,
     {
       resolve: `gatsby-source-filesystem`,
       options: {
@@ -32,7 +31,7 @@ module.exports = {
     //     // https://css-tricks.com/meta-theme-color-and-trickery/
     //     // theme_color: `#663399`,
     //     display: `minimal-ui`,
-    //     icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
+    //     // icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
     //   },
     // },
     {
@@ -42,6 +41,14 @@ module.exports = {
         accessToken: process.env.STRAPI_TOKEN,
         collectionTypes: ["category", "product", "variant"],
         singleTypes: [],
+      },
+    },
+    {
+      resolve: "gatsby-plugin-web-font-loader",
+      options: {
+        google: {
+          families: ["Philosopher:i7:latin", "Montserrat:n5,n4,n3:latin"],
+        },
       },
     },
   ],

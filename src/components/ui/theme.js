@@ -64,6 +64,7 @@ const theme = createTheme({
       color: grey,
     },
   },
+  components: {},
 })
 
 export default theme
