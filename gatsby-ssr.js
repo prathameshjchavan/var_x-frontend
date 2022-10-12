@@ -4,8 +4,11 @@
  * See: https://www.gatsbyjs.com/docs/ssr-apis/
  */
 
-exports.onRenderBody = ({ setHtmlAttributes }) => {
+import RootWrapper from "./src/components/ui/root-wrapper"
+
+const onRenderBody = ({ setHtmlAttributes }) => {
   setHtmlAttributes({ lang: `en` })
 }
-import RootWrapper from "./src/components/ui/root-wrapper"
-export const wrapRootElement = RootWrapper
+const wrapRootElement = RootWrapper
+
+export { onRenderBody, wrapRootElement }
