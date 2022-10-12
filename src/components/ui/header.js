@@ -11,7 +11,12 @@ import search from "../../images/search.svg"
 import cart from "../../images/cart.svg"
 import account from "../../images/account-header.svg"
 
-const Header = () => {
+const Header = ({ categories }) => {
+  const routes = [
+    ...categories.map(({ node }) => node),
+    { name: "Contact Us", strapi_id: "contact" },
+  ]
+
   // sx prop
   const sx = {
     tabs: {
@@ -40,10 +45,9 @@ const Header = () => {
             </Typography>
           </Button>
           <Tabs value={0} sx={sx.tabs}>
-            <Tab label="Hats" />
-            <Tab label="Hoodies" />
-            <Tab label="Shirts" />
-            <Tab label="Contact Us" />
+            {routes.map(route => (
+              <Tab key={route.strapi_id} label={route.name} />
+            ))}
           </Tabs>
           <IconButton>
             <img src={search} alt="search" />
