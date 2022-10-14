@@ -42,6 +42,17 @@ const Header = ({ categories }) => {
     },
   ]
 
+  const activeIndex = () => {
+    const found = routes.indexOf(
+      routes.filter(
+        ({ name, link }) =>
+          (link || `/${name.toLowerCase()}`) === window.location.pathname
+      )[0]
+    )
+
+    return found === -1 ? false : found
+  }
+
   // sx prop
   const sx = {
     logoContainer: {
@@ -54,9 +65,6 @@ const Header = ({ categories }) => {
       "& .MuiTabs-indicator": {
         backgroundColor: "#fff",
       },
-      "& .Mui-selected": {
-        color: "",
-      },
     },
     accountButton: {
       display: { xs: "none", md: "block" },
@@ -65,8 +73,19 @@ const Header = ({ categories }) => {
       "& .MuiPaper-root": {
         backgroundColor: theme.palette.primary.main,
       },
+      "& .Mui-selected": {
+        backgroundColor: `${theme.palette.primary.dark} !important`,
+      },
+    },
+    listItem: {
+      "&.MuiListItem-root": {
+        padding: 0,
+      },
     },
     listItemText: {
+      "&.MuiListItemText-root": {
+        padding: "8px 16px",
+      },
       "& .MuiTypography-root": {
         color: "#fff",
       },
@@ -91,7 +110,7 @@ const Header = ({ categories }) => {
     <header>
       <AppBar color="transparent" elevation={0}>
         <Toolbar>
-          <Button sx={sx.logoContainer} disableRipple>
+          <Button component={Link} to="/" sx={sx.logoContainer} disableRipple>
             <Typography variant="h1">
               <LogoText>VAR</LogoText> X
             </Typography>
@@ -107,9 +126,16 @@ const Header = ({ categories }) => {
               disableDiscovery={iOS}
             >
               <List disablePadding>
-                {routes.map(route => (
-                  <ListItem divider key={route.strapi_id}>
-                    <ListItemButton>
+                {routes.map((route, i) => (
+                  <ListItem
+                    selected={activeIndex() === i}
+                    sx={sx.listItem}
+                    component={Link}
+                    to={route.link || `/${route.name.toLowerCase()}`}
+                    divider
+                    key={route.strapi_id}
+                  >
+                    <ListItemButton disableRipple>
                       <ListItemText sx={sx.listItemText} primary={route.name} />
                     </ListItemButton>
                   </ListItem>
@@ -117,7 +143,7 @@ const Header = ({ categories }) => {
               </List>
             </SwipeableDrawer>
           ) : (
-            <Tabs value={0} sx={sx.tabs}>
+            <Tabs value={activeIndex()} sx={sx.tabs}>
               {routes.map(route => (
                 <Tab
                   sx={sx.tab}
