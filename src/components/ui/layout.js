@@ -1,6 +1,6 @@
 import { graphql, useStaticQuery } from "gatsby"
 import React, { Fragment } from "react"
-
+import Footer from "./footer"
 import Header from "./header"
 
 const Layout = ({ children }) => {
@@ -22,11 +22,13 @@ const Layout = ({ children }) => {
       <Header categories={data.allStrapiCategory.edges} />
       <div
         style={{
-          margin: `0 auto`,
+          // margin: `0 auto`,
+          marginTop: 500,
         }}
       >
         <main>{children}</main>
       </div>
+      <Footer />
     </Fragment>
   )
 }
