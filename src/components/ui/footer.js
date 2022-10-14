@@ -1,15 +1,36 @@
 import React from "react"
 import Grid from "@mui/material/Grid"
 import Typography from "@mui/material/Typography"
+import IconButton from "@mui/material/IconButton"
 import { styled, useTheme } from "@mui/material/styles"
 import useMediaQuery from "@mui/material/useMediaQuery"
 import facebook from "../../images/facebook.svg"
 import twitter from "../../images/twitter.svg"
 import instagram from "../../images/instagram.svg"
+import { Link } from "gatsby"
 
 const Footer = () => {
   const theme = useTheme()
   const matches = useMediaQuery(theme.breakpoints.down("footer"))
+  const socialMedia = [
+    { icon: facebook, alt: "facebook", link: "https://facebook.com" },
+    { icon: twitter, alt: "twitter", link: "https://twitter.com" },
+    { icon: instagram, alt: "instagram", link: "https://instagram.com" },
+  ]
+  const routes = {
+    "Contact Us": [
+      { label: "(555) 555-5555", href: "tel:(555) 555-5555" },
+      { label: "zachary@var-x.com", href: "mailto: 'zachary@var-x.com" },
+    ],
+    "Customer Service": [
+      { label: "Contact Us", link: "/contact" },
+      { label: "My Account", link: "/account" },
+    ],
+    Information: [
+      { label: "Privacy Policy", link: "/privacy-policy" },
+      { label: "Terms & Conditions", link: "/terms-conditions" },
+    ],
+  }
 
   // sx prop
   const sx = {
@@ -24,11 +45,16 @@ const Footer = () => {
     linkColumn: {
       width: "20rem",
     },
-    spacer: {
-      margin: "2rem 0",
-    },
     linkContainer: {
       marginBottom: matches ? "3rem" : undefined,
+    },
+    iconButton: {
+      "&:hover": {
+        backgroundColor: "transparent",
+      },
+    },
+    link: {
+      textDecoration: "none",
     },
   }
 
@@ -43,65 +69,49 @@ const Footer = () => {
         {/* Links */}
         <Grid item sx={sx.linkContainer}>
           <Grid container>
-            <Grid item container sx={sx.linkColumn} direction="column">
-              <Grid item>
-                <Typography variant="h5">Contact Us</Typography>
+            {Object.keys(routes).map((category, i) => (
+              <Grid
+                key={i}
+                item
+                container
+                sx={sx.linkColumn}
+                direction="column"
+              >
+                <Grid item>
+                  <Typography variant="h5">{category}</Typography>
+                </Grid>
+                {routes[category].map(({ label, link, href }, i) => (
+                  <Grid key={i} item>
+                    <Typography
+                      component={link ? Link : "a"}
+                      to={link ? link : undefined}
+                      href={href ? href : undefined}
+                      sx={{ ...sx.body1, ...sx.link }}
+                      variant="body1"
+                    >
+                      {label}
+                    </Typography>
+                  </Grid>
+                ))}
               </Grid>
-              <Grid item>
-                <Typography sx={sx.body1} variant="body1">
-                  (555) 555-5555
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography sx={sx.body1} variant="body1">
-                  zacahry@var-x.com
-                </Typography>
-              </Grid>
-            </Grid>
-            <Grid item container sx={sx.linkColumn} direction="column">
-              <Grid item>
-                <Typography variant="h5">Customer Service</Typography>
-              </Grid>
-              <Grid item>
-                <Typography sx={sx.body1} variant="body1">
-                  Contact Us
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography sx={sx.body1} variant="body1">
-                  My Account
-                </Typography>
-              </Grid>
-            </Grid>
-            <Grid item container sx={sx.linkColumn} direction="column">
-              <Grid item>
-                <Typography variant="h5">Information</Typography>
-              </Grid>
-              <Grid item>
-                <Typography sx={sx.body1} variant="body1">
-                  Privacy Policy
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography sx={sx.body1} variant="body1">
-                  Terms & Conditions
-                </Typography>
-              </Grid>
-            </Grid>
+            ))}
           </Grid>
         </Grid>
         {/* Social Media Icons */}
         <Grid item>
           <Grid container direction="column" alignItems="center">
-            <Grid item>
-              <img src={facebook} alt="facebook" />
-            </Grid>
-            <Grid item sx={sx.spacer}>
-              <img src={twitter} alt="twitter" />
-            </Grid>
-            <Grid item>
-              <img src={instagram} alt="instagram" />
-            </Grid>
+            {socialMedia.map((platform, i) => (
+              <Grid key={i} item>
+                <IconButton
+                  sx={sx.iconButton}
+                  disableRipple
+                  component="a"
+                  href={platform.link}
+                >
+                  <img src={platform.icon} alt={platform.alt} />
+                </IconButton>
+              </Grid>
+            ))}
           </Grid>
         </Grid>
       </Grid>
