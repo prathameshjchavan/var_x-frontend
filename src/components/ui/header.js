@@ -6,13 +6,14 @@ import Button from "@mui/material/Button"
 import IconButton from "@mui/material/IconButton"
 import Tabs from "@mui/material/Tabs"
 import Tab from "@mui/material/Tab"
-import { styled } from "@mui/material/styles"
+import { styled, useTheme } from "@mui/material/styles"
 import useMediaQuery from "@mui/material/useMediaQuery"
 import SwipeableDrawer from "@mui/material/SwipeableDrawer"
 import List from "@mui/material/List"
 import ListItem from "@mui/material/ListItem"
 import ListItemText from "@mui/material/ListItemText"
 import ListItemButton from "@mui/material/ListItemButton"
+import { Link } from "gatsby"
 import search from "../../images/search.svg"
 import cart from "../../images/cart.svg"
 import account from "../../images/account-header.svg"
@@ -21,17 +22,18 @@ import menu from "../../images/menu.svg"
 const Header = ({ categories }) => {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const matchesMD = useMediaQuery(theme => theme.breakpoints.down("md"))
+  const theme = useTheme()
   const iOS =
     typeof navigator !== "undefined" &&
     /iPad|iPhone|iPod/.test(navigator.userAgent)
   const routes = [
     ...categories.map(({ node }) => node),
-    { name: "Contact Us", strapi_id: "contact" },
+    { name: "Contact Us", strapi_id: "contact", link: "/contact" },
   ]
   const actions = [
     { icon: search, alt: "search", visible: true },
-    { icon: cart, alt: "cart", visible: true },
-    { icon: account, alt: "account", visible: !matchesMD },
+    { icon: cart, alt: "cart", visible: true, link: "/cart" },
+    { icon: account, alt: "account", visible: !matchesMD, link: "/account" },
     {
       icon: menu,
       alt: "menu",
@@ -42,6 +44,11 @@ const Header = ({ categories }) => {
 
   // sx prop
   const sx = {
+    logoContainer: {
+      [theme.breakpoints.down("md")]: {
+        marginRight: "auto",
+      },
+    },
     tabs: {
       margin: "0 auto",
       "& .MuiTabs-indicator": {
@@ -53,6 +60,20 @@ const Header = ({ categories }) => {
     },
     accountButton: {
       display: { xs: "none", md: "block" },
+    },
+    drawer: {
+      "& .MuiPaper-root": {
+        backgroundColor: theme.palette.primary.main,
+      },
+    },
+    listItemText: {
+      "& .MuiTypography-root": {
+        color: "#fff",
+      },
+    },
+    tab: {
+      ...theme.typography.body1,
+      fontWeight: 600,
     },
   }
 
@@ -70,13 +91,14 @@ const Header = ({ categories }) => {
     <header>
       <AppBar color="transparent" elevation={0}>
         <Toolbar>
-          <Button disableRipple>
+          <Button sx={sx.logoContainer} disableRipple>
             <Typography variant="h1">
               <LogoText>VAR</LogoText> X
             </Typography>
           </Button>
           {matchesMD ? (
             <SwipeableDrawer
+              sx={sx.drawer}
               anchor="right"
               open={drawerOpen}
               onOpen={() => setDrawerOpen(true)}
@@ -88,7 +110,7 @@ const Header = ({ categories }) => {
                 {routes.map(route => (
                   <ListItem divider key={route.strapi_id}>
                     <ListItemButton>
-                      <ListItemText primary={route.name} />
+                      <ListItemText sx={sx.listItemText} primary={route.name} />
                     </ListItemButton>
                   </ListItem>
                 ))}
@@ -97,15 +119,26 @@ const Header = ({ categories }) => {
           ) : (
             <Tabs value={0} sx={sx.tabs}>
               {routes.map(route => (
-                <Tab key={route.strapi_id} label={route.name} />
+                <Tab
+                  sx={sx.tab}
+                  component={Link}
+                  to={route.link || `/${route.name.toLowerCase()}`}
+                  key={route.strapi_id}
+                  label={route.name}
+                />
               ))}
             </Tabs>
           )}
           {actions
             .filter(action => action.visible)
-            .map((action, i) => (
-              <IconButton key={i} onClick={action.onClick}>
-                <Icon src={action.icon} alt={action.alt} />
+            .map(({ icon, alt, link, onClick }, i) => (
+              <IconButton
+                component={link ? Link : undefined}
+                to={link}
+                key={i}
+                onClick={onClick}
+              >
+                <Icon src={icon} alt={alt} />
               </IconButton>
             ))}
         </Toolbar>
