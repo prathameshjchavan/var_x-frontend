@@ -2,10 +2,14 @@ import React, { useState } from "react"
 import Grid from "@mui/material/Grid"
 import Typography from "@mui/material/Typography"
 import IconButton from "@mui/material/IconButton"
+import Button from "@mui/material/Button"
+import Chip from "@mui/material/Chip"
 import { useStaticQuery, graphql } from "gatsby"
+import { styled, useTheme } from "@mui/material/styles"
+import Rating from "./Rating"
 import featuredAdornment from "../../images/featured-adornment.svg"
 import frame from "../../images/product-frame-grid.svg"
-import { styled, useTheme } from "@mui/material/styles"
+import explore from "../../images/explore.svg"
 
 const FeaturedProducts = () => {
   const [expanded, setExpanded] = useState(null)
@@ -58,6 +62,7 @@ const FeaturedProducts = () => {
       width: "24.5rem",
       zIndex: 0,
       transition: "transform 0.5s ease",
+      padding: "1rem 2rem",
     },
     productContainer: {
       margin: "5rem 0",
@@ -68,11 +73,30 @@ const FeaturedProducts = () => {
     slideRight: {
       transform: "translate(24.5rem, 0)",
     },
+    exploreContainer: {
+      marginTop: "auto",
+    },
+    exploreButton: {
+      textTransform: "none",
+    },
+    chip: {
+      "&.MuiChip-root": {
+        backgroundColor: theme.palette.secondary.main,
+      },
+      "& .MuiChip-label": {
+        ...theme.typography.h5,
+      },
+    },
   }
 
   const Featured = styled("img")(() => ({
     height: "20rem",
     width: "20rem",
+  }))
+
+  const ExploreIcon = styled("img")(() => ({
+    height: "1.5rem",
+    marginLeft: "1rem",
   }))
 
   return (
@@ -115,7 +139,23 @@ const FeaturedProducts = () => {
                 alt={node.name}
               />
             </IconButton>
-            <Grid container sx={slideSx} direction="column"></Grid>
+            <Grid container sx={slideSx} direction="column">
+              <Grid item>
+                <Typography variant="h4">{node.name.split("-")[0]}</Typography>
+              </Grid>
+              <Grid item>
+                <Rating number={2.5} />
+              </Grid>
+              <Grid item>
+                <Chip sx={sx.chip} label={`$${node.variants[0].price}`} />
+              </Grid>
+              <Grid item sx={sx.exploreContainer}>
+                <Button sx={sx.exploreButton}>
+                  <Typography variant="h5">Details</Typography>
+                  <ExploreIcon src={explore} alt="go to product details" />
+                </Button>
+              </Grid>
+            </Grid>
           </Grid>
         )
       })}
