@@ -108,7 +108,7 @@ const Header = ({ categories }) => {
 
   return (
     <header>
-      <AppBar color="transparent" elevation={0}>
+      <AppBar color="transparent" elevation={0} position="static">
         <Toolbar>
           <Button component={Link} to="/" sx={sx.logoContainer} disableRipple>
             <Typography variant="h1">

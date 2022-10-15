@@ -20,14 +20,8 @@ const Layout = ({ children }) => {
   return (
     <Fragment>
       <Header categories={data.allStrapiCategory.edges} />
-      <div
-        style={{
-          // margin: `0 auto`,
-          marginTop: 500,
-        }}
-      >
-        <main>{children}</main>
-      </div>
+      <div style={{ marginBottom: "10rem" }} />
+      <main>{children}</main>
       <Footer />
     </Fragment>
   )
