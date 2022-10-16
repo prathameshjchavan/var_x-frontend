@@ -1,7 +1,6 @@
 import React from "react"
 import Grid from "@mui/material/Grid"
 import Typography from "@mui/material/Typography"
-import IconButton from "@mui/material/IconButton"
 import { Link } from "gatsby"
 import marketingAdornment from "../../images/marketing-adornment.svg"
 import moreByUs from "../../images/more-by-us.svg"
