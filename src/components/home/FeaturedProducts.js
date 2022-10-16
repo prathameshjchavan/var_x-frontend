@@ -127,6 +127,7 @@ const FeaturedProducts = () => {
             alignItems="center"
           >
             <IconButton
+              disableRipple
               onClick={() =>
                 expanded === i ? setExpanded(null) : setExpanded(i)
               }
