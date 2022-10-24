@@ -1,3 +1,4 @@
+import { styled } from "@mui/material/styles"
 import { graphql, useStaticQuery } from "gatsby"
 import React, { Fragment } from "react"
 import Footer from "./footer"
@@ -17,10 +18,20 @@ const Layout = ({ children }) => {
     }
   `)
 
+  const Seperator = styled("div")(({ theme }) => ({
+    marginBottom: "10rem",
+    [theme.breakpoints.down("md")]: {
+      marginBottom: "2rem",
+    },
+    [theme.breakpoints.down("lg")]: {
+      marginBottom: "5rem",
+    },
+  }))
+
   return (
     <Fragment>
       <Header categories={data.allStrapiCategory.edges} />
-      <div style={{ marginBottom: "10rem" }} />
+      <Seperator />
       <main>{children}</main>
       <Footer />
     </Fragment>
