@@ -9,7 +9,10 @@ import { useTheme } from "@mui/material"
 const HeroBlock = () => {
   const theme = useTheme()
   const matchesSM = useMediaQuery(theme => theme.breakpoints.down("sm"))
+  const matchesHeroVertical = useMediaQuery("(max-width:1450px)")
   const animationWidth = matchesSM ? "25rem" : "30rem"
+
+  console.log(matchesHeroVertical)
 
   const defaultOptions = {
     loop: true,
@@ -21,18 +24,24 @@ const HeroBlock = () => {
   }
 
   const sx = {
+    container: {
+      padding: "0 2rem",
+      flexDirection: matchesHeroVertical ? "column" : "row",
+    },
     textContainer: {
       [theme.breakpoints.down("md")]: {
         padding: "2rem",
       },
     },
-    animationContainer: {
-      marginRight: "2rem",
-    },
   }
 
   return (
-    <Grid container justifyContent="space-around" alignItems="center">
+    <Grid
+      container
+      sx={sx.container}
+      justifyContent="space-around"
+      alignItems="center"
+    >
       <Grid item sx={sx.textContainer} alignItems="center">
         <Grid container direction="column">
           <Grid item>
@@ -49,7 +58,7 @@ const HeroBlock = () => {
           </Grid>
         </Grid>
       </Grid>
-      <Grid item sx={sx.animationContainer}>
+      <Grid item>
         <Lottie options={defaultOptions} width={animationWidth} />
       </Grid>
     </Grid>
