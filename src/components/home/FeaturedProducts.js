@@ -10,10 +10,12 @@ import Rating from "./Rating"
 import featuredAdornment from "../../images/featured-adornment.svg"
 import frame from "../../images/product-frame-grid.svg"
 import explore from "../../images/explore.svg"
+import { useMediaQuery } from "@mui/material"
 
 const FeaturedProducts = () => {
   const [expanded, setExpanded] = useState(null)
   const theme = useTheme()
+  const matchesLG = useMediaQuery(theme.breakpoints.down("lg"))
   const data = useStaticQuery(graphql`
     query MyQuery {
       allStrapiProduct(filter: { featured: { eq: true } }) {
@@ -42,6 +44,9 @@ const FeaturedProducts = () => {
       width: "100%",
       height: "180rem",
       padding: "0 2.5rem",
+      [theme.breakpoints.down("lg")]: {
+        height: "220rem",
+      },
     },
     frame: {
       backgroundImage: `url(${frame})`,
@@ -55,6 +60,10 @@ const FeaturedProducts = () => {
       boxShadow: theme.shadows[5],
       position: "absolute",
       zIndex: 1,
+      [theme.breakpoints.down("lg")]: {
+        height: "19.8rem",
+        width: "20rem",
+      },
     },
     slide: {
       backgroundColor: theme.palette.primary.main,
@@ -63,6 +72,10 @@ const FeaturedProducts = () => {
       zIndex: 0,
       transition: "transform 0.5s ease",
       padding: "1rem 2rem",
+      [theme.breakpoints.down("lg")]: {
+        height: "15.2rem",
+        width: "19.5rem",
+      },
     },
     productContainer: {
       margin: "5rem 0",
@@ -72,6 +85,9 @@ const FeaturedProducts = () => {
     },
     slideRight: {
       transform: "translate(24.5rem, 0)",
+    },
+    slideDown: {
+      transform: "translate(0, 17rem)",
     },
     exploreContainer: {
       marginTop: "auto",
@@ -92,6 +108,10 @@ const FeaturedProducts = () => {
   const Featured = styled("img")(() => ({
     height: "20rem",
     width: "20rem",
+    [theme.breakpoints.down("lg")]: {
+      height: "15rem",
+      width: "15rem",
+    },
   }))
 
   const ExploreIcon = styled("img")(() => ({
@@ -103,18 +123,26 @@ const FeaturedProducts = () => {
     <Grid
       container
       direction="column"
-      justifyContent="center"
+      justifyContent={matchesLG ? "space-between" : "center"}
       sx={sx.mainContainer}
     >
       {data.allStrapiProduct.edges.map(({ node }, i) => {
-        const alignment =
-          i % 3 === 0 ? "flex-start" : i % 3 === 1 ? "center" : "flex-end"
+        const alignment = matchesLG
+          ? "center"
+          : i % 3 === 0
+          ? "flex-start"
+          : i % 3 === 1
+          ? "center"
+          : "flex-end"
         const slideSx =
-          expanded === i && alignment === "flex-end"
+          !matchesLG && expanded === i && alignment === "flex-end"
             ? { ...sx.slide, ...sx.slideLeft }
-            : expanded === i &&
+            : !matchesLG &&
+              expanded === i &&
               (alignment === "flex-start" || alignment === "center")
             ? { ...sx.slide, ...sx.slideRight }
+            : matchesLG && expanded === i
+            ? { ...sx.slide, ...sx.slideDown }
             : sx.slide
 
         return (
