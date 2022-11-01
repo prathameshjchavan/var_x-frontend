@@ -8,9 +8,12 @@ import { useStaticQuery, graphql } from "gatsby"
 import { styled } from "@mui/material/styles"
 import promoAdornment from "../../images/promo-adornment.svg"
 import explore from "../../images/explore.svg"
+import { useTheme, useMediaQuery } from "@mui/material"
 
 const PromotionalProducts = () => {
   const [selectedSlide, setSelectedSlide] = useState(0)
+  const theme = useTheme()
+  const matchesVertical = useMediaQuery("(max-width: 1290px)")
   const data = useStaticQuery(graphql`
     query GetPromo {
       allStrapiProduct(filter: { promo: { eq: true } }) {
@@ -40,6 +43,9 @@ const PromotionalProducts = () => {
       width: "100%",
       height: "70rem",
       padding: "30rem 10rem 10rem 10rem",
+      [theme.breakpoints.down("xl")]: {
+        padding: "20rem 2rem 2rem 2rem",
+      },
     },
     productName: {
       color: "#fff",
@@ -50,18 +56,21 @@ const PromotionalProducts = () => {
       },
     },
     carouselContainer: {
-      marginLeft: "20rem",
+      height: "30rem",
+      marginLeft: matchesVertical ? 0 : "20rem",
     },
     space: {
-      margin: "0 15rem",
-      marginBottom: "10rem",
+      margin: "0 15rem 10rem 15rem",
+      [theme.breakpoints.down("md")]: {
+        margin: "0 10rem 10rem 10rem",
+      },
     },
     explore: {
       textTransform: "none",
       marginRight: "2rem",
     },
     descriptionContainer: {
-      textAlign: "right",
+      textAlign: matchesVertical ? "center" : "right",
     },
   }
 
@@ -71,6 +80,14 @@ const PromotionalProducts = () => {
     backgroundColor: "#fff",
     borderRadius: 20,
     boxShadow: theme.shadows[5],
+    [theme.breakpoints.down("md")]: {
+      height: "25rem",
+      width: "20rem",
+    },
+    [theme.breakpoints.down("sm")]: {
+      height: "20rem",
+      width: "15rem",
+    },
   }))
 
   const slides = data.allStrapiProduct.edges.map(({ node }, i) => {
@@ -112,8 +129,9 @@ const PromotionalProducts = () => {
     <Grid
       container
       sx={sx.mainContainer}
-      justifyContent="space-between"
+      justifyContent={matchesVertical ? "space-around" : "space-between"}
       alignItems="center"
+      direction={matchesVertical ? "column" : "row"}
     >
       <Grid item sx={sx.carouselContainer}>
         <Carousel slides={slides} goToSlide={selectedSlide} />

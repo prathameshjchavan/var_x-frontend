@@ -9,10 +9,16 @@ import { useTheme } from "@mui/material"
 const HeroBlock = () => {
   const theme = useTheme()
   const matchesSM = useMediaQuery(theme => theme.breakpoints.down("sm"))
-  const matchesHeroVertical = useMediaQuery("(max-width:1450px)")
-  const animationWidth = matchesSM ? "25rem" : "30rem"
-
-  console.log(matchesHeroVertical)
+  const matchesMD = useMediaQuery(theme => theme.breakpoints.down("md"))
+  const matchesXL = useMediaQuery(theme => theme.breakpoints.down("xl"))
+  const matchesHeroVertical = useMediaQuery("(max-width:1650px)")
+  const animationWidth = matchesSM
+    ? "25rem"
+    : matchesMD
+    ? "30rem"
+    : matchesXL
+    ? "35rem"
+    : "40rem"
 
   const defaultOptions = {
     loop: true,
@@ -32,6 +38,7 @@ const HeroBlock = () => {
       [theme.breakpoints.down("md")]: {
         padding: "2rem",
       },
+      textAlign: matchesHeroVertical ? "center" : undefined,
     },
   }
 

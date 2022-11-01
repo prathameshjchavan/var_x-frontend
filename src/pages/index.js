@@ -1,7 +1,7 @@
 import React from "react"
 import Layout from "../components/ui/layout"
 import "../components/index.module.css"
-import HeroBlock from "../components/home/heroBlock"
+import HeroBlock from "../components/home/HeroBlock"
 import PromotionalProducts from "../components/home/PromotionalProducts"
 import FeaturedProducts from "../components/home/FeaturedProducts"
 import MarketingButtons from "../components/home/MarketingButtons"
