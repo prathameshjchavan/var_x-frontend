@@ -5,8 +5,12 @@ import { Link } from "gatsby"
 import marketingAdornment from "../../images/marketing-adornment.svg"
 import moreByUs from "../../images/more-by-us.svg"
 import store from "../../images/store.svg"
+import { useTheme } from "@mui/material"
+import { styled } from "@mui/material/styles"
 
 const MarketingButtons = () => {
+  const theme = useTheme()
+
   const buttons = [
     { label: "Store", icon: store, link: "/hoodies" },
     { label: "More By Us", icon: moreByUs, href: "https://www.google.com" },
@@ -28,8 +32,40 @@ const MarketingButtons = () => {
       "&:hover": {
         transform: "scale(1.1)",
       },
+      [theme.breakpoints.down("xxl")]: {
+        height: "40rem",
+        width: "40rem",
+        margin: "3rem",
+      },
+      [theme.breakpoints.down("md")]: {
+        height: "30rem",
+        width: "30rem",
+      },
+      [theme.breakpoints.down("sm")]: {
+        height: "24rem",
+        width: "24rem",
+      },
+    },
+    label: {
+      [theme.breakpoints.down("md")]: {
+        fontSize: "2.75rem",
+      },
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "2.5rem",
+      },
     },
   }
+
+  const Icon = styled("img")(() => ({
+    [theme.breakpoints.down("md")]: {
+      height: "8rem",
+      width: "8rem",
+    },
+    [theme.breakpoints.down("sm")]: {
+      height: "6rem",
+      width: "6rem",
+    },
+  }))
 
   return (
     <Grid container justifyContent="space-around" sx={sx.container}>
@@ -46,10 +82,12 @@ const MarketingButtons = () => {
             href={button.href ? button.href : undefined}
           >
             <Grid item>
-              <img src={button.icon} alt={button.label} />
+              <Icon src={button.icon} alt={button.label} />
             </Grid>
             <Grid item>
-              <Typography variant="h1">{button.label}</Typography>
+              <Typography sx={sx.label} variant="h1">
+                {button.label}
+              </Typography>
             </Grid>
           </Grid>
         </Grid>

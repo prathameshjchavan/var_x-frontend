@@ -32,6 +32,11 @@ const PromotionalProducts = () => {
       }
     }
   `)
+  const carouselIndex = [
+    { l: 1, r: 2 },
+    { l: 2, r: 0 },
+    { l: 0, r: 1 },
+  ]
 
   // sx prop
   const sx = {
@@ -92,7 +97,14 @@ const PromotionalProducts = () => {
 
   const slides = data.allStrapiProduct.edges.map(({ node }, i) => {
     let iconButtonSx = sx.iconButton
-    if (selectedSlide !== i) iconButtonSx = { ...iconButtonSx, ...sx.space }
+    if (selectedSlide !== i) {
+      iconButtonSx = { ...iconButtonSx, ...sx.space }
+      if (carouselIndex[selectedSlide].l === i) {
+        iconButtonSx.marginLeft = "0 !important"
+      } else {
+        iconButtonSx.marginRight = "0 !important"
+      }
+    }
 
     return {
       key: i,
