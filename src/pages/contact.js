@@ -1,12 +1,19 @@
-import { Button, Grid, TextField, Typography } from "@mui/material"
+import {
+  Button,
+  Grid,
+  InputAdornment,
+  TextField,
+  Typography,
+} from "@mui/material"
 import React, { useState } from "react"
 import Layout from "../components/ui/layout"
-import address from "../images/address.svg"
-import phone from "../images/phone-adornment.svg"
-import Email from "../images/EmailAdornment"
-import send from "../images/send.svg"
 import { useTheme } from "@mui/material"
 import { styled } from "@mui/material/styles"
+import address from "../images/address.svg"
+import Email from "../images/EmailAdornment"
+import send from "../images/send.svg"
+import nameAdornment from "../images/name-adornment.svg"
+import PhoneAdornment from "../images/PhoneAdornment"
 
 const ContactPage = () => {
   const theme = useTheme()
@@ -86,6 +93,10 @@ const ContactPage = () => {
       height: "2.25rem",
       width: "3rem",
     },
+    contactIcon: {
+      height: "3rem",
+      width: "3rem",
+    },
     middleInfo: {
       borderTop: "2px solid #fff",
       borderBottom: "2px solid #fff",
@@ -98,6 +109,15 @@ const ContactPage = () => {
     },
     multilineContainer: {
       marginTop: "1rem",
+    },
+    emailAdornment: {
+      height: 17,
+      width: 22,
+      marginBottom: "10px",
+    },
+    phoneAdornment: {
+      width: 25.173,
+      height: 25.122,
     },
   }
 
@@ -144,6 +164,13 @@ const ContactPage = () => {
                     variant="standard"
                     placeholder="Name"
                     sx={sx.textField}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <img src={nameAdornment} alt="name" />
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                 </Grid>
                 <Grid item sx={sx.fieldContainer}>
@@ -153,6 +180,15 @@ const ContactPage = () => {
                     variant="standard"
                     placeholder="Email"
                     sx={sx.textField}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <div style={sx.emailAdornment}>
+                            <Email color={theme.palette.secondary.main} />
+                          </div>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                 </Grid>
                 <Grid item sx={sx.fieldContainer}>
@@ -162,6 +198,17 @@ const ContactPage = () => {
                     variant="standard"
                     placeholder="Phone Number"
                     sx={sx.textField}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <div style={sx.phoneAdornment}>
+                            <PhoneAdornment
+                              color={theme.palette.secondary.main}
+                            />
+                          </div>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                 </Grid>
                 <Grid item sx={sx.multilineContainer}>
@@ -211,7 +258,9 @@ const ContactPage = () => {
             </Grid>
             <Grid item container alignItems="center" sx={sx.middleInfo}>
               <Grid item sx={sx.iconContainer}>
-                <ContactIcon src={phone} alt="phone" />
+                <div style={sx.contactIcon}>
+                  <PhoneAdornment />
+                </div>
               </Grid>
               <Grid item>
                 <Typography variant="h2" sx={sx.contactInfo}>
