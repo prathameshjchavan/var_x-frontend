@@ -21,7 +21,7 @@ import menu from "../../images/menu.svg"
 
 const Header = ({ categories }) => {
   const [drawerOpen, setDrawerOpen] = useState(false)
-  const matchesMD = useMediaQuery(theme => theme.breakpoints.down("md"))
+  const matchesSmall = useMediaQuery("(max-width: 1100px)")
   const theme = useTheme()
   const iOS =
     typeof navigator !== "undefined" &&
@@ -33,11 +33,11 @@ const Header = ({ categories }) => {
   const actions = [
     { icon: search, alt: "search", visible: true },
     { icon: cart, alt: "cart", visible: true, link: "/cart" },
-    { icon: account, alt: "account", visible: !matchesMD, link: "/account" },
+    { icon: account, alt: "account", visible: !matchesSmall, link: "/account" },
     {
       icon: menu,
       alt: "menu",
-      visible: matchesMD,
+      visible: matchesSmall,
       onClick: () => setDrawerOpen(true),
     },
   ]
@@ -56,9 +56,7 @@ const Header = ({ categories }) => {
   // sx prop
   const sx = {
     logoContainer: {
-      [theme.breakpoints.down("md")]: {
-        marginRight: "auto",
-      },
+      marginRight: matchesSmall ? "auto" : undefined,
     },
     logo: {
       [theme.breakpoints.down("sm")]: {
@@ -118,13 +116,13 @@ const Header = ({ categories }) => {
   return (
     <header>
       <AppBar color="transparent" elevation={0} position="static">
-        <Toolbar disableGutters>
+        <Toolbar>
           <Button component={Link} to="/" sx={sx.logoContainer} disableRipple>
             <Typography variant="h1" sx={sx.logo}>
               <LogoText>VAR</LogoText> X
             </Typography>
           </Button>
-          {matchesMD ? (
+          {matchesSmall ? (
             <SwipeableDrawer
               sx={sx.drawer}
               anchor="right"

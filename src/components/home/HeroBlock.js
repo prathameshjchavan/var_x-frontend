@@ -10,13 +10,16 @@ const HeroBlock = () => {
   const theme = useTheme()
   const matchesSM = useMediaQuery(theme => theme.breakpoints.down("sm"))
   const matchesMD = useMediaQuery(theme => theme.breakpoints.down("md"))
-  const matchesXL = useMediaQuery(theme => theme.breakpoints.down("xl"))
-  const matchesHeroVertical = useMediaQuery("(max-width:1650px)")
+  const matchesXL = useMediaQuery("(max-width: 1540px)")
+  const matchesXXL = useMediaQuery(theme => theme.breakpoints.down("xxl"))
+  const matchesVertical = useMediaQuery("(max-width: 1480px)")
   const animationWidth = matchesSM
     ? "20rem"
     : matchesMD
-    ? "30rem"
+    ? "25rem"
     : matchesXL
+    ? "30rem"
+    : matchesXXL
     ? "35rem"
     : "40rem"
 
@@ -31,7 +34,7 @@ const HeroBlock = () => {
 
   const sx = {
     container: {
-      flexDirection: matchesHeroVertical ? "column" : "row",
+      padding: "0 2rem",
     },
     heading: {
       [theme.breakpoints.down("sm")]: {
@@ -45,7 +48,8 @@ const HeroBlock = () => {
       [theme.breakpoints.down("sm")]: {
         padding: "1rem",
       },
-      textAlign: matchesHeroVertical ? "center" : undefined,
+      textAlign: matchesVertical ? "center" : undefined,
+      marginBottom: matchesVertical ? "2rem" : undefined,
     },
   }
 
@@ -53,7 +57,8 @@ const HeroBlock = () => {
     <Grid
       container
       sx={sx.container}
-      justifyContent="space-around"
+      direction={matchesVertical ? "column" : "row"}
+      justifyContent="space-between"
       alignItems="center"
     >
       <Grid item sx={sx.textContainer} alignItems="center">
