@@ -42,8 +42,12 @@ const MarketingButtons = () => {
         width: "30rem",
       },
       [theme.breakpoints.down("sm")]: {
-        height: "24rem",
-        width: "24rem",
+        height: "20rem",
+        width: "20rem",
+        margin: "2rem 0",
+        "&:hover": {
+          transform: "scale(1)",
+        },
       },
     },
     label: {
@@ -51,7 +55,7 @@ const MarketingButtons = () => {
         fontSize: "2.75rem",
       },
       [theme.breakpoints.down("sm")]: {
-        fontSize: "2.5rem",
+        fontSize: "2.25rem",
       },
     },
   }
@@ -62,8 +66,8 @@ const MarketingButtons = () => {
       width: "8rem",
     },
     [theme.breakpoints.down("sm")]: {
-      height: "6rem",
-      width: "6rem",
+      height: "5rem",
+      width: "5rem",
     },
   }))
 

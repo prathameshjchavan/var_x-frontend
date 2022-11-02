@@ -90,8 +90,8 @@ const PromotionalProducts = () => {
       width: "20rem",
     },
     [theme.breakpoints.down("sm")]: {
-      height: "20rem",
-      width: "15rem",
+      height: "16rem",
+      width: "11rem",
     },
   }))
 

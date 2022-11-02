@@ -45,7 +45,7 @@ const FeaturedProducts = () => {
       height: "180rem",
       padding: "0 2.5rem",
       [theme.breakpoints.down("lg")]: {
-        height: "220rem",
+        paddingBottom: "15rem",
       },
     },
     frame: {

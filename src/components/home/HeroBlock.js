@@ -13,7 +13,7 @@ const HeroBlock = () => {
   const matchesXL = useMediaQuery(theme => theme.breakpoints.down("xl"))
   const matchesHeroVertical = useMediaQuery("(max-width:1650px)")
   const animationWidth = matchesSM
-    ? "25rem"
+    ? "20rem"
     : matchesMD
     ? "30rem"
     : matchesXL
@@ -31,12 +31,19 @@ const HeroBlock = () => {
 
   const sx = {
     container: {
-      padding: "0 2rem",
       flexDirection: matchesHeroVertical ? "column" : "row",
+    },
+    heading: {
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "3.5rem",
+      },
     },
     textContainer: {
       [theme.breakpoints.down("md")]: {
         padding: "2rem",
+      },
+      [theme.breakpoints.down("sm")]: {
+        padding: "1rem",
       },
       textAlign: matchesHeroVertical ? "center" : undefined,
     },
@@ -52,7 +59,7 @@ const HeroBlock = () => {
       <Grid item sx={sx.textContainer} alignItems="center">
         <Grid container direction="column">
           <Grid item>
-            <Typography variant="h1">
+            <Typography sx={sx.heading} variant="h1">
               The Premiere
               <br />
               Developer Clothing Line

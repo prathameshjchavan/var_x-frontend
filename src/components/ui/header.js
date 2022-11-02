@@ -60,6 +60,11 @@ const Header = ({ categories }) => {
         marginRight: "auto",
       },
     },
+    logo: {
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "3rem",
+      },
+    },
     tabs: {
       margin: "0 auto",
       "& .MuiTabs-indicator": {
@@ -104,14 +109,18 @@ const Header = ({ categories }) => {
   const Icon = styled("img")(() => ({
     height: "3rem",
     width: "3rem",
+    [theme.breakpoints.down("sm")]: {
+      height: "2rem",
+      width: "2rem",
+    },
   }))
 
   return (
     <header>
       <AppBar color="transparent" elevation={0} position="static">
-        <Toolbar>
+        <Toolbar disableGutters>
           <Button component={Link} to="/" sx={sx.logoContainer} disableRipple>
-            <Typography variant="h1">
+            <Typography variant="h1" sx={sx.logo}>
               <LogoText>VAR</LogoText> X
             </Typography>
           </Button>

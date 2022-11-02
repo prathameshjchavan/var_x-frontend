@@ -5,6 +5,7 @@ import Button from "@mui/material/Button"
 import { Link } from "gatsby"
 import cta from "../../images/cta.svg"
 import { useMediaQuery, useTheme } from "@mui/material"
+import { styled } from "@mui/material/styles"
 
 const CallToAction = () => {
   const theme = useTheme()
@@ -18,9 +19,9 @@ const CallToAction = () => {
       [theme.breakpoints.down("md")]: {
         padding: "0 1rem",
       },
-    },
-    image: {
-      marginLeft: matchesVertical ? undefined : "2rem",
+      [theme.breakpoints.down("sm")]: {
+        padding: 0,
+      },
     },
     body: {
       maxWidth: "45rem !important",
@@ -28,12 +29,23 @@ const CallToAction = () => {
       [theme.breakpoints.down("md")]: {
         padding: "0 1rem",
       },
+      [theme.breakpoints.down("sm")]: {
+        padding: 0,
+      },
     },
     account: {
       color: "#fff",
       marginLeft: "2rem",
     },
   }
+
+  const Icon = styled("img")(() => ({
+    marginLeft: matchesVertical ? undefined : "2rem",
+    [theme.breakpoints.down("sm")]: {
+      height: "18rem",
+      width: "20rem",
+    },
+  }))
 
   return (
     <Grid
@@ -43,8 +55,8 @@ const CallToAction = () => {
       direction={matchesVertical ? "column" : "row"}
       sx={sx.container}
     >
-      <Grid item sx={sx.image}>
-        <img src={cta} alt="quality committed" />
+      <Grid item>
+        <Icon src={cta} alt="quality committed" />
       </Grid>
       <Grid item>
         <Grid
