@@ -1,5 +1,5 @@
-import { Button, Grid, Typography } from "@mui/material"
-import React from "react"
+import { Button, Grid, TextField, Typography } from "@mui/material"
+import React, { useState } from "react"
 import Layout from "../components/ui/layout"
 import address from "../images/address.svg"
 import phone from "../images/phone-adornment.svg"
@@ -10,6 +10,10 @@ import { styled } from "@mui/material/styles"
 
 const ContactPage = () => {
   const theme = useTheme()
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [phoneNumber, setPhoneNumber] = useState("")
+  const [message, setMessage] = useState("")
 
   const sx = {
     mainContainer: {
@@ -85,6 +89,9 @@ const ContactPage = () => {
       borderTop: "2px solid #fff",
       borderBottom: "2px solid #fff",
     },
+    textField: {
+      width: "30rem",
+    },
   }
 
   const ContactIcon = styled("img")(() => ({
@@ -119,6 +126,48 @@ const ContactPage = () => {
           >
             <Grid item sx={{ ...sx.titleContainer, ...sx.blockContainer }}>
               <Typography variant="h4">Contact Us</Typography>
+            </Grid>
+            <Grid item>
+              <Grid container direction="column">
+                <Grid item>
+                  <TextField
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    variant="standard"
+                    placeholder="Name"
+                    sx={sx.textField}
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    variant="standard"
+                    placeholder="Email"
+                    sx={sx.textField}
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    value={phoneNumber}
+                    onChange={e => setPhoneNumber(e.target.value)}
+                    variant="standard"
+                    placeholder="Phone Number"
+                    sx={sx.textField}
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    value={message}
+                    onChange={e => setMessage(e.target.value)}
+                    variant="standard"
+                    multiline
+                    rows={8}
+                    placeholder="Message"
+                    sx={sx.textField}
+                  />
+                </Grid>
+              </Grid>
             </Grid>
             <Grid
               component={Button}
