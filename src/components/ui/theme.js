@@ -75,6 +75,28 @@ const theme = createTheme({
       footer: 1080,
     },
   },
+  components: {
+    MuiInput: {
+      styleOverrides: {
+        input: {
+          color: "#fff",
+        },
+        underline: {
+          "&:before, &:hover:not(.Mui-disabled):before": {
+            borderBottom: "2px solid #fff",
+          },
+          "&:after": {
+            borderBottom: `2px solid ${darkGreen}`,
+          },
+        },
+        multiline: {
+          border: "2px solid #fff",
+          borderRadius: 10,
+          padding: "1rem",
+        },
+      },
+    },
+  },
 })
 
 export default theme

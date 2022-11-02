@@ -15,6 +15,7 @@ const ContactPage = () => {
   const [phoneNumber, setPhoneNumber] = useState("")
   const [message, setMessage] = useState("")
 
+  // sx prop
   const sx = {
     mainContainer: {
       height: "45rem",
@@ -92,8 +93,15 @@ const ContactPage = () => {
     textField: {
       width: "30rem",
     },
+    fieldContainer: {
+      marginBottom: "1rem",
+    },
+    multilineContainer: {
+      marginTop: "1rem",
+    },
   }
 
+  // styled components
   const ContactIcon = styled("img")(() => ({
     height: "3rem",
     width: "3rem",
@@ -129,7 +137,7 @@ const ContactPage = () => {
             </Grid>
             <Grid item>
               <Grid container direction="column">
-                <Grid item>
+                <Grid item sx={sx.fieldContainer}>
                   <TextField
                     value={name}
                     onChange={e => setName(e.target.value)}
@@ -138,7 +146,7 @@ const ContactPage = () => {
                     sx={sx.textField}
                   />
                 </Grid>
-                <Grid item>
+                <Grid item sx={sx.fieldContainer}>
                   <TextField
                     value={email}
                     onChange={e => setEmail(e.target.value)}
@@ -147,7 +155,7 @@ const ContactPage = () => {
                     sx={sx.textField}
                   />
                 </Grid>
-                <Grid item>
+                <Grid item sx={sx.fieldContainer}>
                   <TextField
                     value={phoneNumber}
                     onChange={e => setPhoneNumber(e.target.value)}
@@ -156,12 +164,15 @@ const ContactPage = () => {
                     sx={sx.textField}
                   />
                 </Grid>
-                <Grid item>
+                <Grid item sx={sx.multilineContainer}>
                   <TextField
                     value={message}
                     onChange={e => setMessage(e.target.value)}
                     variant="standard"
                     multiline
+                    InputProps={{
+                      disableUnderline: true,
+                    }}
                     rows={8}
                     placeholder="Message"
                     sx={sx.textField}
