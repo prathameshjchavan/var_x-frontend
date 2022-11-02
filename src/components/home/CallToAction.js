@@ -4,15 +4,30 @@ import Typography from "@mui/material/Typography"
 import Button from "@mui/material/Button"
 import { Link } from "gatsby"
 import cta from "../../images/cta.svg"
+import { useMediaQuery, useTheme } from "@mui/material"
 
 const CallToAction = () => {
+  const theme = useTheme()
+  const matchesVertical = useMediaQuery("(max-width: 1300px)")
+
   const sx = {
     container: {
       marginBottom: "15rem",
     },
+    headingContainer: {
+      [theme.breakpoints.down("md")]: {
+        padding: "0 1rem",
+      },
+    },
+    image: {
+      marginLeft: matchesVertical ? undefined : "2rem",
+    },
     body: {
       maxWidth: "45rem !important",
       marginBottom: "3rem",
+      [theme.breakpoints.down("md")]: {
+        padding: "0 1rem",
+      },
     },
     account: {
       color: "#fff",
@@ -25,14 +40,19 @@ const CallToAction = () => {
       container
       justifyContent="space-around"
       alignItems="center"
+      direction={matchesVertical ? "column" : "row"}
       sx={sx.container}
     >
-      <Grid item>
+      <Grid item sx={sx.image}>
         <img src={cta} alt="quality committed" />
       </Grid>
       <Grid item>
-        <Grid container direction="column">
-          <Grid item>
+        <Grid
+          container
+          direction="column"
+          align={matchesVertical ? "center" : undefined}
+        >
+          <Grid item sx={sx.headingContainer}>
             <Typography variant="h1">Committed To Quality</Typography>
           </Grid>
           <Grid item sx={sx.body}>
@@ -42,7 +62,11 @@ const CallToAction = () => {
               technology enthusiasts.
             </Typography>
           </Grid>
-          <Grid item container>
+          <Grid
+            item
+            container
+            justifyContent={matchesVertical ? "center" : undefined}
+          >
             <Grid item>
               <Button variant="outlined" component={Link} to="/contact">
                 Contact Us
