@@ -19,18 +19,12 @@ const CallToAction = () => {
       [theme.breakpoints.down("md")]: {
         padding: "0 1rem",
       },
-      [theme.breakpoints.down("sm")]: {
-        padding: 0,
-      },
     },
     body: {
       maxWidth: "45rem !important",
       marginBottom: "3rem",
       [theme.breakpoints.down("md")]: {
         padding: "0 1rem",
-      },
-      [theme.breakpoints.down("sm")]: {
-        padding: 0,
       },
     },
     account: {

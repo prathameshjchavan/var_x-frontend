@@ -69,6 +69,9 @@ const PromotionalProducts = () => {
       [theme.breakpoints.down("md")]: {
         margin: "0 10rem 10rem 10rem",
       },
+      [theme.breakpoints.down("sm")]: {
+        margin: "0 8rem 10rem 8rem",
+      },
     },
     explore: {
       textTransform: "none",
