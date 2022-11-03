@@ -23,10 +23,10 @@ const ContactPage = () => {
   const [phoneNumber, setPhoneNumber] = useState("")
   const [message, setMessage] = useState("")
   const [errors, setErrors] = useState({
-    name: false,
-    email: false,
-    phone: false,
-    message: false,
+    name: null,
+    email: null,
+    phone: null,
+    message: null,
   })
 
   // sx prop
@@ -114,6 +114,16 @@ const ContactPage = () => {
     fieldContainer: {
       marginBottom: "1rem",
     },
+    multiline: {
+      "& .MuiInput-input": {
+        border: "2px solid #fff",
+        borderRadius: "10px",
+        padding: "1rem",
+      },
+      "& .Mui-error > .MuiInput-input": {
+        border: `2px solid ${theme.palette.error.main}`,
+      },
+    },
     multilineContainer: {
       marginTop: "1rem",
     },
@@ -125,6 +135,9 @@ const ContactPage = () => {
     phoneAdornment: {
       width: 25.173,
       height: 25.122,
+    },
+    buttonDisabled: {
+      backgroundColor: theme.palette.grey[500],
     },
   }
 
@@ -141,6 +154,17 @@ const ContactPage = () => {
   const EmailIconContainer = styled("div")(() => ({
     ...sx.contactEmailIcon,
   }))
+
+  // functions
+  const getButtonSx = () => {
+    let buttonSx = { ...sx.buttonContainer, ...sx.blockContainer }
+    if (
+      Object.values(errors).includes(true) ||
+      Object.values(errors).includes(null)
+    )
+      buttonSx = { ...buttonSx, ...sx.buttonDisabled }
+    return buttonSx
+  }
 
   return (
     <Layout>
@@ -167,7 +191,16 @@ const ContactPage = () => {
                 <Grid item sx={sx.fieldContainer}>
                   <TextField
                     value={name}
-                    onChange={e => setName(e.target.value)}
+                    onChange={e => {
+                      setName(e.target.value)
+                      if (
+                        errors.name ||
+                        (name !== "" && errors.name !== null)
+                      ) {
+                        const valid = validate({ name: e.target.value })
+                        setErrors({ ...errors, name: !valid.name })
+                      }
+                    }}
                     onBlur={e => {
                       const valid = validate({ name })
                       setErrors({ ...errors, name: !valid.name })
@@ -189,7 +222,16 @@ const ContactPage = () => {
                 <Grid item sx={sx.fieldContainer}>
                   <TextField
                     value={email}
-                    onChange={e => setEmail(e.target.value)}
+                    onChange={e => {
+                      setEmail(e.target.value)
+                      if (
+                        errors.email ||
+                        (email !== "" && errors.email !== null)
+                      ) {
+                        const valid = validate({ email: e.target.value })
+                        setErrors({ ...errors, email: !valid.email })
+                      }
+                    }}
                     onBlur={e => {
                       const valid = validate({ email })
                       setErrors({ ...errors, email: !valid.email })
@@ -213,7 +255,16 @@ const ContactPage = () => {
                 <Grid item sx={sx.fieldContainer}>
                   <TextField
                     value={phoneNumber}
-                    onChange={e => setPhoneNumber(e.target.value)}
+                    onChange={e => {
+                      setPhoneNumber(e.target.value)
+                      if (
+                        errors.phone ||
+                        (phoneNumber !== "" && errors.phone !== null)
+                      ) {
+                        const valid = validate({ phone: e.target.value })
+                        setErrors({ ...errors, phone: !valid.phone })
+                      }
+                    }}
                     onBlur={e => {
                       const valid = validate({ phone: phoneNumber })
                       setErrors({ ...errors, phone: !valid.phone })
@@ -239,7 +290,16 @@ const ContactPage = () => {
                 <Grid item sx={sx.multilineContainer}>
                   <TextField
                     value={message}
-                    onChange={e => setMessage(e.target.value)}
+                    onChange={e => {
+                      setMessage(e.target.value)
+                      if (
+                        errors.message ||
+                        (message !== "" && errors.message !== null)
+                      ) {
+                        const valid = validate({ message: e.target.value })
+                        setErrors({ ...errors, message: !valid.message })
+                      }
+                    }}
                     onBlur={e => {
                       const valid = validate({ message })
                       setErrors({ ...errors, message: !valid.message })
@@ -253,15 +313,19 @@ const ContactPage = () => {
                     }}
                     rows={8}
                     placeholder="Message"
-                    sx={sx.textField}
+                    sx={{ ...sx.textField, ...sx.multiline }}
                   />
                 </Grid>
               </Grid>
             </Grid>
             <Grid
               component={Button}
+              disabled={
+                Object.values(errors).includes(true) ||
+                Object.values(errors).includes(null)
+              }
               item
-              sx={{ ...sx.buttonContainer, ...sx.blockContainer }}
+              sx={getButtonSx()}
             >
               <Typography variant="h4">send message</Typography>
               <SendIcon src={send} alt="send message" />

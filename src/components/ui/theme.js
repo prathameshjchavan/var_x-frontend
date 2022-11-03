@@ -89,11 +89,6 @@ const theme = createTheme({
             borderBottom: `2px solid ${darkGreen}`,
           },
         },
-        multiline: {
-          border: "2px solid #fff",
-          borderRadius: 10,
-          padding: "1rem",
-        },
       },
     },
   },
