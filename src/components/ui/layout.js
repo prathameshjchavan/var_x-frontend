@@ -19,7 +19,7 @@ const Layout = ({ children }) => {
   `)
 
   const Seperator = styled("div")(({ theme }) => ({
-    marginBottom: "10rem",
+    marginBottom: "5rem",
     [theme.breakpoints.down("md")]: {
       marginBottom: "2rem",
     },

@@ -35,9 +35,9 @@ exports.createPages = async ({ graphql, actions }) => {
 
   products.forEach(product => {
     createPage({
-      path: `/${product.node.category.name.toLowerCase()}/${encodeURIComponent(
+      path: `/${product.node.category.name.toLowerCase()}/${
         product.node.name.split(" ")[0]
-      )}`,
+      }`,
       component: require.resolve("./src/templates/ProductDetail.jsx"),
       context: {
         name: product.node.name,
