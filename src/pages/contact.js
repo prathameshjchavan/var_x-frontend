@@ -14,6 +14,7 @@ import Email from "../images/EmailAdornment"
 import send from "../images/send.svg"
 import nameAdornment from "../images/name-adornment.svg"
 import PhoneAdornment from "../images/PhoneAdornment"
+import validate from "../components/ui/validate"
 
 const ContactPage = () => {
   const theme = useTheme()
@@ -21,11 +22,17 @@ const ContactPage = () => {
   const [email, setEmail] = useState("")
   const [phoneNumber, setPhoneNumber] = useState("")
   const [message, setMessage] = useState("")
+  const [errors, setErrors] = useState({
+    name: false,
+    email: false,
+    phone: false,
+    message: false,
+  })
 
   // sx prop
   const sx = {
     mainContainer: {
-      height: "45rem",
+      height: "50rem",
       backgroundColor: theme.palette.primary.main,
       marginBottom: "10rem",
       // [theme.breakpoints.down("lg")]: {
@@ -161,6 +168,12 @@ const ContactPage = () => {
                   <TextField
                     value={name}
                     onChange={e => setName(e.target.value)}
+                    onBlur={e => {
+                      const valid = validate({ name })
+                      setErrors({ ...errors, name: !valid.name })
+                    }}
+                    error={errors.name}
+                    helperText={errors.name && "You must enter a name"}
                     variant="standard"
                     placeholder="Name"
                     sx={sx.textField}
@@ -177,6 +190,12 @@ const ContactPage = () => {
                   <TextField
                     value={email}
                     onChange={e => setEmail(e.target.value)}
+                    onBlur={e => {
+                      const valid = validate({ email })
+                      setErrors({ ...errors, email: !valid.email })
+                    }}
+                    error={errors.email}
+                    helperText={errors.email && "Invalid email"}
                     variant="standard"
                     placeholder="Email"
                     sx={sx.textField}
@@ -195,6 +214,12 @@ const ContactPage = () => {
                   <TextField
                     value={phoneNumber}
                     onChange={e => setPhoneNumber(e.target.value)}
+                    onBlur={e => {
+                      const valid = validate({ phone: phoneNumber })
+                      setErrors({ ...errors, phone: !valid.phone })
+                    }}
+                    error={errors.phone}
+                    helperText={errors.phone && "Invalid phone number"}
                     variant="standard"
                     placeholder="Phone Number"
                     sx={sx.textField}
@@ -215,6 +240,12 @@ const ContactPage = () => {
                   <TextField
                     value={message}
                     onChange={e => setMessage(e.target.value)}
+                    onBlur={e => {
+                      const valid = validate({ message })
+                      setErrors({ ...errors, message: !valid.message })
+                    }}
+                    error={errors.message}
+                    helperText={errors.message && "You must enter a message"}
                     variant="standard"
                     multiline
                     InputProps={{
