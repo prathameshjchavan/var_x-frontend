@@ -4,6 +4,7 @@ import {
   InputAdornment,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material"
 import React, { useState } from "react"
 import Layout from "../components/ui/layout"
@@ -28,6 +29,8 @@ const ContactPage = () => {
     phone: null,
     message: null,
   })
+  const matchesVertical = useMediaQuery("(max-width: 1280px)")
+  const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
 
   // sx prop
   const sx = {
@@ -35,20 +38,20 @@ const ContactPage = () => {
       height: "50rem",
       backgroundColor: theme.palette.primary.main,
       marginBottom: "10rem",
-      // [theme.breakpoints.down("lg")]: {
-      //   marginTop: "8rem",
-      //   height: "90rem",
-      // },
+      "@media (max-width: 1280px)": {
+        marginTop: "8rem",
+        height: "90rem",
+      },
     },
     formWrapper: {
       height: "100%",
-      // [theme.breakpoints.down("md")]: {
-      //   height: "50%",
-      //   marginTop: "-8rem",
-      // },
-      // [theme.breakpoints.down("xs")]: {
-      //   width: "100%",
-      // },
+      "@media (max-width: 1280px)": {
+        height: "50%",
+        marginTop: "-8rem",
+      },
+      "@media (max-width: 500px)": {
+        width: "100%",
+      },
     },
     formContainer: {
       height: "100%",
@@ -68,18 +71,18 @@ const ContactPage = () => {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      // [theme.breakpoints.down("sm")]: {
-      //   width: "30rem",
-      // },
-      // [theme.breakpoints.down("xs")]: {
-      //   width: "100%",
-      // },
+      "@media (max-width: 700px)": {
+        width: "30rem",
+      },
+      "@media (max-width: 500px)": {
+        width: "100%",
+      },
     },
     infoContainer: {
       height: "21.25rem",
-      // [theme.breakpoints.down("xs")]: {
-      //   height: "15.25rem",
-      // },
+      [theme.breakpoints.down("sm")]: {
+        height: "15.25rem",
+      },
     },
     titleContainer: {
       marginTop: "-4rem",
@@ -91,6 +94,10 @@ const ContactPage = () => {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
+      [theme.breakpoints.down("sm")]: {
+        height: "5rem",
+        width: "6rem",
+      },
     },
     contactInfo: {
       fontSize: "1.5rem",
@@ -110,6 +117,9 @@ const ContactPage = () => {
     },
     textField: {
       width: "30rem",
+      "@media (max-width: 700px)": {
+        width: "20rem",
+      },
     },
     fieldContainer: {
       marginBottom: "1rem",
@@ -138,6 +148,11 @@ const ContactPage = () => {
     },
     buttonDisabled: {
       backgroundColor: theme.palette.grey[500],
+    },
+    sendMessage: {
+      "@media (max-width: 400px)": {
+        fontSize: "2.5rem",
+      },
     },
   }
 
@@ -173,6 +188,7 @@ const ContactPage = () => {
         sx={sx.mainContainer}
         justifyContent="space-around"
         alignItems="center"
+        direction={matchesVertical ? "column" : "row"}
       >
         {/* Contact Form */}
         <Grid item sx={sx.formWrapper}>
@@ -327,7 +343,9 @@ const ContactPage = () => {
               item
               sx={getButtonSx()}
             >
-              <Typography variant="h4">send message</Typography>
+              <Typography variant="h4" sx={sx.sendMessage}>
+                send message
+              </Typography>
               <SendIcon src={send} alt="send message" />
             </Grid>
           </Grid>
@@ -347,7 +365,7 @@ const ContactPage = () => {
               </Grid>
               <Grid item>
                 <Typography variant="h2" sx={sx.contactInfo}>
-                  1234 S Example St Wichita, KS 67111
+                  1234 S Example St {matchesSM ? <br /> : null}Wichita, KS 67111
                 </Typography>
               </Grid>
             </Grid>
