@@ -201,9 +201,33 @@ const ContactPage = () => {
     marginLeft: "2rem",
   }))
 
-  const EmailIconContainer = styled("div")(() => ({
-    ...sx.contactEmailIcon,
-  }))
+  // Contact Info
+  const info = [
+    {
+      label: (
+        <span>
+          1234 S Example St {matchesSM ? <br /> : null}Wichita, KS 67111
+        </span>
+      ),
+      icon: <ContactIcon src={address} alt="address" />,
+    },
+    {
+      label: "(555) 555-5555",
+      icon: (
+        <div style={sx.contactIcon}>
+          <PhoneAdornment />
+        </div>
+      ),
+    },
+    {
+      label: "zachary@var-x.com",
+      icon: (
+        <div style={sx.contactEmailIcon}>
+          <Email color="#fff" />
+        </div>
+      ),
+    },
+  ]
 
   // functions
   const getButtonSx = () => {
@@ -310,40 +334,24 @@ const ContactPage = () => {
             justifyContent="space-between"
             sx={sx.infoContainer}
           >
-            <Grid item container alignItems="center">
-              <Grid item sx={sx.iconContainer}>
-                <ContactIcon src={address} alt="address" />
+            {info.map(({ icon, label }, i) => (
+              <Grid
+                key={i}
+                item
+                container
+                alignItems="center"
+                sx={i === 1 ? sx.middleInfo : undefined}
+              >
+                <Grid item sx={sx.iconContainer}>
+                  {icon}
+                </Grid>
+                <Grid item>
+                  <Typography variant="h2" sx={sx.contactInfo}>
+                    {label}
+                  </Typography>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Typography variant="h2" sx={sx.contactInfo}>
-                  1234 S Example St {matchesSM ? <br /> : null}Wichita, KS 67111
-                </Typography>
-              </Grid>
-            </Grid>
-            <Grid item container alignItems="center" sx={sx.middleInfo}>
-              <Grid item sx={sx.iconContainer}>
-                <div style={sx.contactIcon}>
-                  <PhoneAdornment />
-                </div>
-              </Grid>
-              <Grid item>
-                <Typography variant="h2" sx={sx.contactInfo}>
-                  (555) 555-5555
-                </Typography>
-              </Grid>
-            </Grid>
-            <Grid item container alignItems="center">
-              <Grid item sx={sx.iconContainer}>
-                <EmailIconContainer>
-                  <Email color="#fff" />
-                </EmailIconContainer>
-              </Grid>
-              <Grid item>
-                <Typography variant="h2" sx={sx.contactInfo}>
-                  zachary@var-x.com
-                </Typography>
-              </Grid>
-            </Grid>
+            ))}
           </Grid>
         </Grid>
       </Grid>
