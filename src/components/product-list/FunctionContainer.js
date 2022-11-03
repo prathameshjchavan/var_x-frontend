@@ -2,6 +2,7 @@ import { Grid, IconButton, useTheme } from "@mui/material"
 import React, { useState } from "react"
 import filter from "../../images/filter.svg"
 import sort from "../../images/sort.svg"
+import Sort from "./Sort"
 
 const FunctionContainer = () => {
   const [option, setOption] = useState(null)
@@ -33,13 +34,15 @@ const FunctionContainer = () => {
           >
             {items.map(({ icon, alt }, i) => (
               <Grid item key={i}>
-                <IconButton>
+                <IconButton onClick={() => setOption(alt)}>
                   <img src={icon} alt={alt} />
                 </IconButton>
               </Grid>
             ))}
           </Grid>
         )
+      case "sort":
+        return <Sort setOption={setOption} />
       default:
         return null
     }
