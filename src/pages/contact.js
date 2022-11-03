@@ -19,10 +19,12 @@ import validate from "../components/ui/validate"
 
 const ContactPage = () => {
   const theme = useTheme()
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [phoneNumber, setPhoneNumber] = useState("")
-  const [message, setMessage] = useState("")
+  const [values, setValues] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  })
   const [errors, setErrors] = useState({
     name: null,
     email: null,
@@ -31,6 +33,8 @@ const ContactPage = () => {
   })
   const matchesVertical = useMediaQuery("(max-width: 1280px)")
   const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
+  const disabled =
+    Object.values(errors).includes(true) || Object.values(errors).includes(null)
 
   // sx prop
   const sx = {
@@ -156,6 +160,37 @@ const ContactPage = () => {
     },
   }
 
+  // TextField props
+  const fields = {
+    name: {
+      helperText: "You must enter a name",
+      placeholder: "Name",
+      adornment: <img src={nameAdornment} alt="name" />,
+    },
+    email: {
+      helperText: "Invalid email",
+      placeholder: "Email",
+      adornment: (
+        <div style={sx.emailAdornment}>
+          <Email color={theme.palette.secondary.main} />
+        </div>
+      ),
+    },
+    phone: {
+      helperText: "Invalid phone",
+      placeholder: "Phone Number",
+      adornment: (
+        <div style={sx.phoneAdornment}>
+          <PhoneAdornment color={theme.palette.secondary.main} />
+        </div>
+      ),
+    },
+    message: {
+      helperText: "You must enter a message",
+      placeholder: "Message",
+    },
+  }
+
   // styled components
   const ContactIcon = styled("img")(() => ({
     height: "3rem",
@@ -173,11 +208,7 @@ const ContactPage = () => {
   // functions
   const getButtonSx = () => {
     let buttonSx = { ...sx.buttonContainer, ...sx.blockContainer }
-    if (
-      Object.values(errors).includes(true) ||
-      Object.values(errors).includes(null)
-    )
-      buttonSx = { ...buttonSx, ...sx.buttonDisabled }
+    if (disabled) buttonSx = { ...buttonSx, ...sx.buttonDisabled }
     return buttonSx
   }
 
@@ -204,142 +235,62 @@ const ContactPage = () => {
             </Grid>
             <Grid item>
               <Grid container direction="column">
-                <Grid item sx={sx.fieldContainer}>
-                  <TextField
-                    value={name}
-                    onChange={e => {
-                      setName(e.target.value)
-                      if (
-                        errors.name ||
-                        (name !== "" && errors.name !== null)
-                      ) {
-                        const valid = validate({ name: e.target.value })
-                        setErrors({ ...errors, name: !valid.name })
+                {Object.keys(fields).map(field => {
+                  const validateHelper = event => {
+                    const valid = validate({ [field]: event.target.value })
+                    setErrors({ ...errors, [field]: !valid[field] })
+                  }
+                  const fieldSx =
+                    field === "message"
+                      ? { ...sx.textField, ...sx.multiline }
+                      : sx.textField
+
+                  return (
+                    <Grid
+                      key={field}
+                      item
+                      sx={
+                        field === "message"
+                          ? sx.multilineContainer
+                          : sx.fieldContainer
                       }
-                    }}
-                    onBlur={e => {
-                      const valid = validate({ name })
-                      setErrors({ ...errors, name: !valid.name })
-                    }}
-                    error={errors.name}
-                    helperText={errors.name && "You must enter a name"}
-                    variant="standard"
-                    placeholder="Name"
-                    sx={sx.textField}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <img src={nameAdornment} alt="name" />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </Grid>
-                <Grid item sx={sx.fieldContainer}>
-                  <TextField
-                    value={email}
-                    onChange={e => {
-                      setEmail(e.target.value)
-                      if (
-                        errors.email ||
-                        (email !== "" && errors.email !== null)
-                      ) {
-                        const valid = validate({ email: e.target.value })
-                        setErrors({ ...errors, email: !valid.email })
-                      }
-                    }}
-                    onBlur={e => {
-                      const valid = validate({ email })
-                      setErrors({ ...errors, email: !valid.email })
-                    }}
-                    error={errors.email}
-                    helperText={errors.email && "Invalid email"}
-                    variant="standard"
-                    placeholder="Email"
-                    sx={sx.textField}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <div style={sx.emailAdornment}>
-                            <Email color={theme.palette.secondary.main} />
-                          </div>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </Grid>
-                <Grid item sx={sx.fieldContainer}>
-                  <TextField
-                    value={phoneNumber}
-                    onChange={e => {
-                      setPhoneNumber(e.target.value)
-                      if (
-                        errors.phone ||
-                        (phoneNumber !== "" && errors.phone !== null)
-                      ) {
-                        const valid = validate({ phone: e.target.value })
-                        setErrors({ ...errors, phone: !valid.phone })
-                      }
-                    }}
-                    onBlur={e => {
-                      const valid = validate({ phone: phoneNumber })
-                      setErrors({ ...errors, phone: !valid.phone })
-                    }}
-                    error={errors.phone}
-                    helperText={errors.phone && "Invalid phone number"}
-                    variant="standard"
-                    placeholder="Phone Number"
-                    sx={sx.textField}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <div style={sx.phoneAdornment}>
-                            <PhoneAdornment
-                              color={theme.palette.secondary.main}
-                            />
-                          </div>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </Grid>
-                <Grid item sx={sx.multilineContainer}>
-                  <TextField
-                    value={message}
-                    onChange={e => {
-                      setMessage(e.target.value)
-                      if (
-                        errors.message ||
-                        (message !== "" && errors.message !== null)
-                      ) {
-                        const valid = validate({ message: e.target.value })
-                        setErrors({ ...errors, message: !valid.message })
-                      }
-                    }}
-                    onBlur={e => {
-                      const valid = validate({ message })
-                      setErrors({ ...errors, message: !valid.message })
-                    }}
-                    error={errors.message}
-                    helperText={errors.message && "You must enter a message"}
-                    variant="standard"
-                    multiline
-                    InputProps={{
-                      disableUnderline: true,
-                    }}
-                    rows={8}
-                    placeholder="Message"
-                    sx={{ ...sx.textField, ...sx.multiline }}
-                  />
-                </Grid>
+                    >
+                      <TextField
+                        value={values[field]}
+                        onChange={e => {
+                          setValues({ ...values, [field]: e.target.value })
+                          if (
+                            errors[field] ||
+                            (values[field] !== "" && errors[field] !== null)
+                          )
+                            validateHelper(e)
+                        }}
+                        onBlur={e => validateHelper(e)}
+                        error={errors[field]}
+                        helperText={errors[field] && fields[field].helperText}
+                        variant="standard"
+                        multiline={field === "message"}
+                        rows={field === "message" ? 8 : undefined}
+                        placeholder={fields[field].placeholder}
+                        sx={fieldSx}
+                        InputProps={{
+                          startAdornment:
+                            field !== "message" ? (
+                              <InputAdornment position="start">
+                                {fields[field].adornment}
+                              </InputAdornment>
+                            ) : undefined,
+                          disableUnderline: field === "message",
+                        }}
+                      />
+                    </Grid>
+                  )
+                })}
               </Grid>
             </Grid>
             <Grid
               component={Button}
-              disabled={
-                Object.values(errors).includes(true) ||
-                Object.values(errors).includes(null)
-              }
+              disabled={disabled}
               item
               sx={getButtonSx()}
             >
