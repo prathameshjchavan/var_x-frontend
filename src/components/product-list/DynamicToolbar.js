@@ -2,7 +2,7 @@ import { Grid, useTheme } from "@mui/material"
 import React from "react"
 import FunctionContainer from "./FunctionContainer"
 
-const DynamicToolbar = () => {
+const DynamicToolbar = ({ filterOptions }) => {
   const theme = useTheme()
 
   // sx prop
@@ -17,7 +17,7 @@ const DynamicToolbar = () => {
 
   return (
     <Grid item container sx={sx.toolbar} direction="column">
-      <FunctionContainer />
+      <FunctionContainer filterOptions={filterOptions} />
     </Grid>
   )
 }

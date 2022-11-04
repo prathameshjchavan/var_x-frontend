@@ -2,9 +2,10 @@ import { Grid, IconButton, useTheme } from "@mui/material"
 import React, { useState } from "react"
 import filter from "../../images/filter.svg"
 import sort from "../../images/sort.svg"
+import Filter from "./FIlter"
 import Sort from "./Sort"
 
-const FunctionContainer = () => {
+const FunctionContainer = ({ filterOptions }) => {
   const [option, setOption] = useState(null)
   const theme = useTheme()
 
@@ -43,6 +44,8 @@ const FunctionContainer = () => {
         )
       case "sort":
         return <Sort setOption={setOption} />
+      case "filter":
+        return <Filter setOptions={setOption} filterOptions={filterOptions} />
       default:
         return null
     }
