@@ -17,6 +17,9 @@ const Filter = ({ setOption, filterOptions }) => {
 
   // sx prop
   const sx = {
+    mainContainer: {
+      padding: "1rem 0",
+    },
     chip: {
       backgroundColor: theme.palette.secondary.main,
       "& .MuiChip-label": {
@@ -25,10 +28,24 @@ const Filter = ({ setOption, filterOptions }) => {
         fontWeight: 500,
       },
     },
+    checkbox: {
+      "& .MuiTypography-root": {
+        color: "#fff",
+      },
+      "& .MuiCheckbox-root": {
+        color: "#fff",
+      },
+    },
   }
 
   return (
-    <Grid item container justifyContent="space-between" alignItems="center">
+    <Grid
+      item
+      container
+      sx={sx.mainContainer}
+      justifyContent="space-between"
+      alignItems="center"
+    >
       <Grid item>
         <IconButton>
           <img src={filter} alt="filter" />
@@ -50,6 +67,7 @@ const Filter = ({ setOption, filterOptions }) => {
                         {filterOptions[option].map(({ label, checked }) => (
                           <FormControlLabel
                             key={label}
+                            sx={sx.checkbox}
                             label={label}
                             control={
                               <Checkbox checked={checked} name={label} />
