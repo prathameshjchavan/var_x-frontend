@@ -1,12 +1,11 @@
 import { Grid, IconButton, useTheme } from "@mui/material"
-import React, { useState } from "react"
+import React from "react"
 import filter from "../../images/filter.svg"
 import sort from "../../images/sort.svg"
 import Filter from "./FIlter"
 import Sort from "./Sort"
 
-const FunctionContainer = ({ filterOptions }) => {
-  const [option, setOption] = useState(null)
+const FunctionContainer = ({ filterOptions, option, setOption }) => {
   const theme = useTheme()
 
   // sx prop
@@ -15,7 +14,7 @@ const FunctionContainer = ({ filterOptions }) => {
       backgroundColor: theme.palette.primary.main,
       minHeight: "6rem",
       height: "auto",
-      borderRadius: "10px 10px 0 0",
+      borderRadius: option !== null ? "10px" : "10px 10px 0 0",
     },
   }
 

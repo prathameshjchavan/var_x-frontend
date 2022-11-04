@@ -15,6 +15,7 @@ const DescriptionContainer = ({ name, description }) => {
       backgroundSize: "cover",
       backgroundPosition: "center",
       backgroundRepeat: "no-repeat",
+      position: "relative",
     },
     description: {
       color: "#fff",
@@ -25,6 +26,11 @@ const DescriptionContainer = ({ name, description }) => {
       width: "60rem",
       borderRadius: "25px",
       padding: "1rem",
+    },
+    buttonContainer: {
+      position: "absolute",
+      right: "3rem",
+      bottom: "3rem",
     },
     button: {
       border: `2px solid ${theme.palette.primary.main} !important`,
@@ -57,7 +63,7 @@ const DescriptionContainer = ({ name, description }) => {
           {description}
         </Typography>
       </Grid>
-      <Grid item>
+      <Grid item sx={sx.buttonContainer}>
         <ButtonGroup>
           <Button onClick={() => setLayout("list")} sx={getButtonSx("list")}>
             <ListIcon color={layout === "list" ? "#fff" : undefined} />
