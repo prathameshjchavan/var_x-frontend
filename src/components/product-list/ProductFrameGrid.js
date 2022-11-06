@@ -1,11 +1,15 @@
 import { Grid, Typography } from "@mui/material"
-import React from "react"
+import React, { useState } from "react"
 import { styled } from "@mui/material/styles"
 import { useTheme } from "@mui/material/styles"
 import frame from "../../images/product-frame-grid.svg"
+import QuickView from "./QuickView"
 
 const ProductFrameGrid = ({ product, variant }) => {
   const theme = useTheme()
+  const [open, setOpen] = useState(false)
+  const imgURL = process.env.STRAPI_API_URL + variant.images[0].url
+  const productName = product.node.name.split(" ")[0]
 
   // sx prop
   const sx = {
@@ -39,19 +43,21 @@ const ProductFrameGrid = ({ product, variant }) => {
 
   return (
     <Grid item>
-      <Grid container direction="column">
+      <Grid container direction="column" onClick={() => setOpen(true)}>
         <Grid item sx={sx.frame}>
-          <Product
-            src={process.env.STRAPI_API_URL + variant.images[0].url}
-            alt={product.node.name}
-          />
+          <Product src={imgURL} alt={product.node.name} />
         </Grid>
         <Grid item sx={sx.title}>
-          <Typography variant="h5">
-            {product.node.name.split(" ")[0]}
-          </Typography>
+          <Typography variant="h5">{}</Typography>
         </Grid>
       </Grid>
+      <QuickView
+        open={open}
+        setOpen={setOpen}
+        url={imgURL}
+        name={productName}
+        price={variant.price}
+      />
     </Grid>
   )
 }

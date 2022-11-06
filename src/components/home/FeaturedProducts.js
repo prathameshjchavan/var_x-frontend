@@ -96,9 +96,6 @@ const FeaturedProducts = () => {
       textTransform: "none",
     },
     chip: {
-      "&.MuiChip-root": {
-        backgroundColor: theme.palette.secondary.main,
-      },
       "& .MuiChip-label": {
         ...theme.typography.h5,
       },

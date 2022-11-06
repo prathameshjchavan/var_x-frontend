@@ -6,27 +6,16 @@ import {
   FormGroup,
   Grid,
   IconButton,
-  useTheme,
 } from "@mui/material"
 import React from "react"
 import filter from "../../images/filter.svg"
 import close from "../../images/close-outline.svg"
 
 const Filter = ({ setOption, filterOptions }) => {
-  const theme = useTheme()
-
   // sx prop
   const sx = {
     mainContainer: {
       padding: "1rem 0",
-    },
-    chip: {
-      backgroundColor: theme.palette.secondary.main,
-      "& .MuiChip-label": {
-        ...theme.typography.body1,
-        color: "#fff",
-        fontWeight: 500,
-      },
     },
     checkbox: {
       "& .MuiTypography-root": {
@@ -59,7 +48,7 @@ const Filter = ({ setOption, filterOptions }) => {
               <Grid key={option} item>
                 <Grid container direction="column">
                   <Grid item>
-                    <Chip label={option} sx={sx.chip} />
+                    <Chip label={option} />
                   </Grid>
                   <Grid item>
                     <FormControl>
