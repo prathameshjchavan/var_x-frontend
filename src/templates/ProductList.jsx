@@ -2,11 +2,14 @@ import { Grid } from "@mui/material"
 import { graphql } from "gatsby"
 import React from "react"
 import DynamicToolbar from "../components/product-list/DynamicToolbar"
+import ListOfProducts from "../components/product-list/ListOfProducts"
 import Layout from "../components/ui/layout"
 
 const ProductList = ({
   pageContext: { filterOptions, name, description },
-  data,
+  data: {
+    allStrapiProduct: { edges: products },
+  },
 }) => {
   return (
     <Layout>
@@ -16,6 +19,7 @@ const ProductList = ({
           name={name}
           description={description}
         />
+        <ListOfProducts products={products} />
       </Grid>
     </Layout>
   )
