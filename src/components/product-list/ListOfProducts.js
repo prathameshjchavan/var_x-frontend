@@ -11,7 +11,7 @@ const ListOfProducts = ({ products }) => {
         marginRight: "calc((100% - (25rem * 4)) / 3)",
         marginBottom: "5rem",
       },
-      "& > :nth-child(4n)": {
+      "& > :nth-of-type(4n)": {
         marginRight: 0,
       },
     },

@@ -10,9 +10,11 @@ import { styled, useTheme } from "@mui/material/styles"
 import Rating from "../home/Rating"
 import frame from "../../images/selected-frame.svg"
 import explore from "../../images/explore.svg"
-import React from "react"
+import React, { useEffect, useState } from "react"
+import Sizes from "./Sizes"
 
-const QuickView = ({ open, setOpen, url, name, price }) => {
+const QuickView = ({ open, setOpen, url, name, price, product }) => {
+  const [sizes, setSizes] = useState([])
   const theme = useTheme()
 
   // sx prop
@@ -69,6 +71,20 @@ const QuickView = ({ open, setOpen, url, name, price }) => {
     marginLeft: "0.5rem",
   }))
 
+  useEffect(() => {
+    let productSizes = []
+
+    product.node.variants.forEach(({ size }) => {
+      if (!productSizes.includes(size)) {
+        productSizes.push(size)
+      }
+    })
+    productSizes.sort()
+    productSizes.reverse()
+
+    setSizes(productSizes)
+  }, [product, setSizes])
+
   return (
     <Dialog sx={sx.dialog} open={open} onClose={() => setOpen(false)}>
       <DialogContent sx={sx.selectedFrame}>
@@ -76,7 +92,7 @@ const QuickView = ({ open, setOpen, url, name, price }) => {
           <Grid item>
             <ProductImage src={url} alt="product" />
           </Grid>
-          <Grid item container sx={sx.toolbar}>
+          <Grid item container justifyContent="space-between" sx={sx.toolbar}>
             <Grid item>
               <Grid
                 container
@@ -106,6 +122,13 @@ const QuickView = ({ open, setOpen, url, name, price }) => {
             </Grid>
             <Grid item sx={sx.chipContainer}>
               <Chip label={`$${price}`} sx={sx.chip} />
+            </Grid>
+            <Grid item>
+              <Grid container direction="column">
+                <Grid item>
+                  <Sizes sizes={sizes} />
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
