@@ -12,9 +12,12 @@ import frame from "../../images/selected-frame.svg"
 import explore from "../../images/explore.svg"
 import React, { useEffect, useState } from "react"
 import Sizes from "./Sizes"
+import Swatches from "./Swatches"
 
 const QuickView = ({ open, setOpen, url, name, price, product }) => {
   const [sizes, setSizes] = useState([])
+  const [colors, setColors] = useState([])
+  const [selectedSize, setSelectedSize] = useState(null)
   const theme = useTheme()
 
   // sx prop
@@ -36,10 +39,10 @@ const QuickView = ({ open, setOpen, url, name, price, product }) => {
       backgroundColor: theme.palette.primary.main,
       height: "13rem",
       marginTop: "2rem",
+      padding: "0.5rem 1rem",
     },
     infoContainer: {
       height: "100%",
-      padding: "0.5rem 1rem",
     },
     stock: {
       color: "#fff",
@@ -73,17 +76,23 @@ const QuickView = ({ open, setOpen, url, name, price, product }) => {
 
   useEffect(() => {
     let productSizes = []
+    let productColors = []
 
-    product.node.variants.forEach(({ size }) => {
+    product.node.variants.forEach(({ size, color }) => {
       if (!productSizes.includes(size)) {
         productSizes.push(size)
+      }
+      if (!productColors.includes(color)) {
+        productColors.push(color)
       }
     })
     productSizes.sort()
     productSizes.reverse()
+    productColors.sort()
 
     setSizes(productSizes)
-  }, [product, setSizes])
+    setColors(productColors)
+  }, [product, setSizes, setColors])
 
   return (
     <Dialog sx={sx.dialog} open={open} onClose={() => setOpen(false)}>
@@ -125,9 +134,12 @@ const QuickView = ({ open, setOpen, url, name, price, product }) => {
             </Grid>
             <Grid item>
               <Grid container direction="column">
-                <Grid item>
-                  <Sizes sizes={sizes} />
-                </Grid>
+                <Sizes
+                  sizes={sizes}
+                  selectedSize={selectedSize}
+                  setSelectedSize={setSelectedSize}
+                />
+                <Swatches colors={colors} />
               </Grid>
             </Grid>
           </Grid>
