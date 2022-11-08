@@ -18,6 +18,7 @@ const QuickView = ({ open, setOpen, url, name, price, product }) => {
   const [sizes, setSizes] = useState([])
   const [colors, setColors] = useState([])
   const [selectedSize, setSelectedSize] = useState(null)
+  const [selectedColor, setSelectedColor] = useState(null)
   const theme = useTheme()
 
   // sx prop
@@ -139,7 +140,11 @@ const QuickView = ({ open, setOpen, url, name, price, product }) => {
                   selectedSize={selectedSize}
                   setSelectedSize={setSelectedSize}
                 />
-                <Swatches colors={colors} />
+                <Swatches
+                  colors={colors}
+                  selectedColor={selectedColor}
+                  setSelectedColor={setSelectedColor}
+                />
               </Grid>
             </Grid>
           </Grid>
