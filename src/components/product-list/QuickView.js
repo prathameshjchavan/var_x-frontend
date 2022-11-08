@@ -13,6 +13,7 @@ import explore from "../../images/explore.svg"
 import React, { useEffect, useState } from "react"
 import Sizes from "./Sizes"
 import Swatches from "./Swatches"
+import QtyButton from "./QtyButton"
 
 const QuickView = ({ open, setOpen, url, name, price, product }) => {
   const [sizes, setSizes] = useState([])
@@ -145,6 +146,7 @@ const QuickView = ({ open, setOpen, url, name, price, product }) => {
                   selectedColor={selectedColor}
                   setSelectedColor={setSelectedColor}
                 />
+                <QtyButton />
               </Grid>
             </Grid>
           </Grid>
