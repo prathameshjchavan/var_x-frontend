@@ -9,7 +9,6 @@ const QtyButton = () => {
   // sx prop
   const sx = {
     mainContainer: {
-      marginTop: "2.25rem",
       height: "3rem",
     },
     buttonContainer: {

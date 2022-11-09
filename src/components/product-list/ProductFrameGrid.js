@@ -5,7 +5,16 @@ import { useTheme } from "@mui/material/styles"
 import frame from "../../images/product-frame-grid.svg"
 import QuickView from "./QuickView"
 
-const ProductFrameGrid = ({ product, variant }) => {
+const ProductFrameGrid = ({
+  product,
+  variant,
+  sizes,
+  colors,
+  selectedColor,
+  selectedSize,
+  setSelectedColor,
+  setSelectedSize,
+}) => {
   const theme = useTheme()
   const [open, setOpen] = useState(false)
   const imgURL = process.env.STRAPI_API_URL + variant.images[0].url
@@ -58,6 +67,12 @@ const ProductFrameGrid = ({ product, variant }) => {
         name={productName}
         price={variant.price}
         product={product}
+        sizes={sizes}
+        colors={colors}
+        selectedColor={selectedColor}
+        selectedSize={selectedSize}
+        setSelectedColor={setSelectedColor}
+        setSelectedSize={setSelectedSize}
       />
     </Grid>
   )

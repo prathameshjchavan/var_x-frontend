@@ -10,16 +10,25 @@ import { styled, useTheme } from "@mui/material/styles"
 import Rating from "../home/Rating"
 import frame from "../../images/selected-frame.svg"
 import explore from "../../images/explore.svg"
-import React, { useEffect, useState } from "react"
+import React from "react"
 import Sizes from "./Sizes"
 import Swatches from "./Swatches"
 import QtyButton from "./QtyButton"
 
-const QuickView = ({ open, setOpen, url, name, price, product }) => {
-  const [sizes, setSizes] = useState([])
-  const [colors, setColors] = useState([])
-  const [selectedSize, setSelectedSize] = useState(null)
-  const [selectedColor, setSelectedColor] = useState(null)
+const QuickView = ({
+  open,
+  setOpen,
+  url,
+  name,
+  price,
+  product,
+  sizes,
+  colors,
+  selectedSize,
+  selectedColor,
+  setSelectedSize,
+  setSelectedColor,
+}) => {
   const theme = useTheme()
 
   // sx prop
@@ -64,6 +73,7 @@ const QuickView = ({ open, setOpen, url, name, price, product }) => {
     },
   }
 
+  // styled components
   const ProductImage = styled("img")(() => ({
     width: "40rem",
     height: "40rem",
@@ -76,25 +86,9 @@ const QuickView = ({ open, setOpen, url, name, price, product }) => {
     marginLeft: "0.5rem",
   }))
 
-  useEffect(() => {
-    let productSizes = []
-    let productColors = []
-
-    product.node.variants.forEach(({ size, color }) => {
-      if (!productSizes.includes(size)) {
-        productSizes.push(size)
-      }
-      if (!productColors.includes(color)) {
-        productColors.push(color)
-      }
-    })
-    productSizes.sort()
-    productSizes.reverse()
-    productColors.sort()
-
-    setSizes(productSizes)
-    setColors(productColors)
-  }, [product, setSizes, setColors])
+  const Spacer = styled("div")(() => ({
+    height: "2.25rem",
+  }))
 
   return (
     <Dialog sx={sx.dialog} open={open} onClose={() => setOpen(false)}>
@@ -146,6 +140,7 @@ const QuickView = ({ open, setOpen, url, name, price, product }) => {
                   selectedColor={selectedColor}
                   setSelectedColor={setSelectedColor}
                 />
+                <Spacer />
                 <QtyButton />
               </Grid>
             </Grid>
