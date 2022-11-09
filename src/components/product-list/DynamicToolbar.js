@@ -3,7 +3,13 @@ import React, { useState } from "react"
 import DescriptionContainer from "./DescriptionContainer"
 import FunctionContainer from "./FunctionContainer"
 
-const DynamicToolbar = ({ filterOptions, name, description }) => {
+const DynamicToolbar = ({
+  filterOptions,
+  name,
+  description,
+  layout,
+  setLayout,
+}) => {
   const [option, setOption] = useState(null)
   const theme = useTheme()
 
@@ -26,7 +32,12 @@ const DynamicToolbar = ({ filterOptions, name, description }) => {
         setOption={setOption}
       />
       {option === null && (
-        <DescriptionContainer name={name} description={description} />
+        <DescriptionContainer
+          name={name}
+          description={description}
+          layout={layout}
+          setLayout={setLayout}
+        />
       )}
     </Grid>
   )

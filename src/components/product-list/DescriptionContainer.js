@@ -1,11 +1,10 @@
 import { Button, ButtonGroup, Grid, Typography, useTheme } from "@mui/material"
-import React, { useState } from "react"
+import React from "react"
 import background from "../../images/toolbar-background.svg"
 import ListIcon from "../../images/List"
 import GridIcon from "../../images/Grid"
 
-const DescriptionContainer = ({ name, description }) => {
-  const [layout, setLayout] = useState("grid")
+const DescriptionContainer = ({ name, description, layout, setLayout }) => {
   const theme = useTheme()
 
   const sx = {

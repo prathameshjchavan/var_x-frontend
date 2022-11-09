@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material"
 import { graphql } from "gatsby"
-import React from "react"
+import React, { useState } from "react"
 import DynamicToolbar from "../components/product-list/DynamicToolbar"
 import ListOfProducts from "../components/product-list/ListOfProducts"
 import Layout from "../components/ui/layout"
@@ -11,6 +11,8 @@ const ProductList = ({
     allStrapiProduct: { edges: products },
   },
 }) => {
+  const [layout, setLayout] = useState("grid")
+
   return (
     <Layout>
       <Grid container direction="column" alignItems="center">
@@ -18,8 +20,10 @@ const ProductList = ({
           filterOptions={filterOptions}
           name={name}
           description={description}
+          layout={layout}
+          setLayout={setLayout}
         />
-        <ListOfProducts products={products} />
+        <ListOfProducts products={products} layout={layout} />
       </Grid>
     </Layout>
   )
