@@ -4,26 +4,27 @@ import ProductFrameGrid from "./ProductFrameGrid"
 import ProductFrameList from "./ProductFrameList"
 
 const ListOfProducts = ({ products, layout, page, productsPerPage }) => {
+  const content = useMemo(
+    () =>
+      products.reduce(
+        (contents, product, index) =>
+          contents.concat(
+            product.node.variants.map(variant => ({
+              productIndex: index,
+              variant,
+            }))
+          ),
+        []
+      ),
+    [products]
+  )
+
+  // helper function : JSX
   const FrameHelper = ({ Frame, product, variant }) => {
     const [sizes, setSizes] = useState([])
     const [colors, setColors] = useState([])
     const [selectedSize, setSelectedSize] = useState(null)
     const [selectedColor, setSelectedColor] = useState(null)
-    const content = useMemo(
-      () =>
-        products.reduce(
-          (contents, product, index) =>
-            contents.concat(
-              product.node.variants.map(variant => ({
-                product: index,
-                ...variant,
-              }))
-            ),
-          []
-        ),
-      []
-    )
-    console.log(content)
 
     useEffect(() => {
       let productSizes = []
@@ -75,16 +76,16 @@ const ListOfProducts = ({ products, layout, page, productsPerPage }) => {
 
   return (
     <Grid item container sx={sx.productsContainer}>
-      {products.map(product =>
-        product.node.variants.map(variant => (
+      {content
+        .slice((page - 1) * productsPerPage, page * productsPerPage)
+        .map(({ productIndex, variant }) => (
           <FrameHelper
             key={variant.id}
             Frame={layout === "grid" ? ProductFrameGrid : ProductFrameList}
             variant={variant}
-            product={product}
+            product={products[productIndex]}
           />
-        ))
-      )}
+        ))}
     </Grid>
   )
 }

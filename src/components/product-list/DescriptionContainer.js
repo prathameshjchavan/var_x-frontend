@@ -4,7 +4,13 @@ import background from "../../images/toolbar-background.svg"
 import ListIcon from "../../images/List"
 import GridIcon from "../../images/Grid"
 
-const DescriptionContainer = ({ name, description, layout, setLayout }) => {
+const DescriptionContainer = ({
+  name,
+  description,
+  layout,
+  setLayout,
+  setPage,
+}) => {
   const theme = useTheme()
 
   const sx = {
@@ -46,10 +52,16 @@ const DescriptionContainer = ({ name, description, layout, setLayout }) => {
     },
   }
 
+  // functions
   function getButtonSx(layoutProp) {
     const buttonSx = sx.button
 
     return layoutProp === layout ? { ...buttonSx, ...sx.selected } : buttonSx
+  }
+
+  const changeLayout = option => {
+    setPage(1)
+    setLayout(option)
   }
 
   return (
@@ -64,10 +76,10 @@ const DescriptionContainer = ({ name, description, layout, setLayout }) => {
       </Grid>
       <Grid item sx={sx.buttonContainer}>
         <ButtonGroup>
-          <Button onClick={() => setLayout("list")} sx={getButtonSx("list")}>
+          <Button onClick={() => changeLayout("list")} sx={getButtonSx("list")}>
             <ListIcon color={layout === "list" ? "#fff" : undefined} />
           </Button>
-          <Button onClick={() => setLayout("grid")} sx={getButtonSx("grid")}>
+          <Button onClick={() => changeLayout("grid")} sx={getButtonSx("grid")}>
             <GridIcon color={layout === "grid" ? "#fff" : undefined} />
           </Button>
         </ButtonGroup>

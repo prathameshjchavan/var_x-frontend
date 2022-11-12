@@ -1,4 +1,4 @@
-import { Fab, Grid, Pagination } from "@mui/material"
+import { Fab, Grid, Pagination, useTheme } from "@mui/material"
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward"
 import { graphql } from "gatsby"
 import React, { useState, useRef, useMemo } from "react"
@@ -14,6 +14,7 @@ const ProductList = ({
 }) => {
   const [layout, setLayout] = useState("grid")
   const [page, setPage] = useState(1)
+  const theme = useTheme()
   const scrollRef = useRef(null)
   const productsPerPage = layout === "grid" ? 16 : 6
   const numVariants = useMemo(
@@ -40,6 +41,24 @@ const ProductList = ({
       width: "4rem",
       height: "4rem",
     },
+    pagination: {
+      alignSelf: "flex-end",
+      marginRight: "2%",
+      marginTop: "-3rem",
+      marginBottom: "4rem",
+      "& .MuiPaginationItem-text": {
+        "&:not(.Mui-disabled)": {
+          fontFamily: "Montserrat",
+          fontSize: "2rem",
+        },
+        "&:not(.Mui-selected)": {
+          color: theme.palette.primary.main,
+        },
+      },
+      "& .Mui-selected": {
+        color: "#fff",
+      },
+    },
   }
 
   // functions
@@ -58,6 +77,7 @@ const ProductList = ({
           description={description}
           layout={layout}
           setLayout={setLayout}
+          setPage={setPage}
         />
         <ListOfProducts
           page={page}
@@ -66,8 +86,10 @@ const ProductList = ({
           layout={layout}
         />
         <Pagination
+          sx={sx.pagination}
           count={numPages}
           page={page}
+          color="primary"
           onChange={(e, n) => setPage(n)}
         />
         <Fab sx={sx.fab} color="primary" onClick={scroll}>
