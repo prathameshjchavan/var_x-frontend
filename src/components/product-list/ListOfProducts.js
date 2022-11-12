@@ -1,14 +1,29 @@
 import { Grid } from "@mui/material"
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useMemo } from "react"
 import ProductFrameGrid from "./ProductFrameGrid"
 import ProductFrameList from "./ProductFrameList"
 
-const ListOfProducts = ({ products, layout }) => {
+const ListOfProducts = ({ products, layout, page, productsPerPage }) => {
   const FrameHelper = ({ Frame, product, variant }) => {
     const [sizes, setSizes] = useState([])
     const [colors, setColors] = useState([])
     const [selectedSize, setSelectedSize] = useState(null)
     const [selectedColor, setSelectedColor] = useState(null)
+    const content = useMemo(
+      () =>
+        products.reduce(
+          (contents, product, index) =>
+            contents.concat(
+              product.node.variants.map(variant => ({
+                product: index,
+                ...variant,
+              }))
+            ),
+          []
+        ),
+      []
+    )
+    console.log(content)
 
     useEffect(() => {
       let productSizes = []

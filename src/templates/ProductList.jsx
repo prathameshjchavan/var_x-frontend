@@ -1,7 +1,7 @@
-import { Fab, Grid } from "@mui/material"
+import { Fab, Grid, Pagination } from "@mui/material"
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward"
 import { graphql } from "gatsby"
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useMemo } from "react"
 import DynamicToolbar from "../components/product-list/DynamicToolbar"
 import ListOfProducts from "../components/product-list/ListOfProducts"
 import Layout from "../components/ui/layout"
@@ -13,7 +13,18 @@ const ProductList = ({
   },
 }) => {
   const [layout, setLayout] = useState("grid")
+  const [page, setPage] = useState(1)
   const scrollRef = useRef(null)
+  const productsPerPage = layout === "grid" ? 16 : 6
+  const numVariants = useMemo(
+    () =>
+      products.reduce(
+        (count, product) => count + product.node.variants.length,
+        0
+      ),
+    [products]
+  )
+  const numPages = Math.ceil(numVariants / productsPerPage)
 
   // sx prop
   const sx = {
@@ -26,11 +37,12 @@ const ProductList = ({
       height: "5rem",
     },
     fabIcon: {
-      width: "5rem",
-      height: "5rem",
+      width: "4rem",
+      height: "4rem",
     },
   }
 
+  // functions
   const scroll = () => {
     scrollRef.current.scrollIntoView({ behavior: "smooth" })
   }
@@ -47,7 +59,17 @@ const ProductList = ({
           layout={layout}
           setLayout={setLayout}
         />
-        <ListOfProducts products={products} layout={layout} />
+        <ListOfProducts
+          page={page}
+          productsPerPage={productsPerPage}
+          products={products}
+          layout={layout}
+        />
+        <Pagination
+          count={numPages}
+          page={page}
+          onChange={(e, n) => setPage(n)}
+        />
         <Fab sx={sx.fab} color="primary" onClick={scroll}>
           <ArrowUpwardIcon sx={sx.fabIcon} />
         </Fab>
