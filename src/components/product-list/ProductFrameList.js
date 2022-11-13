@@ -7,6 +7,7 @@ import Sizes from "./Sizes"
 import Swatches from "./Swatches"
 import QtyButton from "./QtyButton"
 import { getColorIndex } from "../utils/productList"
+import { Link } from "gatsby"
 
 function ProductFrameList({
   product,
@@ -39,7 +40,9 @@ function ProductFrameList({
       width: "100%",
       padding: "1rem",
     },
+    productInfo: { textDecoration: "none" },
     chip: {
+      cursor: "pointer",
       "& .MuiChip-label": {
         fontSize: "2rem",
       },
@@ -68,7 +71,14 @@ function ProductFrameList({
         sx={sx.frame}
       >
         {images.map(image => (
-          <Grid key={image.url} item>
+          <Grid
+            key={image.url}
+            item
+            component={Link}
+            to={`/${product.node.category.name.toLowerCase()}/${product.node.name
+              .split(" ")[0]
+              .toLowerCase()}`}
+          >
             <ProductImage
               src={process.env.STRAPI_API_URL + image.url}
               alt={image.url}
@@ -84,7 +94,16 @@ function ProductFrameList({
         justifyContent="space-between"
         sx={sx.info}
       >
-        <Grid item container direction="column">
+        <Grid
+          item
+          container
+          sx={sx.productInfo}
+          component={Link}
+          to={`/${product.node.category.name.toLowerCase()}/${product.node.name
+            .split(" ")[0]
+            .toLowerCase()}`}
+          direction="column"
+        >
           <Grid item>
             <Typography variant="h4">
               {product.node.name.split(" ")[0]}

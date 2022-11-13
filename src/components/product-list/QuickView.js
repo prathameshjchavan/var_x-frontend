@@ -14,6 +14,7 @@ import React from "react"
 import Sizes from "./Sizes"
 import Swatches from "./Swatches"
 import QtyButton from "./QtyButton"
+import { Link } from "gatsby"
 
 const QuickView = ({
   open,
@@ -55,6 +56,7 @@ const QuickView = ({
     },
     infoContainer: {
       height: "100%",
+      textDecoration: "none",
     },
     stock: {
       color: "#fff",
@@ -94,16 +96,33 @@ const QuickView = ({
   }))
 
   return (
-    <Dialog sx={sx.dialog} open={open} onClose={() => setOpen(false)}>
+    <Dialog
+      sx={sx.dialog}
+      open={open}
+      onClose={() => {
+        setOpen(false)
+        setSelectedColor(null)
+      }}
+    >
       <DialogContent sx={sx.selectedFrame}>
         <Grid container direction="column" alignItems="center">
-          <Grid item>
+          <Grid
+            item
+            component={Link}
+            to={`/${product.node.category.name.toLowerCase()}/${product.node.name
+              .split(" ")[0]
+              .toLowerCase()}`}
+          >
             <ProductImage src={url} alt="product" />
           </Grid>
           <Grid item container justifyContent="space-between" sx={sx.toolbar}>
             <Grid item>
               <Grid
                 container
+                component={Link}
+                to={`/${product.node.category.name.toLowerCase()}/${product.node.name
+                  .split(" ")[0]
+                  .toLowerCase()}`}
                 direction="column"
                 sx={sx.infoContainer}
                 justifyContent="space-between"

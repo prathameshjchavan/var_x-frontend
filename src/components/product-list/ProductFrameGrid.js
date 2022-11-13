@@ -21,7 +21,7 @@ const ProductFrameGrid = ({
   const imageIndex = getColorIndex(product, selectedColor)
   const imgURL =
     process.env.STRAPI_API_URL +
-    (imageIndex !== -1
+    (imageIndex !== -1 && open
       ? product.node.variants[imageIndex].images[0].url
       : variant.images[0].url)
   const productName = product.node.name.split(" ")[0]
@@ -29,6 +29,7 @@ const ProductFrameGrid = ({
   // sx prop
   const sx = {
     productContainer: {
+      cursor: "pointer",
       visibility: open ? "hidden" : undefined,
     },
     frame: {
