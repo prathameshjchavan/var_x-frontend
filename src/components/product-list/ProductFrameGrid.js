@@ -4,7 +4,7 @@ import { styled } from "@mui/material/styles"
 import { useTheme } from "@mui/material/styles"
 import frame from "../../images/product-frame-grid.svg"
 import QuickView from "./QuickView"
-import { getColorIndex } from "../utils/productList"
+import { getColorIndex } from "../../utils/productList"
 
 const ProductFrameGrid = ({
   product,
@@ -18,7 +18,7 @@ const ProductFrameGrid = ({
 }) => {
   const theme = useTheme()
   const [open, setOpen] = useState(false)
-  const imageIndex = getColorIndex(product, selectedColor)
+  const imageIndex = getColorIndex(product, variant, selectedColor)
   const imgURL =
     process.env.STRAPI_API_URL +
     (imageIndex !== -1 && open

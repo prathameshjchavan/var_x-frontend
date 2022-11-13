@@ -6,7 +6,7 @@ import Rating from "../home/Rating"
 import Sizes from "./Sizes"
 import Swatches from "./Swatches"
 import QtyButton from "./QtyButton"
-import { getColorIndex } from "../utils/productList"
+import { getColorIndex } from "../../utils/productList"
 import { Link } from "gatsby"
 
 function ProductFrameList({
@@ -20,7 +20,7 @@ function ProductFrameList({
   setSelectedColor,
 }) {
   const theme = useTheme()
-  const imageIndex = getColorIndex(product, selectedColor)
+  const imageIndex = getColorIndex(product, variant, selectedColor)
   const images =
     imageIndex !== -1
       ? product.node.variants[imageIndex].images
