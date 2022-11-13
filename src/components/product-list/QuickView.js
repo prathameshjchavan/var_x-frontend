@@ -48,6 +48,7 @@ const QuickView = ({
     },
     toolbar: {
       backgroundColor: theme.palette.primary.main,
+      position: "relative",
       height: "13rem",
       marginTop: "2rem",
       padding: "0.5rem 1rem",
@@ -65,8 +66,10 @@ const QuickView = ({
       fontSize: "1.5rem",
     },
     chipContainer: {
-      display: "flex",
-      alignItems: "center",
+      position: "absolute",
+      alignSelf: "center",
+      width: "calc(100% - 2rem)",
+      textAlign: "center",
     },
     chip: {
       transform: "scale(1.5)",

@@ -33,6 +33,11 @@ function ProductFrameList({
       width: "100%",
       padding: "1rem",
     },
+    chip: {
+      "& .MuiChip-label": {
+        fontSize: "2rem",
+      },
+    },
     sizesAndSwatches: {
       maxWidth: "15rem !important",
     },
@@ -83,7 +88,7 @@ function ProductFrameList({
             <Rating number={3.5} />
           </Grid>
           <Grid item>
-            <Chip label={`$${variant.price}`} />
+            <Chip sx={sx.chip} label={`$${variant.price}`} />
           </Grid>
           <Grid item>
             <Typography variant="h3" sx={sx.stock}>

@@ -22,6 +22,9 @@ const ProductFrameGrid = ({
 
   // sx prop
   const sx = {
+    productContainer: {
+      visibility: open ? "hidden" : undefined,
+    },
     frame: {
       backgroundImage: `url(${frame})`,
       backgroundPosition: "center",
@@ -52,12 +55,17 @@ const ProductFrameGrid = ({
 
   return (
     <Grid item>
-      <Grid container direction="column" onClick={() => setOpen(true)}>
+      <Grid
+        container
+        direction="column"
+        sx={sx.productContainer}
+        onClick={() => setOpen(true)}
+      >
         <Grid item sx={sx.frame}>
           <Product src={imgURL} alt={product.node.name} />
         </Grid>
         <Grid item sx={sx.title}>
-          <Typography variant="h5">{}</Typography>
+          <Typography variant="h5">{productName}</Typography>
         </Grid>
       </Grid>
       <QuickView
