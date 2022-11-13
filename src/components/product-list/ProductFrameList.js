@@ -6,6 +6,7 @@ import Rating from "../home/Rating"
 import Sizes from "./Sizes"
 import Swatches from "./Swatches"
 import QtyButton from "./QtyButton"
+import { getColorIndex } from "../utils/productList"
 
 function ProductFrameList({
   product,
@@ -18,6 +19,11 @@ function ProductFrameList({
   setSelectedColor,
 }) {
   const theme = useTheme()
+  const imageIndex = getColorIndex(product, selectedColor)
+  const images =
+    imageIndex !== -1
+      ? product.node.variants[imageIndex].images
+      : variant.images
 
   const sx = {
     frame: {
@@ -61,7 +67,7 @@ function ProductFrameList({
         xs={9}
         sx={sx.frame}
       >
-        {variant.images.map(image => (
+        {images.map(image => (
           <Grid key={image.url} item>
             <ProductImage
               src={process.env.STRAPI_API_URL + image.url}
