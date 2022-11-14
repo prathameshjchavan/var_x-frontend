@@ -1,4 +1,11 @@
-import { Button, ButtonGroup, Grid, Typography, useTheme } from "@mui/material"
+import {
+  Button,
+  ButtonGroup,
+  Grid,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material"
 import React from "react"
 import background from "../../images/toolbar-background.svg"
 import ListIcon from "../../images/List"
@@ -12,6 +19,7 @@ const DescriptionContainer = ({
   setPage,
 }) => {
   const theme = useTheme()
+  const matchesVertical = useMediaQuery("(max-width: 1100px)")
 
   const sx = {
     mainContainer: {
@@ -21,6 +29,9 @@ const DescriptionContainer = ({
       backgroundPosition: "center",
       backgroundRepeat: "no-repeat",
       position: "relative",
+      [theme.breakpoints.down("sm")]: {
+        padding: "3rem 0",
+      },
     },
     description: {
       color: "#fff",
@@ -28,14 +39,22 @@ const DescriptionContainer = ({
     descriptionContainer: {
       backgroundColor: theme.palette.primary.main,
       height: "15rem",
-      width: "60rem",
+      width: matchesVertical ? "100%" : "60%",
       borderRadius: "25px",
       padding: "1rem",
+      [theme.breakpoints.down("sm")]: {
+        borderRadius: 0,
+      },
     },
     buttonContainer: {
-      position: "absolute",
-      right: "3rem",
-      bottom: "3rem",
+      position: matchesVertical ? "relative" : "absolute",
+      right: matchesVertical ? undefined : "3rem",
+      bottom: matchesVertical ? undefined : "3rem",
+      alignSelf: matchesVertical ? "flex-end" : undefined,
+      marginTop: matchesVertical ? "3rem" : 0,
+      [theme.breakpoints.down("sm")]: {
+        marginRight: "1.5rem",
+      },
     },
     button: {
       border: `2px solid ${theme.palette.primary.main} !important`,
@@ -65,7 +84,14 @@ const DescriptionContainer = ({
   }
 
   return (
-    <Grid item container sx={sx.mainContainer} justifyContent="center">
+    <Grid
+      item
+      container
+      sx={sx.mainContainer}
+      direction={matchesVertical ? "column" : "row"}
+      alignItems={matchesVertical ? "center" : undefined}
+      justifyContent="center"
+    >
       <Grid item align="center" sx={sx.descriptionContainer}>
         <Typography variant="h4" paragraph gutterBottom>
           {name}

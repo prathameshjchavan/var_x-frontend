@@ -1,9 +1,10 @@
-import { Chip, Grid, IconButton } from "@mui/material"
+import { Chip, Grid, IconButton, useMediaQuery } from "@mui/material"
 import React from "react"
 import sort from "../../images/sort.svg"
 import close from "../../images/close-outline.svg"
 
 const Sort = ({ setOption }) => {
+  const matchesVertical = useMediaQuery("(max-width: 1100px)")
   const sortOptions = [
     { label: "A-Z" },
     { label: "Z-A" },
@@ -13,6 +14,13 @@ const Sort = ({ setOption }) => {
     { label: "PRICE ↓" },
     { label: "REVIEWS" },
   ]
+
+  // sx prop
+  const sx = {
+    chipContainer: {
+      margin: matchesVertical && "0.5rem",
+    },
+  }
 
   return (
     <Grid item container justifyContent="space-between" alignItems="center">
@@ -24,7 +32,7 @@ const Sort = ({ setOption }) => {
       <Grid item xs>
         <Grid container justifyContent="space-around">
           {sortOptions.map(({ label }) => (
-            <Grid key={label} item>
+            <Grid key={label} sx={sx.chipContainer} item>
               <Chip label={label} />
             </Grid>
           ))}
