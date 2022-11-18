@@ -3,13 +3,20 @@ import React, { useState, useEffect, useMemo } from "react"
 import ProductFrameGrid from "./ProductFrameGrid"
 import ProductFrameList from "./ProductFrameList"
 
-const ListOfProducts = ({ products, layout, page, productsPerPage }) => {
+const ListOfProducts = ({
+  products,
+  filterOptions,
+  layout,
+  page,
+  productsPerPage,
+}) => {
   const theme = useTheme()
   const occupy3Items = useMediaQuery(theme.breakpoints.down("xxl"))
   const occupy2Items = useMediaQuery("(width <= 1370px)")
   const occupy1Item = useMediaQuery(theme.breakpoints.down("md"))
   const gridRowItems = occupy1Item ? 1 : occupy2Items ? 2 : occupy3Items ? 3 : 4
-  const content = useMemo(
+  const [isFiltered, setIsFiltered] = useState(false)
+  const unfilteredProducts = useMemo(
     () =>
       products.reduce(
         (contents, product, index) =>
@@ -22,6 +29,31 @@ const ListOfProducts = ({ products, layout, page, productsPerPage }) => {
         []
       ),
     [products]
+  )
+  const filteredProducts = useMemo(
+    () =>
+      unfilteredProducts.filter(item => {
+        let valid = false
+
+        Object.keys(filterOptions)
+          .filter(option => filterOptions[option] !== null)
+          .forEach(option => {
+            filterOptions[option].forEach(value => {
+              if (value.checked) {
+                if (item.variant[option.toLowerCase()] === value.label) {
+                  valid = true
+                }
+              }
+            })
+          })
+
+        return valid
+      }),
+    [unfilteredProducts, filterOptions]
+  )
+  const content = useMemo(
+    () => (isFiltered ? filteredProducts : unfilteredProducts),
+    [isFiltered, filteredProducts, unfilteredProducts]
   )
 
   // helper function : JSX
@@ -81,6 +113,26 @@ const ListOfProducts = ({ products, layout, page, productsPerPage }) => {
       },
     },
   }
+
+  useEffect(() => {
+    let filtered = false
+
+    Object.keys(filterOptions)
+      .filter(option => filterOptions[option] !== null)
+      .some(option => {
+        filterOptions[option].some(value => {
+          if (value.checked) {
+            setIsFiltered(true)
+            filtered = true
+            return true
+          }
+          return false
+        })
+        return filtered === true
+      })
+
+    if (!filtered) setIsFiltered(false)
+  }, [filterOptions])
 
   return (
     <Grid

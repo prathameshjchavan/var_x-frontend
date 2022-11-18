@@ -86,6 +86,7 @@ const ProductList = ({
         />
         <ListOfProducts
           page={page}
+          filterOptions={filterOptions}
           productsPerPage={productsPerPage}
           products={products}
           layout={layout}
