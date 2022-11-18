@@ -5,6 +5,7 @@ import FunctionContainer from "./FunctionContainer"
 
 const DynamicToolbar = ({
   filterOptions,
+  setFilterOptions,
   name,
   description,
   layout,
@@ -29,6 +30,7 @@ const DynamicToolbar = ({
     <Grid item container sx={sx.toolbar} direction="column">
       <FunctionContainer
         filterOptions={filterOptions}
+        setFilterOptions={setFilterOptions}
         option={option}
         setOption={setOption}
       />

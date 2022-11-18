@@ -13,7 +13,7 @@ import React from "react"
 import filter from "../../images/filter.svg"
 import close from "../../images/close-outline.svg"
 
-const Filter = ({ setOption, filterOptions }) => {
+const Filter = ({ setOption, filterOptions, setFilterOptions }) => {
   const theme = useTheme()
   const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
 
@@ -32,7 +32,18 @@ const Filter = ({ setOption, filterOptions }) => {
       "& .MuiCheckbox-root": {
         color: "#fff",
       },
+      "& .Mui-checked": {
+        color: `${theme.palette.secondary.main} !important`,
+      },
     },
+  }
+
+  const handleFilter = (option, i) => {
+    const newFilters = { ...filterOptions }
+
+    newFilters[option][i].checked = !newFilters[option][i].checked
+
+    setFilterOptions(newFilters)
   }
 
   return (
@@ -70,16 +81,22 @@ const Filter = ({ setOption, filterOptions }) => {
                   <Grid item>
                     <FormControl>
                       <FormGroup>
-                        {filterOptions[option].map(({ label, checked }) => (
-                          <FormControlLabel
-                            key={label}
-                            sx={sx.checkbox}
-                            label={label}
-                            control={
-                              <Checkbox checked={checked} name={label} />
-                            }
-                          />
-                        ))}
+                        {filterOptions[option].map(
+                          ({ label, checked }, index) => (
+                            <FormControlLabel
+                              key={label}
+                              sx={sx.checkbox}
+                              label={label}
+                              control={
+                                <Checkbox
+                                  checked={checked}
+                                  onChange={() => handleFilter(option, index)}
+                                  name={label}
+                                />
+                              }
+                            />
+                          )
+                        )}
                       </FormGroup>
                     </FormControl>
                   </Grid>

@@ -5,7 +5,12 @@ import sort from "../../images/sort.svg"
 import Filter from "./FIlter"
 import Sort from "./Sort"
 
-const FunctionContainer = ({ filterOptions, option, setOption }) => {
+const FunctionContainer = ({
+  filterOptions,
+  setFilterOptions,
+  option,
+  setOption,
+}) => {
   const theme = useTheme()
 
   // sx prop
@@ -24,7 +29,13 @@ const FunctionContainer = ({ filterOptions, option, setOption }) => {
       case "sort":
         return <Sort setOption={setOption} />
       case "filter":
-        return <Filter setOption={setOption} filterOptions={filterOptions} />
+        return (
+          <Filter
+            setOption={setOption}
+            setFilterOptions={setFilterOptions}
+            filterOptions={filterOptions}
+          />
+        )
       default:
         const items = [
           { icon: filter, alt: "filter" },
