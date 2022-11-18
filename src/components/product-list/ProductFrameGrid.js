@@ -44,6 +44,10 @@ const ProductFrameGrid = ({
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
+      [theme.breakpoints.down("sm")]: {
+        height: "20rem",
+        width: "20rem",
+      },
     },
     title: {
       backgroundColor: theme.palette.primary.main,
@@ -53,6 +57,9 @@ const ProductFrameGrid = ({
       justifyContent: "center",
       alignItems: "center",
       marginTop: "-0.2rem",
+      [theme.breakpoints.down("sm")]: {
+        width: "20rem",
+      },
     },
   }
 
@@ -60,6 +67,10 @@ const ProductFrameGrid = ({
   const Product = styled("img")(() => ({
     height: "20rem",
     width: "20rem",
+    [theme.breakpoints.down("sm")]: {
+      height: "15rem",
+      width: "15rem",
+    },
   }))
 
   useEffect(() => {

@@ -6,18 +6,26 @@ import {
   FormGroup,
   Grid,
   IconButton,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material"
 import React from "react"
 import filter from "../../images/filter.svg"
 import close from "../../images/close-outline.svg"
 
 const Filter = ({ setOption, filterOptions }) => {
+  const theme = useTheme()
+  const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
+
   // sx prop
   const sx = {
     mainContainer: {
       padding: "1rem 0",
     },
     checkbox: {
+      [theme.breakpoints.down("sm")]: {
+        margin: 0,
+      },
       "& .MuiTypography-root": {
         color: "#fff",
       },
@@ -41,12 +49,21 @@ const Filter = ({ setOption, filterOptions }) => {
         </IconButton>
       </Grid>
       <Grid item xs>
-        <Grid container justifyContent="space-around">
+        <Grid
+          container
+          justifyContent="space-around"
+          direction={matchesSM ? "column" : "row"}
+          spacing={matchesSM ? "2rem" : undefined}
+        >
           {Object.keys(filterOptions)
             .filter(option => filterOptions[option] !== null)
             .map(option => (
               <Grid key={option} item>
-                <Grid container direction="column">
+                <Grid
+                  container
+                  direction="column"
+                  alignItems={matchesSM ? "center" : undefined}
+                >
                   <Grid item>
                     <Chip label={option} />
                   </Grid>

@@ -5,6 +5,7 @@ import close from "../../images/close-outline.svg"
 
 const Sort = ({ setOption }) => {
   const matchesVertical = useMediaQuery("(max-width: 1100px)")
+  const matchesSM = useMediaQuery(theme => theme.breakpoints.down("sm"))
   const sortOptions = [
     { label: "A-Z" },
     { label: "Z-A" },
@@ -30,7 +31,12 @@ const Sort = ({ setOption }) => {
         </IconButton>
       </Grid>
       <Grid item xs>
-        <Grid container justifyContent="space-around">
+        <Grid
+          container
+          direction={matchesSM ? "column" : "row"}
+          alignItems={matchesSM ? "center" : undefined}
+          justifyContent="space-around"
+        >
           {sortOptions.map(({ label }) => (
             <Grid key={label} sx={sx.chipContainer} item>
               <Chip label={label} />
