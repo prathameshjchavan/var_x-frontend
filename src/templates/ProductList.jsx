@@ -56,7 +56,10 @@ const ProductList = ({
         },
       },
       "& .Mui-selected": {
-        color: "#fff",
+        color: "#fff !important",
+      },
+      "@media (900px <= width <= 1200px)": {
+        marginTop: "1rem",
       },
     },
   }

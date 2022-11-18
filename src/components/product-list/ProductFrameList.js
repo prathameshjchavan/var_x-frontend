@@ -39,6 +39,12 @@ function ProductFrameList({
       height: "100%",
       width: "100%",
       padding: "1rem",
+      [theme.breakpoints.down("lg")]: {
+        height: "50%",
+      },
+      [theme.breakpoints.down("md")]: {
+        height: "26rem",
+      },
     },
     productInfo: { textDecoration: "none" },
     chip: {
@@ -67,7 +73,7 @@ function ProductFrameList({
         container
         alignItems="center"
         justifyContent="space-around"
-        xs={9}
+        lg={9}
         sx={sx.frame}
       >
         {images.map(image => (
@@ -89,7 +95,7 @@ function ProductFrameList({
       <Grid
         item
         container
-        xs={3}
+        lg={3}
         direction="column"
         justifyContent="space-between"
         sx={sx.info}
