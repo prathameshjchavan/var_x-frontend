@@ -1,9 +1,14 @@
-import { Grid } from "@mui/material"
+import { Grid, useMediaQuery, useTheme } from "@mui/material"
 import React, { useState, useEffect, useMemo } from "react"
 import ProductFrameGrid from "./ProductFrameGrid"
 import ProductFrameList from "./ProductFrameList"
 
 const ListOfProducts = ({ products, layout, page, productsPerPage }) => {
+  const theme = useTheme()
+  const occupy3Items = useMediaQuery(theme.breakpoints.down("xxl"))
+  const occupy2Items = useMediaQuery("(width <= 1370px)")
+  const occupy1Item = useMediaQuery(theme.breakpoints.down("md"))
+  const gridRowItems = occupy1Item ? 1 : occupy2Items ? 2 : occupy3Items ? 3 : 4
   const content = useMemo(
     () =>
       products.reduce(
@@ -65,17 +70,26 @@ const ListOfProducts = ({ products, layout, page, productsPerPage }) => {
     productsContainer: {
       width: "95%",
       "& > *": {
-        marginRight: layout === "grid" ? "calc((100% - (25rem * 4)) / 3)" : 0,
+        marginRight:
+          layout === "grid"
+            ? `calc((100% - (25rem * ${gridRowItems})) / ${gridRowItems - 1})`
+            : 0,
         marginBottom: "5rem !important",
       },
-      "& > :nth-of-type(4n)": {
+      [`& > :nth-of-type(${gridRowItems}n)`]: {
         marginRight: 0,
       },
     },
   }
 
   return (
-    <Grid item container sx={sx.productsContainer}>
+    <Grid
+      item
+      container
+      direction={occupy1Item ? "column" : "row"}
+      alignItems={occupy1Item ? "center" : undefined}
+      sx={sx.productsContainer}
+    >
       {content
         .slice((page - 1) * productsPerPage, page * productsPerPage)
         .map(({ productIndex, variant }) => (

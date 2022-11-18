@@ -1,10 +1,11 @@
-import { Grid, Typography } from "@mui/material"
-import React, { useState } from "react"
+import { Grid, Typography, useMediaQuery } from "@mui/material"
+import React, { useEffect, useState } from "react"
 import { styled } from "@mui/material/styles"
 import { useTheme } from "@mui/material/styles"
 import frame from "../../images/product-frame-grid.svg"
 import QuickView from "./QuickView"
 import { getColorIndex } from "../../utils/productList"
+import { navigate } from "gatsby"
 
 const ProductFrameGrid = ({
   product,
@@ -17,6 +18,7 @@ const ProductFrameGrid = ({
   setSelectedSize,
 }) => {
   const theme = useTheme()
+  const matchesXL = useMediaQuery(theme.breakpoints.down("xl"))
   const [open, setOpen] = useState(false)
   const imageIndex = getColorIndex(product, variant, selectedColor)
   const imgURL =
@@ -60,13 +62,27 @@ const ProductFrameGrid = ({
     width: "20rem",
   }))
 
+  useEffect(() => {
+    if (matchesXL && open) {
+      setOpen(false)
+    }
+  }, [matchesXL, open])
+
   return (
     <Grid item>
       <Grid
         container
         direction="column"
         sx={sx.productContainer}
-        onClick={() => setOpen(true)}
+        onClick={() =>
+          matchesXL
+            ? navigate(
+                `/${product.node.category.name.toLowerCase()}/${product.node.name
+                  .split(" ")[0]
+                  .toLowerCase()}`
+              )
+            : setOpen(true)
+        }
       >
         <Grid item sx={sx.frame}>
           <Product src={imgURL} alt={product.node.name} />
