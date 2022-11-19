@@ -1,7 +1,7 @@
 import { Fab, Grid, Pagination, useTheme } from "@mui/material"
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward"
 import { graphql } from "gatsby"
-import React, { useState, useRef, useMemo } from "react"
+import React, { useState, useEffect, useRef, useMemo, useContext } from "react"
 import DynamicToolbar from "../components/product-list/DynamicToolbar"
 import ListOfProducts from "../components/product-list/ListOfProducts"
 import Layout from "../components/ui/layout"
@@ -66,9 +66,13 @@ const ProductList = ({
   }
 
   // functions
-  const scroll = () => {
+  const scroll = useContext(() => {
     scrollRef.current.scrollIntoView({ behavior: "smooth" })
-  }
+  })
+
+  useEffect(() => {
+    setPage(1)
+  }, [filterOptions, setPage])
 
   return (
     <Layout>
@@ -122,6 +126,7 @@ export const query = graphql`
             size
             price
             style
+            colorLabel
             images {
               url
             }

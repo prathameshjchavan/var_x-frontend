@@ -15,8 +15,7 @@ const ListOfProducts = ({
   const occupy2Items = useMediaQuery("(width <= 1370px)")
   const occupy1Item = useMediaQuery(theme.breakpoints.down("md"))
   const gridRowItems = occupy1Item ? 1 : occupy2Items ? 2 : occupy3Items ? 3 : 4
-  const [isFiltered, setIsFiltered] = useState(false)
-  const unfilteredProducts = useMemo(
+  let content = useMemo(
     () =>
       products.reduce(
         (contents, product, index) =>
@@ -30,31 +29,9 @@ const ListOfProducts = ({
       ),
     [products]
   )
-  const filteredProducts = useMemo(
-    () =>
-      unfilteredProducts.filter(item => {
-        let valid = false
-
-        Object.keys(filterOptions)
-          .filter(option => filterOptions[option] !== null)
-          .forEach(option => {
-            filterOptions[option].forEach(value => {
-              if (value.checked) {
-                if (item.variant[option.toLowerCase()] === value.label) {
-                  valid = true
-                }
-              }
-            })
-          })
-
-        return valid
-      }),
-    [unfilteredProducts, filterOptions]
-  )
-  const content = useMemo(
-    () => (isFiltered ? filteredProducts : unfilteredProducts),
-    [isFiltered, filteredProducts, unfilteredProducts]
-  )
+  let filters = {}
+  let isFiltered = false
+  let filteredProducts = []
 
   // helper function : JSX
   const FrameHelper = ({ Frame, product, variant }) => {
@@ -114,25 +91,62 @@ const ListOfProducts = ({
     },
   }
 
-  useEffect(() => {
-    let filtered = false
+  Object.keys(filterOptions)
+    .filter(option => filterOptions[option] !== null)
+    .forEach(option => {
+      filterOptions[option].forEach(value => {
+        if (value.checked) {
+          isFiltered = true
 
-    Object.keys(filterOptions)
-      .filter(option => filterOptions[option] !== null)
-      .some(option => {
-        filterOptions[option].some(value => {
-          if (value.checked) {
-            setIsFiltered(true)
-            filtered = true
+          if (filters[option] === undefined) {
+            filters[option] = []
+          }
+
+          if (!filters[option].includes(value)) {
+            filters[option].push(value)
+          }
+
+          content.forEach(item => {
+            if (option === "Color") {
+              if (
+                item.variant.colorLabel === value.label &&
+                !filteredProducts.includes(item)
+              ) {
+                filteredProducts.push(item)
+              }
+            } else if (
+              item.variant[option.toLowerCase()] === value.label &&
+              !filteredProducts.includes(item)
+            ) {
+              filteredProducts.push(item)
+            }
+          })
+        }
+      })
+    })
+
+  Object.keys(filters).forEach(filter => {
+    filteredProducts = filteredProducts.filter(item => {
+      let valid = false
+
+      filters[filter].some(value => {
+        if (filter === "Color") {
+          if (item.variant.colorLabel === value.label) {
+            valid = true
             return true
           }
-          return false
-        })
-        return filtered === true
+        } else if (item.variant[filter.toLowerCase()] === value.label) {
+          valid = true
+          return true
+        }
+        return false
       })
 
-    if (!filtered) setIsFiltered(false)
-  }, [filterOptions])
+      return valid
+    })
+  })
+
+  if (isFiltered) content = filteredProducts
 
   return (
     <Grid
