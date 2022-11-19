@@ -11,13 +11,7 @@ import background from "../../images/toolbar-background.svg"
 import ListIcon from "../../images/List"
 import GridIcon from "../../images/Grid"
 
-const DescriptionContainer = ({
-  name,
-  description,
-  layout,
-  setLayout,
-  setPage,
-}) => {
+const DescriptionContainer = ({ name, description, layout, setLayout }) => {
   const theme = useTheme()
   const matchesVertical = useMediaQuery("(max-width: 1100px)")
 
@@ -79,7 +73,6 @@ const DescriptionContainer = ({
   }
 
   const changeLayout = option => {
-    setPage(1)
     setLayout(option)
   }
 

@@ -18,7 +18,7 @@ const ProductFrameGrid = ({
   setSelectedSize,
 }) => {
   const theme = useTheme()
-  const matchesXL = useMediaQuery(theme.breakpoints.down("xl"))
+  const matchesXL = useMediaQuery("(max-width: 2300px)")
   const [open, setOpen] = useState(false)
   const imageIndex = getColorIndex(product, variant, selectedColor)
   const imgURL =

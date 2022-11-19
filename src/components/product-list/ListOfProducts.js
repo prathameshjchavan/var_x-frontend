@@ -1,11 +1,11 @@
 import { Grid, useMediaQuery, useTheme } from "@mui/material"
-import React, { useState, useEffect, useMemo } from "react"
+import React, { useState, useEffect } from "react"
 import ProductFrameGrid from "./ProductFrameGrid"
 import ProductFrameList from "./ProductFrameList"
 
 const ListOfProducts = ({
   products,
-  filterOptions,
+  content,
   layout,
   page,
   productsPerPage,
@@ -15,23 +15,6 @@ const ListOfProducts = ({
   const occupy2Items = useMediaQuery("(width <= 1370px)")
   const occupy1Item = useMediaQuery(theme.breakpoints.down("md"))
   const gridRowItems = occupy1Item ? 1 : occupy2Items ? 2 : occupy3Items ? 3 : 4
-  let content = useMemo(
-    () =>
-      products.reduce(
-        (contents, product, index) =>
-          contents.concat(
-            product.node.variants.map(variant => ({
-              productIndex: index,
-              variant,
-            }))
-          ),
-        []
-      ),
-    [products]
-  )
-  let filters = {}
-  let isFiltered = false
-  let filteredProducts = []
 
   // helper function : JSX
   const FrameHelper = ({ Frame, product, variant }) => {
@@ -90,63 +73,6 @@ const ListOfProducts = ({
       },
     },
   }
-
-  Object.keys(filterOptions)
-    .filter(option => filterOptions[option] !== null)
-    .forEach(option => {
-      filterOptions[option].forEach(value => {
-        if (value.checked) {
-          isFiltered = true
-
-          if (filters[option] === undefined) {
-            filters[option] = []
-          }
-
-          if (!filters[option].includes(value)) {
-            filters[option].push(value)
-          }
-
-          content.forEach(item => {
-            if (option === "Color") {
-              if (
-                item.variant.colorLabel === value.label &&
-                !filteredProducts.includes(item)
-              ) {
-                filteredProducts.push(item)
-              }
-            } else if (
-              item.variant[option.toLowerCase()] === value.label &&
-              !filteredProducts.includes(item)
-            ) {
-              filteredProducts.push(item)
-            }
-          })
-        }
-      })
-    })
-
-  Object.keys(filters).forEach(filter => {
-    filteredProducts = filteredProducts.filter(item => {
-      let valid = false
-
-      filters[filter].some(value => {
-        if (filter === "Color") {
-          if (item.variant.colorLabel === value.label) {
-            valid = true
-            return true
-          }
-        } else if (item.variant[filter.toLowerCase()] === value.label) {
-          valid = true
-          return true
-        }
-        return false
-      })
-
-      return valid
-    })
-  })
-
-  if (isFiltered) content = filteredProducts
 
   return (
     <Grid

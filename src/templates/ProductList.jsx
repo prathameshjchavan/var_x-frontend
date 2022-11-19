@@ -1,7 +1,7 @@
 import { Fab, Grid, Pagination, useTheme } from "@mui/material"
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward"
 import { graphql } from "gatsby"
-import React, { useState, useEffect, useRef, useMemo, useContext } from "react"
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react"
 import DynamicToolbar from "../components/product-list/DynamicToolbar"
 import ListOfProducts from "../components/product-list/ListOfProducts"
 import Layout from "../components/ui/layout"
@@ -18,15 +18,6 @@ const ProductList = ({
   const theme = useTheme()
   const scrollRef = useRef(null)
   const productsPerPage = layout === "grid" ? 16 : 6
-  const numVariants = useMemo(
-    () =>
-      products.reduce(
-        (count, product) => count + product.node.variants.length,
-        0
-      ),
-    [products]
-  )
-  const numPages = Math.ceil(numVariants / productsPerPage)
 
   // sx prop
   const sx = {
@@ -65,14 +56,92 @@ const ProductList = ({
     },
   }
 
-  // functions
-  const scroll = useContext(() => {
-    scrollRef.current.scrollIntoView({ behavior: "smooth" })
+  let content = useMemo(
+    () =>
+      products.reduce(
+        (contents, product, index) =>
+          contents.concat(
+            product.node.variants.map(variant => ({
+              productIndex: index,
+              variant,
+            }))
+          ),
+        []
+      ),
+    [products]
+  )
+  let filters = {}
+  let isFiltered = false
+  let filteredProducts = content
+
+  // Getting the active filters
+  Object.keys(filterOptions)
+    .filter(option => filterOptions[option] !== null)
+    .forEach(option => {
+      filterOptions[option].forEach(value => {
+        if (value.checked) {
+          isFiltered = true
+
+          if (filters[option] === undefined) {
+            filters[option] = []
+          }
+
+          if (!filters[option].includes(value)) {
+            filters[option].push(value)
+          }
+
+          // content.forEach(item => {
+          //   if (option === "Color") {
+          //     if (
+          //       item.variant.colorLabel === value.label &&
+          //       !filteredProducts.includes(item)
+          //     ) {
+          //       filteredProducts.push(item)
+          //     }
+          //   } else if (
+          //     item.variant[option.toLowerCase()] === value.label &&
+          //     !filteredProducts.includes(item)
+          //   ) {
+          //     filteredProducts.push(item)
+          //   }
+          // })
+        }
+      })
+    })
+
+  // Filtering products
+  Object.keys(filters).forEach(filter => {
+    filteredProducts = filteredProducts.filter(item => {
+      let valid = false
+
+      filters[filter].some(value => {
+        if (filter === "Color") {
+          if (item.variant.colorLabel === value.label) {
+            valid = true
+            return true
+          }
+        } else if (item.variant[filter.toLowerCase()] === value.label) {
+          valid = true
+          return true
+        }
+        return false
+      })
+
+      return valid
+    })
   })
+
+  if (isFiltered) content = filteredProducts
+  const numPages = Math.ceil(content.length / productsPerPage)
+
+  // functions
+  const scroll = useCallback(() => {
+    scrollRef.current.scrollIntoView({ behavior: "smooth" })
+  }, [])
 
   useEffect(() => {
     setPage(1)
-  }, [filterOptions, setPage])
+  }, [filterOptions, layout, setPage])
 
   return (
     <Layout>
@@ -86,13 +155,12 @@ const ProductList = ({
           description={description}
           layout={layout}
           setLayout={setLayout}
-          setPage={setPage}
         />
         <ListOfProducts
           page={page}
-          filterOptions={filterOptions}
           productsPerPage={productsPerPage}
           products={products}
+          content={content}
           layout={layout}
         />
         <Pagination
