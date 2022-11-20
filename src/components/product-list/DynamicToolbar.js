@@ -10,6 +10,8 @@ const DynamicToolbar = ({
   description,
   layout,
   setLayout,
+  sortOptions,
+  setSortOptions,
 }) => {
   const [option, setOption] = useState(null)
   const theme = useTheme()
@@ -32,6 +34,8 @@ const DynamicToolbar = ({
         setFilterOptions={setFilterOptions}
         option={option}
         setOption={setOption}
+        sortOptions={sortOptions}
+        setSortOptions={setSortOptions}
       />
       {option === null && (
         <DescriptionContainer

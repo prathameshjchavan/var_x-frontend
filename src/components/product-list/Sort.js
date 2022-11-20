@@ -1,26 +1,33 @@
-import { Chip, Grid, IconButton, useMediaQuery } from "@mui/material"
+import { Chip, Grid, IconButton, useMediaQuery, useTheme } from "@mui/material"
 import React from "react"
 import sort from "../../images/sort.svg"
 import close from "../../images/close-outline.svg"
 
-const Sort = ({ setOption }) => {
+const Sort = ({ setOption, sortOptions, setSortOptions }) => {
   const matchesVertical = useMediaQuery("(max-width: 1100px)")
   const matchesSM = useMediaQuery(theme => theme.breakpoints.down("sm"))
-  const sortOptions = [
-    { label: "A-Z" },
-    { label: "Z-A" },
-    { label: "NEWEST" },
-    { label: "OLDEST" },
-    { label: "PRICE ↑" },
-    { label: "PRICE ↓" },
-    { label: "REVIEWS" },
-  ]
+  const theme = useTheme()
 
   // sx prop
   const sx = {
     chipContainer: {
       margin: matchesVertical && "0.5rem",
     },
+    active: {
+      backgroundColor: theme.palette.secondary.main,
+    },
+    inactive: {
+      backgroundColor: "transparent",
+    },
+  }
+
+  const handleSort = index => {
+    const newOptions = [...sortOptions]
+
+    newOptions.map(option => (option.active = false))
+    newOptions[index].active = true
+
+    setSortOptions(newOptions)
   }
 
   return (
@@ -37,9 +44,14 @@ const Sort = ({ setOption }) => {
           alignItems={matchesSM ? "center" : undefined}
           justifyContent="space-around"
         >
-          {sortOptions.map(({ label }) => (
+          {sortOptions.map(({ label, active }, index) => (
             <Grid key={label} sx={sx.chipContainer} item>
-              <Chip label={label} />
+              <Chip
+                label={label}
+                sx={active ? sx.active : sx.inactive}
+                onClick={() => handleSort(index)}
+                clickable
+              />
             </Grid>
           ))}
         </Grid>

@@ -10,6 +10,8 @@ const FunctionContainer = ({
   setFilterOptions,
   option,
   setOption,
+  sortOptions,
+  setSortOptions,
 }) => {
   const theme = useTheme()
 
@@ -27,7 +29,13 @@ const FunctionContainer = ({
   const content = () => {
     switch (option) {
       case "sort":
-        return <Sort setOption={setOption} />
+        return (
+          <Sort
+            setOption={setOption}
+            sortOptions={sortOptions}
+            setSortOptions={setSortOptions}
+          />
+        )
       case "filter":
         return (
           <Filter
