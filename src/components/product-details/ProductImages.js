@@ -5,7 +5,7 @@ import React from "react"
 const ProductImages = ({ images, selectedImage, setSelectedImage }) => {
   // sx prop
   const sx = {
-    productImages: {
+    mainContainer: {
       width: "50%",
     },
     selected: {
@@ -28,7 +28,7 @@ const ProductImages = ({ images, selectedImage, setSelectedImage }) => {
     <Grid
       item
       container
-      sx={sx.productImages}
+      sx={sx.mainContainer}
       direction="column"
       alignItems="center"
     >

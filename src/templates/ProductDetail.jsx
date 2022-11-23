@@ -1,6 +1,7 @@
 import { Grid } from "@mui/material"
 import React, { useState } from "react"
 import ProductImages from "../components/product-details/ProductImages"
+import ProductInfo from "../components/product-details/ProductInfo"
 import Layout from "../components/ui/layout"
 
 const ProductDetail = ({
@@ -12,12 +13,20 @@ const ProductDetail = ({
   return (
     <Layout>
       <Grid container direction="column">
-        <ProductImages
-          images={variants[selectedVariant].images}
-          selectedImage={selectedImage}
-          setSelectedImage={setSelectedImage}
-        />
-        <Grid />
+        <Grid item container>
+          <ProductImages
+            images={variants[selectedVariant].images}
+            selectedImage={selectedImage}
+            setSelectedImage={setSelectedImage}
+          />
+          <ProductInfo
+            name={name}
+            description={description}
+            variants={variants}
+            selectedVariant={selectedVariant}
+            setSelectedVariant={setSelectedVariant}
+          />
+        </Grid>
       </Grid>
     </Layout>
   )
