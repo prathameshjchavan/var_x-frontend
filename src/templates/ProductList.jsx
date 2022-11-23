@@ -1,7 +1,7 @@
 import { Fab, Grid, Pagination, useTheme } from "@mui/material"
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward"
 import { graphql } from "gatsby"
-import React, { useState, useEffect, useRef, useMemo, useCallback } from "react"
+import React, { useState, useEffect, useRef, useCallback } from "react"
 import DynamicToolbar from "../components/product-list/DynamicToolbar"
 import ListOfProducts from "../components/product-list/ListOfProducts"
 import Layout from "../components/ui/layout"
@@ -70,19 +70,17 @@ const ProductList = ({
     },
   }
 
-  let content = useMemo(
-    () =>
-      products.reduce(
-        (contents, product, index) =>
-          contents.concat(
-            product.node.variants.map(variant => ({
-              productIndex: index,
-              variant,
-            }))
-          ),
-        []
+  const selectedSort = sortOptions.filter(option => option.active)[0]
+  const sortedProducts = selectedSort.function(products)
+  let content = sortedProducts.reduce(
+    (contents, product, index) =>
+      contents.concat(
+        product.node.variants.map(variant => ({
+          productIndex: index,
+          variant,
+        }))
       ),
-    [products]
+    []
   )
   let filters = {}
   let isFiltered = false
@@ -200,6 +198,7 @@ export const query = graphql`
       edges {
         node {
           strapi_id
+          createdAt
           name
           category {
             name
