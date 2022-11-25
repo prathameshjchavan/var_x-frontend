@@ -46,7 +46,8 @@ const Header = ({ categories }) => {
     const found = routes.indexOf(
       routes.filter(
         ({ name, link }) =>
-          (link || `/${name.toLowerCase()}`) === window.location.pathname
+          (link || `/${name.toLowerCase()}`) ===
+          `/${window.location.pathname.split("/")[1]}`
       )[0]
     )
 
