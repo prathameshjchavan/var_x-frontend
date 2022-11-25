@@ -10,7 +10,7 @@ import { styled, useTheme } from "@mui/material/styles"
 import Rating from "../home/Rating"
 import frame from "../../images/selected-frame.svg"
 import explore from "../../images/explore.svg"
-import React from "react"
+import React, { useMemo } from "react"
 import Sizes from "./Sizes"
 import Swatches from "./Swatches"
 import QtyButton from "./QtyButton"
@@ -23,6 +23,7 @@ const QuickView = ({
   name,
   price,
   product,
+  variant,
   sizes,
   colors,
   selectedSize,
@@ -31,6 +32,17 @@ const QuickView = ({
   setSelectedColor,
 }) => {
   const theme = useTheme()
+  const hasStyles = useMemo(
+    () => product.node.variants.some(variant => variant.style !== null),
+    [product]
+  )
+  const redirectLink = useMemo(
+    () =>
+      `/${product.node.category.name.toLowerCase()}/${product.node.name
+        .split(" ")[0]
+        .toLowerCase()}${hasStyles && `?style=${variant.style}`}`,
+    [product, hasStyles, variant]
+  )
 
   // sx prop
   const sx = {
@@ -106,13 +118,7 @@ const QuickView = ({
     >
       <DialogContent sx={sx.selectedFrame}>
         <Grid container direction="column" alignItems="center">
-          <Grid
-            item
-            component={Link}
-            to={`/${product.node.category.name.toLowerCase()}/${product.node.name
-              .split(" ")[0]
-              .toLowerCase()}`}
-          >
+          <Grid item component={Link} to={redirectLink}>
             <ProductImage src={url} alt="product" />
           </Grid>
           <Grid item container justifyContent="space-between" sx={sx.toolbar}>
@@ -120,9 +126,7 @@ const QuickView = ({
               <Grid
                 container
                 component={Link}
-                to={`/${product.node.category.name.toLowerCase()}/${product.node.name
-                  .split(" ")[0]
-                  .toLowerCase()}`}
+                to={redirectLink}
                 direction="column"
                 sx={sx.infoContainer}
                 justifyContent="space-between"

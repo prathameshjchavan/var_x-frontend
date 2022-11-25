@@ -109,6 +109,7 @@ const ProductFrameGrid = ({
         name={productName}
         price={variant.price}
         product={product}
+        variant={variant}
         sizes={sizes}
         colors={colors}
         selectedColor={selectedColor}
