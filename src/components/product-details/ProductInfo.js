@@ -3,7 +3,11 @@ import favorite from "../../images/favorite.svg"
 import subscription from "../../images/subscription.svg"
 import Rating from "../home/Rating"
 import { styled } from "@mui/material/styles"
-import React from "react"
+import Sizes from "../product-list/Sizes"
+import Swatches from "../product-list/Swatches"
+import QtyButton from "../product-list/QtyButton"
+import { getColorIndex } from "../../utils/productList"
+import React, { useState } from "react"
 
 const ProductInfo = ({
   name,
@@ -12,7 +16,28 @@ const ProductInfo = ({
   selectedVariant,
   setSelectedVariant,
 }) => {
+  const [selectedSize, setSelectedSize] = useState(null)
+  const [selectedColor, setSelectedColor] = useState(null)
   const theme = useTheme()
+  const imageIndex = getColorIndex(
+    { node: { variants } },
+    variants[selectedVariant],
+    selectedColor
+  )
+  const sizes = []
+  const colors = []
+  variants.forEach(({ size, color }) => {
+    if (!sizes.includes(size)) {
+      sizes.push(size)
+    }
+
+    if (!colors.includes(color)) {
+      colors.push(color)
+    }
+  })
+  sizes.sort()
+  sizes.reverse()
+  colors.sort()
 
   // sx prop
   const sx = {
@@ -55,6 +80,12 @@ const ProductInfo = ({
       "& .MuiChip-label": {
         fontSize: "2rem",
       },
+    },
+    sizesAndSwatches: {
+      maxWidth: "13rem !important",
+    },
+    stock: {
+      color: "#fff",
     },
   }
 
@@ -125,7 +156,31 @@ const ProductInfo = ({
             <Typography variant="body2">{description}</Typography>
           </Grid>
         </Grid>
-        <Grid item container sx={sx.sectionContainer}></Grid>
+        <Grid item container sx={sx.sectionContainer}>
+          <Grid item container>
+            <Grid item>
+              <Grid container direction="column">
+                <Grid item sx={sx.sizesAndSwatches}>
+                  <Sizes
+                    sizes={sizes}
+                    selectedSize={selectedSize}
+                    setSelectedSize={setSelectedSize}
+                  />
+                  <Swatches
+                    colors={colors}
+                    selectedColor={selectedColor}
+                    setSelectedColor={setSelectedColor}
+                  />
+                </Grid>
+                <Grid item>
+                  <Typography variant="h3" sx={sx.stock}>
+                    12 Currently In Stock
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   )
