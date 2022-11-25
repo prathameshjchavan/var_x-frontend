@@ -1,5 +1,5 @@
 import { Grid, Typography, useMediaQuery } from "@mui/material"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { styled } from "@mui/material/styles"
 import { useTheme } from "@mui/material/styles"
 import frame from "../../images/product-frame-grid.svg"
@@ -16,6 +16,7 @@ const ProductFrameGrid = ({
   selectedSize,
   setSelectedColor,
   setSelectedSize,
+  hasStyles,
 }) => {
   const theme = useTheme()
   const matchesXL = useMediaQuery("(max-width: 2300px)")
@@ -27,6 +28,15 @@ const ProductFrameGrid = ({
       ? product.node.variants[imageIndex].images[0].url
       : variant.images[0].url)
   const productName = product.node.name.split(" ")[0]
+  const redirectLink = useMemo(
+    () =>
+      `/${product.node.category.name.toLowerCase()}/${product.node.name
+        .split(" ")[0]
+        .toLowerCase()}${`?color=${variant.colorLabel}`}${
+        hasStyles ? `&style=${variant.style}` : ""
+      }`,
+    [product, hasStyles, variant]
+  )
 
   // sx prop
   const sx = {
@@ -85,15 +95,7 @@ const ProductFrameGrid = ({
         container
         direction="column"
         sx={sx.productContainer}
-        onClick={() =>
-          matchesXL
-            ? navigate(
-                `/${product.node.category.name.toLowerCase()}/${product.node.name
-                  .split(" ")[0]
-                  .toLowerCase()}`
-              )
-            : setOpen(true)
-        }
+        onClick={() => (matchesXL ? navigate(redirectLink) : setOpen(true))}
       >
         <Grid item sx={sx.frame}>
           <Product src={imgURL} alt={product.node.name} />
@@ -116,6 +118,7 @@ const ProductFrameGrid = ({
         selectedSize={selectedSize}
         setSelectedColor={setSelectedColor}
         setSelectedSize={setSelectedSize}
+        hasStyles={hasStyles}
       />
     </Grid>
   )

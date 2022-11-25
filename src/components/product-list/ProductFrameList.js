@@ -1,7 +1,7 @@
 import { Chip, Grid, Typography, useTheme } from "@mui/material"
 import frame from "../../images/product-frame-list.svg"
 import { styled } from "@mui/material/styles"
-import React from "react"
+import React, { useMemo } from "react"
 import Rating from "../home/Rating"
 import Sizes from "./Sizes"
 import Swatches from "./Swatches"
@@ -18,6 +18,7 @@ function ProductFrameList({
   selectedColor,
   setSelectedSize,
   setSelectedColor,
+  hasStyles,
 }) {
   const theme = useTheme()
   const imageIndex = getColorIndex(product, variant, selectedColor)
@@ -25,6 +26,15 @@ function ProductFrameList({
     imageIndex !== -1
       ? product.node.variants[imageIndex].images
       : variant.images
+  const redirectLink = useMemo(
+    () =>
+      `/${product.node.category.name.toLowerCase()}/${product.node.name
+        .split(" ")[0]
+        .toLowerCase()}${`?color=${variant.colorLabel}`}${
+        hasStyles ? `&style=${variant.style}` : ""
+      }`,
+    [product, hasStyles, variant]
+  )
 
   const sx = {
     frame: {
@@ -77,14 +87,7 @@ function ProductFrameList({
         sx={sx.frame}
       >
         {images.map(image => (
-          <Grid
-            key={image.url}
-            item
-            component={Link}
-            to={`/${product.node.category.name.toLowerCase()}/${product.node.name
-              .split(" ")[0]
-              .toLowerCase()}`}
-          >
+          <Grid key={image.url} item component={Link} to={redirectLink}>
             <ProductImage
               src={process.env.STRAPI_API_URL + image.url}
               alt={image.url}
@@ -105,9 +108,7 @@ function ProductFrameList({
           container
           sx={sx.productInfo}
           component={Link}
-          to={`/${product.node.category.name.toLowerCase()}/${product.node.name
-            .split(" ")[0]
-            .toLowerCase()}`}
+          to={redirectLink}
           direction="column"
         >
           <Grid item>

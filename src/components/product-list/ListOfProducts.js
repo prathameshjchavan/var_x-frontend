@@ -1,5 +1,5 @@
 import { Grid, useMediaQuery, useTheme } from "@mui/material"
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useMemo } from "react"
 import ProductFrameGrid from "./ProductFrameGrid"
 import ProductFrameList from "./ProductFrameList"
 
@@ -22,6 +22,10 @@ const ListOfProducts = ({
     const [colors, setColors] = useState([])
     const [selectedSize, setSelectedSize] = useState(null)
     const [selectedColor, setSelectedColor] = useState(null)
+    const hasStyles = useMemo(
+      () => product.node.variants.some(variant => variant.style !== null),
+      [product]
+    )
 
     useEffect(() => {
       let productSizes = []
@@ -53,6 +57,7 @@ const ListOfProducts = ({
         selectedColor={selectedColor}
         setSelectedSize={setSelectedSize}
         setSelectedColor={setSelectedColor}
+        hasStyles={hasStyles}
       />
     )
   }

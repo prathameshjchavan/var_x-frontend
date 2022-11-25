@@ -15,6 +15,7 @@ exports.createPages = async ({ graphql, actions }) => {
             variants {
               id
               color
+              colorLabel
               size
               style
               price

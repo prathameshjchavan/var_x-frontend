@@ -30,17 +30,16 @@ const QuickView = ({
   selectedColor,
   setSelectedSize,
   setSelectedColor,
+  hasStyles,
 }) => {
   const theme = useTheme()
-  const hasStyles = useMemo(
-    () => product.node.variants.some(variant => variant.style !== null),
-    [product]
-  )
   const redirectLink = useMemo(
     () =>
       `/${product.node.category.name.toLowerCase()}/${product.node.name
         .split(" ")[0]
-        .toLowerCase()}${hasStyles && `?style=${variant.style}`}`,
+        .toLowerCase()}${`?color=${variant.colorLabel}`}${
+        hasStyles ? `&style=${variant.style}` : ""
+      }`,
     [product, hasStyles, variant]
   )
 
