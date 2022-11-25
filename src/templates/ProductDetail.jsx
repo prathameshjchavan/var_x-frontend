@@ -5,11 +5,12 @@ import ProductInfo from "../components/product-details/ProductInfo"
 import Layout from "../components/ui/layout"
 
 const ProductDetail = ({
-  pageContext: { id, name, category, description, variants },
+  pageContext: { id, name, category, description, product, variants },
 }) => {
   const [selectedVariant, setSelectedVariant] = useState(0)
   const [selectedImage, setSelectedImage] = useState(0)
 
+  // Get product according to style and color
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
 
@@ -21,6 +22,27 @@ const ProductDetail = ({
 
     setSelectedVariant(variants.indexOf(styledVariant))
   }, [variants])
+
+  // Handling products in localStorage
+  useEffect(() => {
+    let recentlyViewed = JSON.parse(
+      window.localStorage.getItem("recentlyViewed")
+    )
+
+    if (recentlyViewed) {
+      if (!recentlyViewed.some(product => product.node.name === name)) {
+        if (recentlyViewed.length === 10) recentlyViewed.shift()
+        recentlyViewed.push(product)
+      } else return
+    } else {
+      recentlyViewed = [product]
+    }
+
+    window.localStorage.setItem(
+      "recentlyViewed",
+      JSON.stringify(recentlyViewed)
+    )
+  }, [name, product])
 
   return (
     <Layout>
