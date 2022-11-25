@@ -7,7 +7,7 @@ import Sizes from "../product-list/Sizes"
 import Swatches from "../product-list/Swatches"
 import QtyButton from "../product-list/QtyButton"
 import { getColorIndex } from "../../utils/productList"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 
 const ProductInfo = ({
   name,
@@ -64,6 +64,9 @@ const ProductInfo = ({
       padding: "0.5rem 1rem",
       overflowY: "auto",
     },
+    actionsContainer: {
+      padding: "0 1rem",
+    },
     name: {
       color: "#fff",
     },
@@ -82,7 +85,7 @@ const ProductInfo = ({
       },
     },
     sizesAndSwatches: {
-      maxWidth: "13rem !important",
+      width: "fit-content",
     },
     stock: {
       color: "#fff",
@@ -94,6 +97,12 @@ const ProductInfo = ({
     width: "4rem",
     margin: "0.5rem 1rem",
   }))
+
+  useEffect(() => {
+    if (imageIndex !== -1) {
+      setSelectedVariant(imageIndex)
+    }
+  }, [imageIndex, setSelectedVariant])
 
   return (
     <Grid
@@ -156,29 +165,36 @@ const ProductInfo = ({
             <Typography variant="body2">{description}</Typography>
           </Grid>
         </Grid>
-        <Grid item container sx={sx.sectionContainer}>
-          <Grid item container>
-            <Grid item>
-              <Grid container direction="column">
-                <Grid item sx={sx.sizesAndSwatches}>
-                  <Sizes
-                    sizes={sizes}
-                    selectedSize={selectedSize}
-                    setSelectedSize={setSelectedSize}
-                  />
-                  <Swatches
-                    colors={colors}
-                    selectedColor={selectedColor}
-                    setSelectedColor={setSelectedColor}
-                  />
-                </Grid>
-                <Grid item>
-                  <Typography variant="h3" sx={sx.stock}>
-                    12 Currently In Stock
-                  </Typography>
-                </Grid>
+        <Grid
+          item
+          container
+          justifyContent="space-between"
+          alignItems="center"
+          sx={{ ...sx.sectionContainer, ...sx.actionsContainer }}
+        >
+          <Grid item>
+            <Grid container direction="column">
+              <Grid item sx={sx.sizesAndSwatches}>
+                <Sizes
+                  sizes={sizes}
+                  selectedSize={selectedSize}
+                  setSelectedSize={setSelectedSize}
+                />
+                <Swatches
+                  colors={colors}
+                  selectedColor={selectedColor}
+                  setSelectedColor={setSelectedColor}
+                />
+              </Grid>
+              <Grid item>
+                <Typography variant="h3" sx={sx.stock}>
+                  12 Currently In Stock
+                </Typography>
               </Grid>
             </Grid>
+          </Grid>
+          <Grid item>
+            <QtyButton />
           </Grid>
         </Grid>
       </Grid>
