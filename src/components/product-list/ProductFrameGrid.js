@@ -17,6 +17,7 @@ const ProductFrameGrid = ({
   setSelectedColor,
   setSelectedSize,
   hasStyles,
+  disableQuickView,
 }) => {
   const theme = useTheme()
   const matchesXL = useMediaQuery("(max-width: 2300px)")
@@ -95,7 +96,9 @@ const ProductFrameGrid = ({
         container
         direction="column"
         sx={sx.productContainer}
-        onClick={() => (matchesXL ? navigate(redirectLink) : setOpen(true))}
+        onClick={() =>
+          matchesXL || disableQuickView ? navigate(redirectLink) : setOpen(true)
+        }
       >
         <Grid item sx={sx.frame}>
           <Product src={imgURL} alt={product.node.name} />

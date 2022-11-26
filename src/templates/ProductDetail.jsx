@@ -2,6 +2,7 @@ import { Grid } from "@mui/material"
 import React, { useState, useEffect } from "react"
 import ProductImages from "../components/product-details/ProductImages"
 import ProductInfo from "../components/product-details/ProductInfo"
+import RecentlyViewed from "../components/product-details/RecentlyViewed"
 import Layout from "../components/ui/layout"
 
 const ProductDetail = ({
@@ -61,6 +62,9 @@ const ProductDetail = ({
             setSelectedVariant={setSelectedVariant}
           />
         </Grid>
+        <RecentlyViewed
+          products={JSON.parse(window.localStorage.getItem("recentlyViewed"))}
+        />
       </Grid>
     </Layout>
   )
