@@ -1,9 +1,12 @@
 import { Button, Grid, useTheme } from "@mui/material"
 import ProductFrameGrid from "../product-list/ProductFrameGrid"
-import React from "react"
+import React, { useCallback, useState } from "react"
 
 const RecentlyViewed = ({ products }) => {
   const theme = useTheme()
+  const [firstIndex, setFirstIndex] = useState(0)
+
+  // sx prop
   const sx = {
     recentContainer: {
       margin: "10rem 0",
@@ -21,6 +24,16 @@ const RecentlyViewed = ({ products }) => {
     },
   }
 
+  const handleNavigation = useCallback(
+    direction => {
+      if (direction === "backward" && firstIndex === 0) return false
+      if (direction === "forward" && firstIndex + 4 === products.length)
+        return false
+      setFirstIndex(direction === "forward" ? firstIndex + 1 : firstIndex - 1)
+    },
+    [products, firstIndex, setFirstIndex]
+  )
+
   return (
     <Grid
       item
@@ -30,9 +43,11 @@ const RecentlyViewed = ({ products }) => {
       sx={sx.recentContainer}
     >
       <Grid item>
-        <Button sx={sx.arrow}>&lt;</Button>
+        <Button onClick={() => handleNavigation("backward")} sx={sx.arrow}>
+          &lt;
+        </Button>
       </Grid>
-      {products?.map(product => {
+      {products?.slice(firstIndex, firstIndex + 4).map(product => {
         const hasStyles = product.node.variants.some(
           variant => variant.style !== null
         )
@@ -49,7 +64,9 @@ const RecentlyViewed = ({ products }) => {
         )
       })}
       <Grid item>
-        <Button sx={sx.arrow}>&gt;</Button>
+        <Button onClick={() => handleNavigation("forward")} sx={sx.arrow}>
+          &gt;
+        </Button>
       </Grid>
     </Grid>
   )
