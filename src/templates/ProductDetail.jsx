@@ -11,8 +11,8 @@ const ProductDetail = ({
   const [selectedVariant, setSelectedVariant] = useState(0)
   const [selectedImage, setSelectedImage] = useState(0)
 
-  // Get product according to style and color
   useEffect(() => {
+    // Get product according to style and color
     const params = new URLSearchParams(window.location.search)
 
     const styledVariant = variants.filter(
@@ -20,30 +20,35 @@ const ProductDetail = ({
         variant.style === params.get("style") &&
         variant.colorLabel === params.get("color")
     )[0]
+    const variantIndex = variants.indexOf(styledVariant)
 
-    setSelectedVariant(variants.indexOf(styledVariant))
-  }, [variants])
+    setSelectedVariant(variantIndex)
 
-  // Handling products in localStorage
-  useEffect(() => {
+    // Handling products in localStorage
     let recentlyViewed = JSON.parse(
       window.localStorage.getItem("recentlyViewed")
     )
 
     if (recentlyViewed) {
-      if (!recentlyViewed.some(product => product.node.name === name)) {
+      if (
+        !recentlyViewed.some(
+          product =>
+            product.node.name === name &&
+            product.selectedVariant === variantIndex
+        )
+      ) {
         if (recentlyViewed.length === 10) recentlyViewed.shift()
-        recentlyViewed.push(product)
+        recentlyViewed.push({ ...product, selectedVariant: variantIndex })
       } else return
     } else {
-      recentlyViewed = [product]
+      recentlyViewed = [{ ...product, selectedVariant: variantIndex }]
     }
 
     window.localStorage.setItem(
       "recentlyViewed",
       JSON.stringify(recentlyViewed)
     )
-  }, [name, product])
+  }, [variants, name, product])
 
   return (
     <Layout>
