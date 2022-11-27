@@ -18,6 +18,7 @@ const ProductFrameGrid = ({
   setSelectedSize,
   hasStyles,
   disableQuickView,
+  small,
 }) => {
   const theme = useTheme()
   const matchesXL = useMediaQuery("(max-width: 2300px)")
@@ -50,37 +51,37 @@ const ProductFrameGrid = ({
       backgroundPosition: "center",
       backgroundSize: "contain",
       backgroundRepeat: "no-repeat",
-      height: "25rem",
-      width: "25rem",
+      height: small ? "15rem" : "25rem",
+      width: small ? "15rem" : "25rem",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
       [theme.breakpoints.down("sm")]: {
-        height: "20rem",
-        width: "20rem",
+        height: small ? "15rem" : "20rem",
+        width: small ? "15rem" : "20rem",
       },
     },
     title: {
       backgroundColor: theme.palette.primary.main,
       height: "5rem",
-      width: "25rem",
+      width: small ? "15rem" : "25rem",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
       marginTop: "-0.2rem",
       [theme.breakpoints.down("sm")]: {
-        width: "20rem",
+        width: small ? "15rem" : "20rem",
       },
     },
   }
 
   // styled components
   const Product = styled("img")(() => ({
-    height: "20rem",
-    width: "20rem",
+    height: small ? "12rem" : "20rem",
+    width: small ? "12rem" : "20rem",
     [theme.breakpoints.down("sm")]: {
-      height: "15rem",
-      width: "15rem",
+      height: small ? "12rem" : "15rem",
+      width: small ? "12rem" : "15rem",
     },
   }))
 
