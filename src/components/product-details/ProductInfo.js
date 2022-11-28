@@ -1,4 +1,11 @@
-import { Button, Chip, Grid, Typography, useTheme } from "@mui/material"
+import {
+  Button,
+  Chip,
+  Grid,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material"
 import favorite from "../../images/favorite.svg"
 import subscription from "../../images/subscription.svg"
 import Rating from "../home/Rating"
@@ -19,6 +26,8 @@ const ProductInfo = ({
   const [selectedSize, setSelectedSize] = useState(null)
   const [selectedColor, setSelectedColor] = useState(null)
   const theme = useTheme()
+  const matchesVertical = useMediaQuery("(max-width: 1400px)")
+  const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
   const imageIndex = getColorIndex(
     { node: { variants } },
     variants[selectedVariant],
@@ -41,17 +50,29 @@ const ProductInfo = ({
 
   // sx prop
   const sx = {
-    mainContainer: { width: "50%", position: "relative" },
+    mainContainer: {
+      width: matchesVertical ? "100%" : "50%",
+      position: "relative",
+    },
     background: {
       backgroundColor: theme.palette.secondary.main,
       height: "45rem",
-      width: "35rem",
+      width: matchesVertical ? "100%" : "35rem",
+      [theme.breakpoints.down("sm")]: {
+        height: "48rem",
+      },
     },
     center: {
       backgroundColor: theme.palette.primary.main,
       height: "35rem",
       width: "45rem",
       position: "absolute",
+      [theme.breakpoints.down("xl")]: {
+        width: matchesVertical ? "100%" : "40rem",
+      },
+      [theme.breakpoints.down("sm")]: {
+        height: "48rem",
+      },
     },
     sectionContainer: {
       height: "calc(100% / 3)",
@@ -127,6 +148,7 @@ const ProductInfo = ({
           item
           container
           justifyContent="space-between"
+          direction={matchesSM ? "column" : "row"}
           sx={{ ...sx.sectionContainer, ...sx.detailsContainer }}
         >
           <Grid item>
@@ -170,6 +192,7 @@ const ProductInfo = ({
           item
           container
           justifyContent="space-between"
+          direction={matchesSM ? "column" : "row"}
           alignItems="center"
           sx={{ ...sx.sectionContainer, ...sx.actionsContainer }}
         >

@@ -1,16 +1,19 @@
-import { Grid, IconButton } from "@mui/material"
+import { Grid, IconButton, useMediaQuery } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import React from "react"
 
 const ProductImages = ({ images, selectedImage, setSelectedImage }) => {
+  const matchesVertical = useMediaQuery("(max-width: 1400px)")
+  const matchesImageSm = useMediaQuery("(max-width: 700px)")
+
   // sx prop
   const sx = {
     mainContainer: {
-      width: "50%",
+      width: matchesVertical ? "100%" : "50%",
     },
     selected: {
-      height: "40rem",
-      width: "40rem",
+      height: matchesImageSm ? "30rem" : "40rem",
+      width: matchesImageSm ? "30rem" : "40rem",
     },
     small: {
       height: "5rem",

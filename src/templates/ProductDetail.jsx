@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material"
+import { Grid, useMediaQuery } from "@mui/material"
 import React, { useState, useEffect, useMemo } from "react"
 import ProductImages from "../components/product-details/ProductImages"
 import ProductInfo from "../components/product-details/ProductInfo"
@@ -15,6 +15,7 @@ const ProductDetail = ({
     () => new URLSearchParams(searchParams),
     [searchParams]
   )
+  const matchesVertical = useMediaQuery("(max-width: 1400px)")
 
   useEffect(() => {
     // Get product according to style and color
@@ -57,7 +58,7 @@ const ProductDetail = ({
   return (
     <Layout>
       <Grid container direction="column">
-        <Grid item container>
+        <Grid item container direction={matchesVertical ? "column" : "row"}>
           <ProductImages
             images={variants[selectedVariant].images}
             selectedImage={selectedImage}
