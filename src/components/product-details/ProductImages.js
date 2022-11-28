@@ -5,6 +5,7 @@ import React from "react"
 const ProductImages = ({ images, selectedImage, setSelectedImage }) => {
   const matchesVertical = useMediaQuery("(max-width: 1400px)")
   const matchesImageSm = useMediaQuery("(max-width: 700px)")
+  const matchesImageXs = useMediaQuery("(max-width: 500px)")
 
   // sx prop
   const sx = {
@@ -12,12 +13,12 @@ const ProductImages = ({ images, selectedImage, setSelectedImage }) => {
       width: matchesVertical ? "100%" : "50%",
     },
     selected: {
-      height: matchesImageSm ? "30rem" : "40rem",
-      width: matchesImageSm ? "30rem" : "40rem",
+      height: matchesImageXs ? "20rem" : matchesImageSm ? "30rem" : "40rem",
+      width: matchesImageXs ? "20rem" : matchesImageSm ? "30rem" : "40rem",
     },
     small: {
-      height: "5rem",
-      width: "5rem",
+      height: matchesImageXs ? "3rem" : "5rem",
+      width: matchesImageXs ? "3rem" : "5rem",
     },
     imageItem: {
       margin: "1rem",

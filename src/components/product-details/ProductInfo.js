@@ -97,6 +97,10 @@ const ProductInfo = ({
     },
     chipContainer: {
       marginTop: "1rem",
+      [theme.breakpoints.down("sm")]: {
+        marginTop: 0,
+        marginBottom: "1rem",
+      },
     },
     chip: {
       height: "3rem",
@@ -191,9 +195,9 @@ const ProductInfo = ({
         <Grid
           item
           container
-          justifyContent="space-between"
+          justifyContent={matchesSM ? "space-around" : "space-between"}
           direction={matchesSM ? "column" : "row"}
-          alignItems="center"
+          alignItems={matchesSM ? "flex-start" : "center"}
           sx={{ ...sx.sectionContainer, ...sx.actionsContainer }}
         >
           <Grid item>
