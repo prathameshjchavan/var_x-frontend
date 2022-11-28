@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material"
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useMemo } from "react"
 import ProductImages from "../components/product-details/ProductImages"
 import ProductInfo from "../components/product-details/ProductInfo"
 import RecentlyViewed from "../components/product-details/RecentlyViewed"
@@ -10,10 +10,14 @@ const ProductDetail = ({
 }) => {
   const [selectedVariant, setSelectedVariant] = useState(0)
   const [selectedImage, setSelectedImage] = useState(0)
+  const searchParams = window.location.search
+  const params = useMemo(
+    () => new URLSearchParams(searchParams),
+    [searchParams]
+  )
 
   useEffect(() => {
     // Get product according to style and color
-    const params = new URLSearchParams(window.location.search)
 
     const styledVariant = variants.filter(
       variant =>
@@ -48,7 +52,7 @@ const ProductDetail = ({
       "recentlyViewed",
       JSON.stringify(recentlyViewed)
     )
-  }, [variants, name, product])
+  }, [variants, name, product, params])
 
   return (
     <Layout>

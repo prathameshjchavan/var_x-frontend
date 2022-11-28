@@ -72,13 +72,14 @@ const ProductInfo = ({
     },
     reviewButton: {
       textTransform: "none",
+      marginLeft: "-8px",
     },
     chipContainer: {
       marginTop: "1rem",
     },
     chip: {
       height: "3rem",
-      width: "8rem",
+      width: "fit-content",
       borderRadius: 50,
       "& .MuiChip-label": {
         fontSize: "2rem",
