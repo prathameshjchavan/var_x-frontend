@@ -19,6 +19,7 @@ const ProductFrameGrid = ({
   hasStyles,
   disableQuickView,
   small,
+  stock,
 }) => {
   const theme = useTheme()
   const matchesXL = useMediaQuery("(max-width: 2300px)")
@@ -123,6 +124,7 @@ const ProductFrameGrid = ({
         setSelectedColor={setSelectedColor}
         setSelectedSize={setSelectedSize}
         hasStyles={hasStyles}
+        stock={stock}
       />
     </Grid>
   )

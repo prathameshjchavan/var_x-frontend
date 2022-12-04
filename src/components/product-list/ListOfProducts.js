@@ -1,5 +1,7 @@
+import { useQuery } from "@apollo/client"
 import { Grid, useMediaQuery, useTheme } from "@mui/material"
 import React, { useState, useEffect, useMemo } from "react"
+import { GET_DETAILS } from "../../apollo/queries"
 import ProductFrameGrid from "./ProductFrameGrid"
 import ProductFrameList from "./ProductFrameList"
 
@@ -22,10 +24,14 @@ const ListOfProducts = ({
     const [colors, setColors] = useState([])
     const [selectedSize, setSelectedSize] = useState(null)
     const [selectedColor, setSelectedColor] = useState(null)
+    const [stock, setStock] = useState(null)
     const hasStyles = useMemo(
       () => product.node.variants.some(variant => variant.style !== null),
       [product]
     )
+    const { error, data } = useQuery(GET_DETAILS, {
+      variables: { id: product.node.strapi_id },
+    })
 
     useEffect(() => {
       let productSizes = []
@@ -47,6 +53,14 @@ const ListOfProducts = ({
       setColors(productColors)
     }, [product, setSizes, setColors])
 
+    useEffect(() => {
+      if (error) {
+        setStock(-1)
+      } else if (data) {
+        setStock(data.product.data.attributes.variants.data)
+      }
+    }, [error, data])
+
     return (
       <Frame
         variant={variant}
@@ -58,6 +72,7 @@ const ListOfProducts = ({
         setSelectedSize={setSelectedSize}
         setSelectedColor={setSelectedColor}
         hasStyles={hasStyles}
+        stock={stock}
       />
     )
   }

@@ -15,6 +15,7 @@ import Sizes from "./Sizes"
 import Swatches from "./Swatches"
 import QtyButton from "./QtyButton"
 import { Link } from "gatsby"
+import { getStockDisplay } from "../product-details/ProductInfo"
 
 const QuickView = ({
   open,
@@ -31,6 +32,7 @@ const QuickView = ({
   setSelectedSize,
   setSelectedColor,
   hasStyles,
+  stock,
 }) => {
   const theme = useTheme()
   const redirectLink = useMemo(
@@ -42,6 +44,7 @@ const QuickView = ({
       }`,
     [product, hasStyles, variant]
   )
+  const stockDisplay = getStockDisplay(stock, variant.strapi_id)
 
   // sx prop
   const sx = {
@@ -136,7 +139,7 @@ const QuickView = ({
                 </Grid>
                 <Grid item>
                   <Typography variant="h3" sx={sx.stock}>
-                    12 Currently In Stock
+                    {stockDisplay}
                   </Typography>
                   <Button sx={sx.detailButton}>
                     <Typography variant="h3" sx={sx.details}>

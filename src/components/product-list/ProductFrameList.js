@@ -8,6 +8,7 @@ import Swatches from "./Swatches"
 import QtyButton from "./QtyButton"
 import { getColorIndex } from "../../utils/productList"
 import { Link } from "gatsby"
+import { getStockDisplay } from "../product-details/ProductInfo"
 
 function ProductFrameList({
   product,
@@ -19,6 +20,7 @@ function ProductFrameList({
   setSelectedSize,
   setSelectedColor,
   hasStyles,
+  stock,
 }) {
   const theme = useTheme()
   const imageIndex = getColorIndex(product, variant, selectedColor)
@@ -35,7 +37,9 @@ function ProductFrameList({
       }`,
     [product, hasStyles, variant]
   )
+  const stockDisplay = getStockDisplay(stock, variant.strapi_id)
 
+  // sx prop
   const sx = {
     frame: {
       backgroundImage: `url(${frame})`,
@@ -124,7 +128,7 @@ function ProductFrameList({
           </Grid>
           <Grid item>
             <Typography variant="h3" sx={sx.stock}>
-              12 Currently In Stock
+              {stockDisplay}
             </Typography>
           </Grid>
         </Grid>

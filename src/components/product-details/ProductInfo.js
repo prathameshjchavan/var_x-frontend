@@ -16,6 +16,27 @@ import QtyButton from "../product-list/QtyButton"
 import { getColorIndex } from "../../utils/productList"
 import React, { useState, useEffect } from "react"
 
+export const getStockDisplay = (stock, variantId) => {
+  switch (stock) {
+    case undefined:
+    case null:
+      return "Loading Inventory..."
+    case -1:
+      return "Error Loading Inventory"
+    default:
+      const stockIndex = stock.findIndex(
+        item => parseInt(item.id) === variantId
+      )
+      if (stockIndex === -1) {
+        return "Cannot find Stock"
+      } else if (stock[stockIndex].attributes.quantity === 0) {
+        return "Out of Stock"
+      } else {
+        return `${stock[stockIndex].attributes.quantity} Currently In Stock`
+      }
+  }
+}
+
 const ProductInfo = ({
   name,
   description,
@@ -48,29 +69,10 @@ const ProductInfo = ({
   sizes.sort()
   sizes.reverse()
   colors.sort()
-  let stockDisplay
-
-  switch (stock) {
-    case undefined:
-    case null:
-      stockDisplay = "Loading Inventory..."
-      break
-    case -1:
-      stockDisplay = "Error Loading Inventory"
-      break
-    default:
-      const stockIndex = stock.findIndex(
-        item => parseInt(item.id) === variants[selectedVariant].strapi_id
-      )
-      if (stockIndex === -1) {
-        stockDisplay = "Cannot find Stock"
-      } else if (stock[stockIndex].attributes.quantity === 0) {
-        stockDisplay = "Out of Stock"
-      } else {
-        stockDisplay = `${stock[stockIndex].attributes.quantity} Currently In Stock`
-      }
-      break
-  }
+  const stockDisplay = getStockDisplay(
+    stock,
+    variants[selectedVariant].strapi_id
+  )
 
   // sx prop
   const sx = {

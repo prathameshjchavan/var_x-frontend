@@ -101,22 +101,6 @@ const ProductList = ({
           if (!filters[option].includes(value)) {
             filters[option].push(value)
           }
-
-          // content.forEach(item => {
-          //   if (option === "Color") {
-          //     if (
-          //       item.variant.colorLabel === value.label &&
-          //       !filteredProducts.includes(item)
-          //     ) {
-          //       filteredProducts.push(item)
-          //     }
-          //   } else if (
-          //     item.variant[option.toLowerCase()] === value.label &&
-          //     !filteredProducts.includes(item)
-          //   ) {
-          //     filteredProducts.push(item)
-          //   }
-          // })
         }
       })
     })
@@ -204,6 +188,7 @@ export const query = graphql`
             name
           }
           variants {
+            strapi_id
             color
             id
             size
