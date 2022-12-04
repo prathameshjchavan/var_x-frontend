@@ -16,6 +16,7 @@ import Swatches from "./Swatches"
 import QtyButton from "./QtyButton"
 import { Link } from "gatsby"
 import { getStockDisplay } from "../product-details/ProductInfo"
+import { getStockIndex } from "../../utils/productList"
 
 const QuickView = ({
   open,
@@ -45,6 +46,7 @@ const QuickView = ({
     [product, hasStyles, variant]
   )
   const stockDisplay = getStockDisplay(stock, variant.strapi_id)
+  const stockIndex = getStockIndex(stock, variant.strapi_id)
 
   // sx prop
   const sx = {
@@ -169,7 +171,7 @@ const QuickView = ({
                   setSelectedColor={setSelectedColor}
                 />
                 <Spacer />
-                <QtyButton />
+                {stock && <QtyButton stock={stock[stockIndex]} />}
               </Grid>
             </Grid>
           </Grid>

@@ -6,7 +6,7 @@ import Rating from "../home/Rating"
 import Sizes from "./Sizes"
 import Swatches from "./Swatches"
 import QtyButton from "./QtyButton"
-import { getColorIndex } from "../../utils/productList"
+import { getColorIndex, getStockIndex } from "../../utils/productList"
 import { Link } from "gatsby"
 import { getStockDisplay } from "../product-details/ProductInfo"
 
@@ -38,6 +38,7 @@ function ProductFrameList({
     [product, hasStyles, variant]
   )
   const stockDisplay = getStockDisplay(stock, variant.strapi_id)
+  const stockIndex = getStockIndex(stock, variant.strapi_id)
 
   // sx prop
   const sx = {
@@ -144,7 +145,7 @@ function ProductFrameList({
             setSelectedColor={setSelectedColor}
           />
         </Grid>
-        <QtyButton />
+        {stock && <QtyButton stock={stock[stockIndex]} />}
       </Grid>
     </Grid>
   )

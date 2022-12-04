@@ -1,10 +1,23 @@
 import { Badge, Button, Grid, Typography, useTheme } from "@mui/material"
 import Cart from "../../images/Cart"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 
-const QtyButton = () => {
+const QtyButton = ({ stock }) => {
   const theme = useTheme()
   const [qty, setQty] = useState(1)
+
+  // functions
+  const handleChange = direction => {
+    if (qty === stock.attributes.quantity && direction === "up") return null
+    if (qty === 1 && direction === "down") return null
+    const newQty = direction === "up" ? qty + 1 : qty - 1
+    setQty(newQty)
+  }
+
+  useEffect(() => {
+    if (stock === -1) return undefined
+    if (qty > stock.attributes.quantity) setQty(stock.attributes.quantity)
+  }, [stock, qty])
 
   // sx prop
   const sx = {
@@ -85,7 +98,7 @@ const QtyButton = () => {
             <Grid item>
               <Button
                 disableRipple
-                onClick={() => setQty(qty + 1)}
+                onClick={() => handleChange("up")}
                 sx={{ ...sx.button, ...sx.editButton }}
               >
                 <Typography variant="h3" sx={sx.qtyText}>
@@ -96,7 +109,7 @@ const QtyButton = () => {
             <Grid item>
               <Button
                 disableRipple
-                onClick={() => setQty(qty - 1)}
+                onClick={() => handleChange("down")}
                 sx={{ ...sx.button, ...sx.editButton }}
               >
                 <Typography variant="h3" sx={sx.qtyText}>

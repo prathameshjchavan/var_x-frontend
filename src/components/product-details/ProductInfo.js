@@ -13,7 +13,7 @@ import { styled } from "@mui/material/styles"
 import Sizes from "../product-list/Sizes"
 import Swatches from "../product-list/Swatches"
 import QtyButton from "../product-list/QtyButton"
-import { getColorIndex } from "../../utils/productList"
+import { getColorIndex, getStockIndex } from "../../utils/productList"
 import React, { useState, useEffect } from "react"
 
 export const getStockDisplay = (stock, variantId) => {
@@ -24,9 +24,7 @@ export const getStockDisplay = (stock, variantId) => {
     case -1:
       return "Error Loading Inventory"
     default:
-      const stockIndex = stock.findIndex(
-        item => parseInt(item.id) === variantId
-      )
+      const stockIndex = getStockIndex(stock, variantId)
       if (stockIndex === -1) {
         return "Cannot find Stock"
       } else if (stock[stockIndex].attributes.quantity === 0) {
@@ -73,6 +71,7 @@ const ProductInfo = ({
     stock,
     variants[selectedVariant].strapi_id
   )
+  const stockIndex = getStockIndex(stock, variants[selectedVariant].strapi_id)
 
   // sx prop
   const sx = {
@@ -247,9 +246,7 @@ const ProductInfo = ({
               </Grid>
             </Grid>
           </Grid>
-          <Grid item>
-            <QtyButton />
-          </Grid>
+          <Grid item>{stock && <QtyButton stock={stock[stockIndex]} />}</Grid>
         </Grid>
       </Grid>
     </Grid>
