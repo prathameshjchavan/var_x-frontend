@@ -14,6 +14,7 @@ exports.createPages = async ({ graphql, actions }) => {
             }
             variants {
               id
+              strapi_id
               color
               colorLabel
               size

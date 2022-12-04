@@ -14,6 +14,7 @@ const GET_DETAILS = gql`
         attributes {
           variants {
             data {
+              id
               attributes {
                 quantity
               }
@@ -30,6 +31,7 @@ const ProductDetail = ({
 }) => {
   const [selectedVariant, setSelectedVariant] = useState(0)
   const [selectedImage, setSelectedImage] = useState(0)
+  const [stock, setStock] = useState(null)
   const searchParams = window.location.search
   const params = useMemo(
     () => new URLSearchParams(searchParams),
@@ -37,7 +39,6 @@ const ProductDetail = ({
   )
   const matchesVertical = useMediaQuery("(max-width: 1400px)")
   const { loading, error, data } = useQuery(GET_DETAILS, { variables: { id } })
-  console.log(data)
 
   useEffect(() => {
     // Get product according to style and color
@@ -77,6 +78,14 @@ const ProductDetail = ({
     )
   }, [variants, name, product, params])
 
+  useEffect(() => {
+    if (error) {
+      setStock(-1)
+    } else if (data) {
+      setStock(data.product.data.attributes.variants.data)
+    }
+  }, [error, data])
+
   return (
     <Layout>
       <Grid container direction="column">
@@ -92,6 +101,7 @@ const ProductDetail = ({
             variants={variants}
             selectedVariant={selectedVariant}
             setSelectedVariant={setSelectedVariant}
+            stock={stock}
           />
         </Grid>
         <RecentlyViewed

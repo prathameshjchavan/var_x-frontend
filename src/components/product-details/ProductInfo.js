@@ -22,6 +22,7 @@ const ProductInfo = ({
   variants,
   selectedVariant,
   setSelectedVariant,
+  stock,
 }) => {
   const [selectedSize, setSelectedSize] = useState(null)
   const [selectedColor, setSelectedColor] = useState(null)
@@ -47,6 +48,29 @@ const ProductInfo = ({
   sizes.sort()
   sizes.reverse()
   colors.sort()
+  let stockDisplay
+
+  switch (stock) {
+    case undefined:
+    case null:
+      stockDisplay = "Loading Inventory..."
+      break
+    case -1:
+      stockDisplay = "Error Loading Inventory"
+      break
+    default:
+      const stockIndex = stock.findIndex(
+        item => parseInt(item.id) === variants[selectedVariant].strapi_id
+      )
+      if (stockIndex === -1) {
+        stockDisplay = "Cannot find Stock"
+      } else if (stock[stockIndex].attributes.quantity === 0) {
+        stockDisplay = "Out of Stock"
+      } else {
+        stockDisplay = `${stock[stockIndex].attributes.quantity} Currently In Stock`
+      }
+      break
+  }
 
   // sx prop
   const sx = {
@@ -216,7 +240,7 @@ const ProductInfo = ({
               </Grid>
               <Grid item>
                 <Typography variant="h3" sx={sx.stock}>
-                  12 Currently In Stock
+                  {stockDisplay}
                 </Typography>
               </Grid>
             </Grid>
