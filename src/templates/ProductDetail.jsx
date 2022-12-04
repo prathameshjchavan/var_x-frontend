@@ -4,6 +4,26 @@ import ProductImages from "../components/product-details/ProductImages"
 import ProductInfo from "../components/product-details/ProductInfo"
 import RecentlyViewed from "../components/product-details/RecentlyViewed"
 import Layout from "../components/ui/layout"
+import { useQuery, gql } from "@apollo/client"
+
+// GraphQL Queries
+const GET_DETAILS = gql`
+  query getDetails($id: ID!) {
+    product(id: $id) {
+      data {
+        attributes {
+          variants {
+            data {
+              attributes {
+                quantity
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
 
 const ProductDetail = ({
   pageContext: { id, name, category, description, product, variants },
@@ -16,6 +36,8 @@ const ProductDetail = ({
     [searchParams]
   )
   const matchesVertical = useMediaQuery("(max-width: 1400px)")
+  const { loading, error, data } = useQuery(GET_DETAILS, { variables: { id } })
+  console.log(data)
 
   useEffect(() => {
     // Get product according to style and color
