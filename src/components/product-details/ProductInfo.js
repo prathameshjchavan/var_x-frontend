@@ -14,7 +14,7 @@ import Sizes from "../product-list/Sizes"
 import Swatches from "../product-list/Swatches"
 import QtyButton from "../product-list/QtyButton"
 import { getColorIndex, getStockIndex } from "../../utils/productList"
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useMemo } from "react"
 
 export const getStockDisplay = (stock, variantId) => {
   switch (stock) {
@@ -43,8 +43,12 @@ const ProductInfo = ({
   setSelectedVariant,
   stock,
 }) => {
-  const [selectedSize, setSelectedSize] = useState(null)
-  const [selectedColor, setSelectedColor] = useState(null)
+  const [selectedSize, setSelectedSize] = useState(
+    variants[selectedVariant].size
+  )
+  const [selectedColor, setSelectedColor] = useState(
+    variants[selectedVariant].color
+  )
   const theme = useTheme()
   const matchesVertical = useMediaQuery("(max-width: 1400px)")
   const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
@@ -53,20 +57,35 @@ const ProductInfo = ({
     variants[selectedVariant],
     selectedColor
   )
-  const sizes = []
-  const colors = []
-  variants.forEach(({ size, color }) => {
-    if (!sizes.includes(size)) {
-      sizes.push(size)
-    }
 
-    if (!colors.includes(color)) {
-      colors.push(color)
-    }
-  })
-  sizes.sort()
-  sizes.reverse()
-  colors.sort()
+  const sizes = useMemo(
+    () =>
+      variants
+        .reduce(
+          (acc, { size }) =>
+            size && !acc.includes(size) ? [...acc, size] : acc,
+          []
+        )
+        .sort()
+        .reverse(),
+    [variants]
+  )
+  const colors = useMemo(
+    () =>
+      variants
+        .reduce(
+          (acc, { size, color, style }) =>
+            !acc.includes(color) &&
+            size === selectedSize &&
+            style === variants[selectedVariant].style
+              ? [...acc, color]
+              : acc,
+          []
+        )
+        .sort(),
+    [selectedSize, selectedVariant, variants]
+  )
+
   const stockDisplay = getStockDisplay(
     stock,
     variants[selectedVariant].strapi_id
@@ -135,9 +154,6 @@ const ProductInfo = ({
         fontSize: "2rem",
       },
     },
-    sizesAndSwatches: {
-      width: "fit-content",
-    },
     stock: {
       color: "#fff",
     },
@@ -154,6 +170,22 @@ const ProductInfo = ({
       setSelectedVariant(imageIndex)
     }
   }, [imageIndex, setSelectedVariant])
+
+  // functions
+  const handleSizeChange = newSize => {
+    let newSelectedVariant
+
+    setSelectedSize(newSize)
+    setSelectedVariant(selectedVariant => {
+      newSelectedVariant = variants.findIndex(
+        ({ size, style }) =>
+          size === newSize && style === variants[selectedVariant].style
+      )
+      return newSelectedVariant
+    })
+
+    setSelectedColor(variants[newSelectedVariant].color)
+  }
 
   return (
     <Grid
@@ -227,11 +259,11 @@ const ProductInfo = ({
         >
           <Grid item>
             <Grid container direction="column">
-              <Grid item sx={sx.sizesAndSwatches}>
+              <Grid item>
                 <Sizes
                   sizes={sizes}
                   selectedSize={selectedSize}
-                  setSelectedSize={setSelectedSize}
+                  handleSizeChange={handleSizeChange}
                 />
                 <Swatches
                   colors={colors}

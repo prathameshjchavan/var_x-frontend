@@ -10,7 +10,7 @@ import { GET_DETAILS } from "../apollo/queries"
 const ProductDetail = ({
   pageContext: { id, name, category, description, product, variants },
 }) => {
-  const [selectedVariant, setSelectedVariant] = useState(0)
+  const [selectedVariant, setSelectedVariant] = useState(null)
   const [selectedImage, setSelectedImage] = useState(0)
   const [stock, setStock] = useState(null)
   const searchParams = window.location.search
@@ -57,7 +57,7 @@ const ProductDetail = ({
       "recentlyViewed",
       JSON.stringify(recentlyViewed)
     )
-  }, [variants, name, product, params])
+  }, [variants, setSelectedVariant, name, product, params])
 
   useEffect(() => {
     if (error) {
@@ -69,26 +69,30 @@ const ProductDetail = ({
 
   return (
     <Layout>
-      <Grid container direction="column">
-        <Grid item container direction={matchesVertical ? "column" : "row"}>
-          <ProductImages
-            images={variants[selectedVariant].images}
-            selectedImage={selectedImage}
-            setSelectedImage={setSelectedImage}
-          />
-          <ProductInfo
-            name={name}
-            description={description}
-            variants={variants}
-            selectedVariant={selectedVariant}
-            setSelectedVariant={setSelectedVariant}
-            stock={stock}
+      {selectedVariant !== null ? (
+        <Grid container direction="column">
+          <Grid item container direction={matchesVertical ? "column" : "row"}>
+            <ProductImages
+              images={variants[selectedVariant]?.images}
+              selectedImage={selectedImage}
+              setSelectedImage={setSelectedImage}
+            />
+            <ProductInfo
+              name={name}
+              description={description}
+              variants={variants}
+              selectedVariant={selectedVariant}
+              setSelectedVariant={setSelectedVariant}
+              stock={stock}
+            />
+          </Grid>
+          <RecentlyViewed
+            products={JSON.parse(window.localStorage.getItem("recentlyViewed"))}
           />
         </Grid>
-        <RecentlyViewed
-          products={JSON.parse(window.localStorage.getItem("recentlyViewed"))}
-        />
-      </Grid>
+      ) : (
+        <Grid container sx={{ height: "100vh" }} />
+      )}
     </Layout>
   )
 }

@@ -1,11 +1,14 @@
 import { Button, Grid, Typography, useTheme } from "@mui/material"
 import React from "react"
 
-const Sizes = ({ sizes, selectedSize, setSelectedSize }) => {
+const Sizes = ({ sizes, selectedSize, handleSizeChange }) => {
   const theme = useTheme()
 
   // sx prop
   const sx = {
+    mainContainer: {
+      width: "13rem",
+    },
     button: {
       border: "3px solid #fff",
       borderRadius: 50,
@@ -27,10 +30,10 @@ const Sizes = ({ sizes, selectedSize, setSelectedSize }) => {
   }
 
   return (
-    <Grid item container justifyContent="space-between">
+    <Grid sx={sx.mainContainer} item container justifyContent="space-between">
       {sizes.map((size, i) => (
         <Grid key={i} item>
-          <Button onClick={() => setSelectedSize(size)} sx={getButtonSx(size)}>
+          <Button onClick={() => handleSizeChange(size)} sx={getButtonSx(size)}>
             <Typography variant="h3" sx={sx.size}>
               {size}
             </Typography>

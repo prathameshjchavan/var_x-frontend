@@ -6,8 +6,10 @@ const Swatches = ({ colors, selectedColor, setSelectedColor }) => {
 
   // sx prop
   const sx = {
-    swatchesContainer: {
+    mainContainer: {
       marginTop: "0.5rem",
+    },
+    swatchesContainer: {
       "&:not(:first-of-type)": {
         marginLeft: "-0.5rem",
       },
@@ -34,7 +36,7 @@ const Swatches = ({ colors, selectedColor, setSelectedColor }) => {
   }
 
   return (
-    <Grid item container>
+    <Grid sx={sx.mainContainer} container>
       {colors.map(color => (
         <Grid key={color} item sx={sx.swatchesContainer}>
           <Button
