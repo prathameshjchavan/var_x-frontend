@@ -34,6 +34,7 @@ const QuickView = ({
   setSelectedColor,
   hasStyles,
   stock,
+  handleSizeChange,
 }) => {
   const theme = useTheme()
   const redirectLink = useMemo(
@@ -163,7 +164,7 @@ const QuickView = ({
                 <Sizes
                   sizes={sizes}
                   selectedSize={selectedSize}
-                  setSelectedSize={setSelectedSize}
+                  handleSizeChange={handleSizeChange}
                 />
                 <Swatches
                   colors={colors}

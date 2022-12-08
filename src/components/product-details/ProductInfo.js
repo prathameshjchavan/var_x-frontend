@@ -173,18 +173,15 @@ const ProductInfo = ({
 
   // functions
   const handleSizeChange = newSize => {
-    let newSelectedVariant
-
     setSelectedSize(newSize)
     setSelectedVariant(selectedVariant => {
-      newSelectedVariant = variants.findIndex(
+      const newSelectedVariant = variants.findIndex(
         ({ size, style }) =>
           size === newSize && style === variants[selectedVariant].style
       )
+      setSelectedColor(variants[newSelectedVariant].color)
       return newSelectedVariant
     })
-
-    setSelectedColor(variants[newSelectedVariant].color)
   }
 
   return (

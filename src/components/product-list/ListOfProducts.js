@@ -20,10 +20,9 @@ const ListOfProducts = ({
 
   // helper function : JSX
   const FrameHelper = ({ Frame, product, variant }) => {
-    const [sizes, setSizes] = useState([])
-    const [colors, setColors] = useState([])
-    const [selectedSize, setSelectedSize] = useState(null)
-    const [selectedColor, setSelectedColor] = useState(null)
+    const [selectedSize, setSelectedSize] = useState(variant.size)
+    const [selectedColor, setSelectedColor] = useState(variant.color)
+    const [selectedVariant, setSelectedVariant] = useState(variant)
     const [stock, setStock] = useState(null)
     const hasStyles = useMemo(
       () => product.node.variants.some(variant => variant.style !== null),
@@ -32,26 +31,57 @@ const ListOfProducts = ({
     const { error, data } = useQuery(GET_DETAILS, {
       variables: { id: product.node.strapi_id },
     })
+    const sizes = useMemo(
+      () =>
+        product.node.variants
+          .reduce(
+            (acc, { size }) =>
+              size && !acc.includes(size) ? [...acc, size] : acc,
+            []
+          )
+          .sort()
+          .reverse(),
+      [product.node.variants]
+    )
+    const colors = useMemo(
+      () =>
+        product.node.variants
+          .reduce(
+            (acc, { size, color, style }) =>
+              !acc.includes(color) &&
+              size === selectedSize &&
+              style === variant.style
+                ? [...acc, color]
+                : acc,
+            []
+          )
+          .sort(),
+      [selectedSize, variant, product.node.variants]
+    )
 
-    useEffect(() => {
-      let productSizes = []
-      let productColors = []
+    // useEffect(() => {
+    //   let productSizes = []
+    //   let productColors = []
 
-      product.node.variants.forEach(({ size, color }) => {
-        if (!productSizes.includes(size)) {
-          productSizes.push(size)
-        }
-        if (!productColors.includes(color)) {
-          productColors.push(color)
-        }
-      })
-      productSizes.sort()
-      productSizes.reverse()
-      productColors.sort()
+    //   product.node.variants.forEach(({ size, style, color }) => {
+    //     if (!productSizes.includes(size)) {
+    //       productSizes.push(size)
+    //     }
+    //     if (
+    //       !productColors.includes(color) &&
+    //       size === selectedSize &&
+    //       style === variant.style
+    //     ) {
+    //       productColors.push(color)
+    //     }
+    //   })
+    //   productSizes.sort()
+    //   productSizes.reverse()
+    //   productColors.sort()
 
-      setSizes(productSizes)
-      setColors(productColors)
-    }, [product, setSizes, setColors])
+    //   setSizes(productSizes)
+    //   setColors(productColors)
+    // }, [product, setSizes, setColors, selectedSize, variant])
 
     useEffect(() => {
       if (error) {
@@ -61,9 +91,22 @@ const ListOfProducts = ({
       }
     }, [error, data])
 
+    // functions
+    const handleSizeChange = newSize => {
+      setSelectedSize(newSize)
+      setSelectedVariant(selectedVariant => {
+        const newSelectedVariant = product.node.variants.find(
+          ({ size, style }) =>
+            size === newSize && style === selectedVariant.style
+        )
+        setSelectedColor(newSelectedVariant.color)
+        return newSelectedVariant
+      })
+    }
+
     return (
       <Frame
-        variant={variant}
+        variant={selectedVariant}
         product={product}
         sizes={sizes}
         colors={colors}
@@ -73,6 +116,7 @@ const ListOfProducts = ({
         setSelectedColor={setSelectedColor}
         hasStyles={hasStyles}
         stock={stock}
+        handleSizeChange={handleSizeChange}
       />
     )
   }

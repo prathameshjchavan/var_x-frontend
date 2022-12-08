@@ -21,6 +21,7 @@ function ProductFrameList({
   setSelectedColor,
   hasStyles,
   stock,
+  handleSizeChange,
 }) {
   const theme = useTheme()
   const imageIndex = getColorIndex(product, variant, selectedColor)
@@ -137,7 +138,7 @@ function ProductFrameList({
           <Sizes
             sizes={sizes}
             selectedSize={selectedSize}
-            setSelectedSize={setSelectedSize}
+            handleSizeChange={handleSizeChange}
           />
           <Swatches
             colors={colors}

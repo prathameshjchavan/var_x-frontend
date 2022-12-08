@@ -1,8 +1,10 @@
 export const getColorIndex = (product, variant, color) =>
   product.node.variants.indexOf(
     product.node.variants.filter(
-      ({ color, style, size }) =>
-        color === color && style === variant.style && size === variant.size
+      item =>
+        item.color === color &&
+        item.style === variant.style &&
+        item.size === variant.size
     )[0]
   )
 
