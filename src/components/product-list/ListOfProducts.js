@@ -59,30 +59,6 @@ const ListOfProducts = ({
       [selectedSize, variant, product.node.variants]
     )
 
-    // useEffect(() => {
-    //   let productSizes = []
-    //   let productColors = []
-
-    //   product.node.variants.forEach(({ size, style, color }) => {
-    //     if (!productSizes.includes(size)) {
-    //       productSizes.push(size)
-    //     }
-    //     if (
-    //       !productColors.includes(color) &&
-    //       size === selectedSize &&
-    //       style === variant.style
-    //     ) {
-    //       productColors.push(color)
-    //     }
-    //   })
-    //   productSizes.sort()
-    //   productSizes.reverse()
-    //   productColors.sort()
-
-    //   setSizes(productSizes)
-    //   setColors(productColors)
-    // }, [product, setSizes, setColors, selectedSize, variant])
-
     useEffect(() => {
       if (error) {
         setStock(-1)
