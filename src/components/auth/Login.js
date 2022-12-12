@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react"
+import React, { Fragment, useMemo, useState } from "react"
 import accountIcon from "../../images/account.svg"
 import EmailAdornment from "../../images/EmailAdornment"
 import passwordAdornment from "../../images/password-adornment.svg"
@@ -16,8 +16,14 @@ import {
 } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { useTheme } from "@mui/material"
+import validate from "../ui/validate"
 
 const Login = () => {
+  const [values, setValues] = useState({
+    email: "",
+    password: "",
+  })
+  const [errors, setErrors] = useState({})
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [visible, setVisible] = useState(false)
@@ -53,6 +59,37 @@ const Login = () => {
     },
   }
 
+  const fields = useMemo(
+    () => ({
+      email: {
+        helperText: "invalid email",
+        placeholder: "Email",
+        type: "text",
+        startAdornment: (
+          <EmailAdornmentContainer>
+            <EmailAdornment />
+          </EmailAdornmentContainer>
+        ),
+      },
+      password: {
+        helperText:
+          "you must include one uppercase letter, one number, and one special character",
+        placeholder: "Password",
+        type: visible ? "text" : "password",
+        startAdornment: <img src={passwordAdornment} alt="password" />,
+        endAdornment: (
+          <IconButton sx={sx.visibleIcon} onClick={() => setVisible(!visible)}>
+            <img
+              src={visible ? showPassword : hidePassword}
+              alt={`${visible ? "Show" : "Hide"} Password`}
+            />
+          </IconButton>
+        ),
+      },
+    }),
+    []
+  )
+
   // styled components
   const EmailAdornmentContainer = styled("span")(() => ({
     height: "17px",
@@ -65,54 +102,32 @@ const Login = () => {
       <Grid item sx={sx.accountIcon}>
         <img src={accountIcon} alt="login page" />
       </Grid>
-      <Grid item>
-        <TextField
-          value={email}
-          variant="standard"
-          placeholder="Email"
-          onChange={e => setEmail(e.target.value)}
-          sx={sx.textfield}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <EmailAdornmentContainer>
-                  <EmailAdornment />
-                </EmailAdornmentContainer>
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Grid>
-      <Grid item>
-        <TextField
-          value={password}
-          variant="standard"
-          placeholder="Password"
-          type={visible ? "text" : "password"}
-          onChange={e => setPassword(e.target.value)}
-          sx={sx.textfield}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <img src={passwordAdornment} alt="password" />
-              </InputAdornment>
-            ),
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  sx={sx.visibleIcon}
-                  onClick={() => setVisible(!visible)}
-                >
-                  <img
-                    src={visible ? showPassword : hidePassword}
-                    alt={`${visible ? "Show" : "Hide"} Password`}
-                  />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Grid>
+      {Object.keys(fields).map(field => {
+        const validateHelper = event => {
+          const valid = validate({ [field]: event.target.value })
+          setErrors({ ...errors, [field]: !valid[field] })
+        }
+
+        return (
+          <Grid item>
+            <TextField
+              value={password}
+              variant="standard"
+              placeholder="Password"
+              type={visible ? "text" : "password"}
+              onChange={e => setPassword(e.target.value)}
+              sx={sx.textfield}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start"></InputAdornment>
+                ),
+                endAdornment: <InputAdornment position="end"></InputAdornment>,
+              }}
+            />
+          </Grid>
+        )
+      })}
+
       <Grid item>
         <Button sx={sx.login} variant="contained" color="secondary">
           <Typography variant="h5">Login</Typography>
