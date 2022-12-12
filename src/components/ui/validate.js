@@ -5,6 +5,10 @@ export default function validate(values) {
       /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/.test(value),
     name: value => value.length > 3,
     message: value => value.length > 3,
+    password: value =>
+      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(
+        value
+      ),
   }
 
   const valid = {}

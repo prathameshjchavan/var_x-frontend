@@ -79,7 +79,7 @@ const Login = () => {
       },
       password: {
         helperText:
-          "you must include one uppercase letter, one number, and one special character",
+          "you password must be at least eight characters and include one uppercase letter, one number, and one special character",
         placeholder: "Password",
         type: visible ? "text" : "password",
         startAdornment: <img src={passwordAdornment} alt="password" />,
