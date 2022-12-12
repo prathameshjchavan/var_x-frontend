@@ -30,7 +30,13 @@ const AuthPortal = () => {
     <Grid container justifyContent="center" sx={sx.container}>
       <Grid item>
         <Paper elevation={6} sx={sx.paper}>
-          <Grid container direction="column" alignItems="center" sx={sx.inner}>
+          <Grid
+            container
+            direction="column"
+            alignItems="center"
+            justifyContent="space-between"
+            sx={sx.inner}
+          >
             {steps.map((Step, index) =>
               selectedStep === index ? (
                 <Step.component
