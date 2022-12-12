@@ -15,21 +15,41 @@ import {
   Typography,
 } from "@mui/material"
 import { styled } from "@mui/material/styles"
+import { useTheme } from "@mui/material"
 
 const Login = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [visible, setVisible] = useState(false)
+  const theme = useTheme()
 
   // sx prop
   const sx = {
+    accountIcon: { marginTop: "2rem" },
     textfield: {
+      width: "20rem",
       "& .MuiInput-input": {
-        color: "currentColor",
+        color: theme.palette.secondary.main,
       },
-      "& .MuiInputBase-root": {
-        borderBottom: "1px solid rgba(0, 0, 0, 0.42)",
+      "& .MuiInput-underline": {
+        "&:before, &:hover:not(.Mui-disabled):before": {
+          borderBottom: `2px solid ${theme.palette.primary.main}`,
+        },
       },
+    },
+    visibleIcon: { padding: 0 },
+    login: {
+      width: "20rem",
+      borderRadius: "50px",
+      textTransform: "none",
+    },
+    facebookButton: {
+      marginTop: "-1rem",
+    },
+    facebookText: {
+      fontSize: "1.5rem",
+      fontWeight: 700,
+      textTransform: "none",
     },
   }
 
@@ -37,12 +57,12 @@ const Login = () => {
   const EmailAdornmentContainer = styled("span")(() => ({
     height: "17px",
     width: "22px",
-    marginBottom: "12px",
+    marginBottom: "15px",
   }))
 
   return (
     <Fragment>
-      <Grid item>
+      <Grid item sx={sx.accountIcon}>
         <img src={accountIcon} alt="login page" />
       </Grid>
       <Grid item>
@@ -68,6 +88,7 @@ const Login = () => {
           value={password}
           variant="standard"
           placeholder="Password"
+          type={visible ? "text" : "password"}
           onChange={e => setPassword(e.target.value)}
           sx={sx.textfield}
           InputProps={{
@@ -78,23 +99,30 @@ const Login = () => {
             ),
             endAdornment: (
               <InputAdornment position="end">
-                <img
-                  src={visible ? showPassword : hidePassword}
-                  alt={`${visible ? "Show" : "Hide"} Password`}
-                />
+                <IconButton
+                  sx={sx.visibleIcon}
+                  onClick={() => setVisible(!visible)}
+                >
+                  <img
+                    src={visible ? showPassword : hidePassword}
+                    alt={`${visible ? "Show" : "Hide"} Password`}
+                  />
+                </IconButton>
               </InputAdornment>
             ),
           }}
         />
       </Grid>
       <Grid item>
-        <Button variant="contained" color="secondary">
+        <Button sx={sx.login} variant="contained" color="secondary">
           <Typography variant="h5">Login</Typography>
         </Button>
       </Grid>
       <Grid item>
-        <Button>
-          <Typography variant="h3">Login with Facebook</Typography>
+        <Button sx={sx.facebookButton}>
+          <Typography variant="h3" sx={sx.facebookText}>
+            Login with Facebook
+          </Typography>
         </Button>
       </Grid>
       <Grid item container justifyContent="space-between">
