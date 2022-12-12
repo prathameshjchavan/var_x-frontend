@@ -24,8 +24,6 @@ const Login = () => {
     password: "",
   })
   const [errors, setErrors] = useState({})
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
   const [visible, setVisible] = useState(false)
   const theme = useTheme()
 
@@ -59,6 +57,13 @@ const Login = () => {
     },
   }
 
+  // styled components
+  const EmailAdornmentContainer = styled("span")(() => ({
+    height: "17px",
+    width: "22px",
+    marginBottom: "15px",
+  }))
+
   const fields = useMemo(
     () => ({
       email: {
@@ -70,6 +75,7 @@ const Login = () => {
             <EmailAdornment />
           </EmailAdornmentContainer>
         ),
+        endAdornment: null,
       },
       password: {
         helperText:
@@ -87,41 +93,50 @@ const Login = () => {
         ),
       },
     }),
-    []
+    [sx.visibleIcon, visible]
   )
-
-  // styled components
-  const EmailAdornmentContainer = styled("span")(() => ({
-    height: "17px",
-    width: "22px",
-    marginBottom: "15px",
-  }))
 
   return (
     <Fragment>
       <Grid item sx={sx.accountIcon}>
         <img src={accountIcon} alt="login page" />
       </Grid>
-      {Object.keys(fields).map(field => {
+      {Object.keys(fields).map((field, index) => {
         const validateHelper = event => {
           const valid = validate({ [field]: event.target.value })
           setErrors({ ...errors, [field]: !valid[field] })
         }
 
         return (
-          <Grid item>
+          <Grid item key={index}>
             <TextField
-              value={password}
+              value={values[field]}
               variant="standard"
-              placeholder="Password"
-              type={visible ? "text" : "password"}
-              onChange={e => setPassword(e.target.value)}
+              placeholder={fields[field].placeholder}
+              type={fields[field].type}
+              onChange={e => {
+                setValues({ ...values, [field]: e.target.value })
+                if (
+                  errors[field] ||
+                  (values[field] !== "" && errors[field] !== null)
+                )
+                  validateHelper(e)
+              }}
+              onBlur={e => validateHelper(e)}
+              error={errors[field]}
+              helperText={errors[field] && fields[field].helperText}
               sx={sx.textfield}
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start"></InputAdornment>
+                  <InputAdornment position="start">
+                    {fields[field].startAdornment}
+                  </InputAdornment>
                 ),
-                endAdornment: <InputAdornment position="end"></InputAdornment>,
+                endAdornment: fields[field].endAdornment ? (
+                  <InputAdornment position="end">
+                    {fields[field].endAdornment}
+                  </InputAdornment>
+                ) : undefined,
               }}
             />
           </Grid>
