@@ -1,10 +1,11 @@
 import React from "react"
+import AuthPortal from "../components/auth/AuthPortal"
 import Layout from "../components/ui/layout"
 
-const AccountPage = () => (
+const Account = () => (
   <Layout>
-    <p>account</p>
+    <AuthPortal />
   </Layout>
 )
 
-export default AccountPage
+export default Account
