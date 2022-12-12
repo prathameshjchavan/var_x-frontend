@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo, useState } from "react"
+import React, { Fragment, useCallback, useMemo, useState } from "react"
 import accountIcon from "../../images/account.svg"
 import EmailAdornment from "../../images/EmailAdornment"
 import passwordAdornment from "../../images/password-adornment.svg"
@@ -6,6 +6,7 @@ import hidePassword from "../../images/hide-password.svg"
 import showPassword from "../../images/show-password.svg"
 import addUserIcon from "../../images/add-user.svg"
 import forgotPasswordIcon from "../../images/forgot.svg"
+import close from "../../images/close.svg"
 import {
   Button,
   Grid,
@@ -25,6 +26,7 @@ const Login = () => {
   })
   const [errors, setErrors] = useState({})
   const [visible, setVisible] = useState(false)
+  const [forgot, setForgot] = useState(false)
   const theme = useTheme()
 
   // sx prop
@@ -47,15 +49,29 @@ const Login = () => {
       borderRadius: "50px",
       textTransform: "none",
     },
+    reset: {
+      marginTop: "-4rem",
+    },
     facebookButton: {
-      marginTop: "-1rem",
+      marginTop: errors.password ? 0 : "-1rem",
     },
     facebookText: {
       fontSize: "1.5rem",
       fontWeight: 700,
       textTransform: "none",
     },
+    close: {
+      paddingTop: forgot && "5px",
+    },
   }
+
+  // functions
+  // Function for getting the sx prop for Login/Reset button
+  const getButtonSx = useCallback(() => {
+    let buttonSx = sx.login
+    if (forgot) buttonSx = { ...buttonSx, ...sx.reset }
+    return buttonSx
+  }, [forgot, sx.login, sx.reset])
 
   // styled components
   const EmailAdornmentContainer = styled("span")(() => ({
@@ -81,6 +97,7 @@ const Login = () => {
         helperText:
           "you password must be at least eight characters and include one uppercase letter, one number, and one special character",
         placeholder: "Password",
+        hidden: forgot,
         type: visible ? "text" : "password",
         startAdornment: <img src={passwordAdornment} alt="password" />,
         endAdornment: (
@@ -93,7 +110,7 @@ const Login = () => {
         ),
       },
     }),
-    [sx.visibleIcon, visible]
+    [sx.visibleIcon, visible, forgot]
   )
 
   return (
@@ -107,7 +124,7 @@ const Login = () => {
           setErrors({ ...errors, [field]: !valid[field] })
         }
 
-        return (
+        return !fields[field].hidden ? (
           <Grid item key={index}>
             <TextField
               value={values[field]}
@@ -140,30 +157,36 @@ const Login = () => {
               }}
             />
           </Grid>
-        )
+        ) : null
       })}
-
       <Grid item>
-        <Button sx={sx.login} variant="contained" color="secondary">
-          <Typography variant="h5">Login</Typography>
-        </Button>
-      </Grid>
-      <Grid item>
-        <Button sx={sx.facebookButton}>
-          <Typography variant="h3" sx={sx.facebookText}>
-            Login with Facebook
+        <Button sx={getButtonSx()} variant="contained" color="secondary">
+          <Typography variant="h5">
+            {forgot ? "Reset Password" : "Login"}
           </Typography>
         </Button>
       </Grid>
+      {forgot ? null : (
+        <Grid item>
+          <Button sx={sx.facebookButton}>
+            <Typography variant="h3" sx={sx.facebookText}>
+              Login with Facebook
+            </Typography>
+          </Button>
+        </Grid>
+      )}
       <Grid item container justifyContent="space-between">
         <Grid item>
           <IconButton>
             <img src={addUserIcon} alt="sign up" />
           </IconButton>
         </Grid>
-        <Grid item>
-          <IconButton>
-            <img src={forgotPasswordIcon} alt="forgot password" />
+        <Grid item sx={sx.close}>
+          <IconButton onClick={() => setForgot(!forgot)}>
+            <img
+              src={forgot ? close : forgotPasswordIcon}
+              alt={forgot ? "back to login" : "forgot password"}
+            />
           </IconButton>
         </Grid>
       </Grid>
