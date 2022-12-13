@@ -2,11 +2,18 @@ import { Grid, useTheme } from "@mui/material"
 import Paper from "@mui/material/Paper"
 import Login from "./Login"
 import React, { useMemo, useState } from "react"
+import SignUp from "./SignUp"
 
 const AuthPortal = () => {
   const theme = useTheme()
   const [selectedStep, setSelectedStep] = useState(0)
-  const steps = useMemo(() => [{ component: Login, label: "Login" }], [])
+  const steps = useMemo(
+    () => [
+      { component: Login, label: "Login" },
+      { component: SignUp, label: "Sign Up" },
+    ],
+    []
+  )
 
   // sx prop
   const sx = {

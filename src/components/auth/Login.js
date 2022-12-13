@@ -19,7 +19,7 @@ import { styled } from "@mui/material/styles"
 import { useTheme } from "@mui/material"
 import validate from "../ui/validate"
 
-const Login = () => {
+const Login = ({ setSelectedStep, steps }) => {
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -72,6 +72,11 @@ const Login = () => {
     if (forgot) buttonSx = { ...buttonSx, ...sx.reset }
     return buttonSx
   }, [forgot, sx.login, sx.reset])
+
+  const navigateSignUp = () => {
+    const signUp = steps.find(step => step.label === "Sign Up")
+    setSelectedStep(steps.indexOf(signUp))
+  }
 
   // styled components
   const EmailAdornmentContainer = styled("span")(() => ({
@@ -177,7 +182,7 @@ const Login = () => {
       )}
       <Grid item container justifyContent="space-between">
         <Grid item>
-          <IconButton>
+          <IconButton onClick={navigateSignUp}>
             <img src={addUserIcon} alt="sign up" />
           </IconButton>
         </Grid>
