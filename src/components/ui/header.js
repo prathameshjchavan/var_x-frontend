@@ -96,7 +96,7 @@ const Header = ({ categories }) => {
     },
     tab: {
       ...theme.typography.body1,
-      fontWeight: 600,
+      fontWeight: 500,
     },
   }
 
