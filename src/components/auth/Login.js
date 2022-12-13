@@ -2,22 +2,60 @@ import React, { Fragment, useCallback, useMemo, useState } from "react"
 import accountIcon from "../../images/account.svg"
 import EmailAdornment from "../../images/EmailAdornment"
 import passwordAdornment from "../../images/password-adornment.svg"
-import hidePassword from "../../images/hide-password.svg"
-import showPassword from "../../images/show-password.svg"
+import hidePasswordIcon from "../../images/hide-password.svg"
+import showPasswordIcon from "../../images/show-password.svg"
 import addUserIcon from "../../images/add-user.svg"
 import forgotPasswordIcon from "../../images/forgot.svg"
 import close from "../../images/close.svg"
-import {
-  Button,
-  Grid,
-  IconButton,
-  InputAdornment,
-  TextField,
-  Typography,
-} from "@mui/material"
+import { Button, Grid, IconButton, Typography } from "@mui/material"
 import { styled } from "@mui/material/styles"
-import { useTheme } from "@mui/material"
-import validate from "../ui/validate"
+import Fields from "./Fields"
+
+export const getFields = (
+  hideEmail,
+  hidePassword,
+  visible,
+  setVisible,
+  visibleIconSx
+) => {
+  // styled components
+  const EmailAdornmentContainer = styled("span")(() => ({
+    height: "17px",
+    width: "22px",
+    marginBottom: "15px",
+  }))
+
+  return {
+    email: {
+      helperText: "invalid email",
+      placeholder: "Email",
+      type: "text",
+      hidden: hideEmail,
+      startAdornment: (
+        <EmailAdornmentContainer>
+          <EmailAdornment />
+        </EmailAdornmentContainer>
+      ),
+      endAdornment: null,
+    },
+    password: {
+      helperText:
+        "you password must be at least eight characters and include one uppercase letter, one number, and one special character",
+      placeholder: "Password",
+      hidden: hidePassword,
+      type: visible ? "text" : "password",
+      startAdornment: <img src={passwordAdornment} alt="password" />,
+      endAdornment: (
+        <IconButton sx={visibleIconSx} onClick={() => setVisible(!visible)}>
+          <img
+            src={visible ? showPasswordIcon : hidePasswordIcon}
+            alt={`${visible ? "Show" : "Hide"} Password`}
+          />
+        </IconButton>
+      ),
+    },
+  }
+}
 
 const Login = ({ setSelectedStep, steps }) => {
   const [values, setValues] = useState({
@@ -27,22 +65,10 @@ const Login = ({ setSelectedStep, steps }) => {
   const [errors, setErrors] = useState({})
   const [visible, setVisible] = useState(false)
   const [forgot, setForgot] = useState(false)
-  const theme = useTheme()
 
   // sx prop
   const sx = {
     accountIcon: { marginTop: "2rem" },
-    textfield: {
-      width: "20rem",
-      "& .MuiInput-input": {
-        color: theme.palette.secondary.main,
-      },
-      "& .MuiInput-underline": {
-        "&:before, &:hover:not(.Mui-disabled):before": {
-          borderBottom: `2px solid ${theme.palette.primary.main}`,
-        },
-      },
-    },
     visibleIcon: { padding: 0 },
     login: {
       width: "20rem",
@@ -78,44 +104,9 @@ const Login = ({ setSelectedStep, steps }) => {
     setSelectedStep(signUpIndex)
   }
 
-  // styled components
-  const EmailAdornmentContainer = styled("span")(() => ({
-    height: "17px",
-    width: "22px",
-    marginBottom: "15px",
-  }))
-
   const fields = useMemo(
-    () => ({
-      email: {
-        helperText: "invalid email",
-        placeholder: "Email",
-        type: "text",
-        startAdornment: (
-          <EmailAdornmentContainer>
-            <EmailAdornment />
-          </EmailAdornmentContainer>
-        ),
-        endAdornment: null,
-      },
-      password: {
-        helperText:
-          "you password must be at least eight characters and include one uppercase letter, one number, and one special character",
-        placeholder: "Password",
-        hidden: forgot,
-        type: visible ? "text" : "password",
-        startAdornment: <img src={passwordAdornment} alt="password" />,
-        endAdornment: (
-          <IconButton sx={sx.visibleIcon} onClick={() => setVisible(!visible)}>
-            <img
-              src={visible ? showPassword : hidePassword}
-              alt={`${visible ? "Show" : "Hide"} Password`}
-            />
-          </IconButton>
-        ),
-      },
-    }),
-    [sx.visibleIcon, visible, forgot]
+    () => getFields(false, false, visible, setVisible, sx.visibleIcon),
+    [visible, setVisible, sx.visibleIcon]
   )
 
   return (
@@ -123,47 +114,13 @@ const Login = ({ setSelectedStep, steps }) => {
       <Grid item sx={sx.accountIcon}>
         <img src={accountIcon} alt="login page" />
       </Grid>
-      {Object.keys(fields).map((field, index) => {
-        const validateHelper = event => {
-          const valid = validate({ [field]: event.target.value })
-          setErrors({ ...errors, [field]: !valid[field] })
-        }
-
-        return !fields[field].hidden ? (
-          <Grid item key={index}>
-            <TextField
-              value={values[field]}
-              variant="standard"
-              placeholder={fields[field].placeholder}
-              type={fields[field].type}
-              onChange={e => {
-                setValues({ ...values, [field]: e.target.value })
-                if (
-                  errors[field] ||
-                  (values[field] !== "" && errors[field] !== null)
-                )
-                  validateHelper(e)
-              }}
-              onBlur={e => validateHelper(e)}
-              error={errors[field]}
-              helperText={errors[field] && fields[field].helperText}
-              sx={sx.textfield}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    {fields[field].startAdornment}
-                  </InputAdornment>
-                ),
-                endAdornment: fields[field].endAdornment ? (
-                  <InputAdornment position="end">
-                    {fields[field].endAdornment}
-                  </InputAdornment>
-                ) : undefined,
-              }}
-            />
-          </Grid>
-        ) : null
-      })}
+      <Fields
+        fields={fields}
+        errors={errors}
+        setErrors={setErrors}
+        values={values}
+        setValues={setValues}
+      />
       <Grid item>
         <Button sx={getButtonSx()} variant="contained" color="secondary">
           <Typography variant="h5">
