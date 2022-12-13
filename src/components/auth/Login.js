@@ -74,8 +74,8 @@ const Login = ({ setSelectedStep, steps }) => {
   }, [forgot, sx.login, sx.reset])
 
   const navigateSignUp = () => {
-    const signUp = steps.find(step => step.label === "Sign Up")
-    setSelectedStep(steps.indexOf(signUp))
+    const signUpIndex = steps.findIndex(step => step.label === "Sign Up")
+    setSelectedStep(signUpIndex)
   }
 
   // styled components
