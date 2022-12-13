@@ -1,23 +1,34 @@
-import React, { Fragment, useCallback, useState } from "react"
+import React, { Fragment, useCallback, useMemo, useState } from "react"
 import addUserIcon from "../../images/add-user.svg"
 import nameAdornment from "../../images/name-adornment.svg"
 import forward from "../../images/forward-outline.svg"
 import backward from "../../images/backwards-outline.svg"
 import { styled } from "@mui/material/styles"
-import {
-  Button,
-  Grid,
-  IconButton,
-  InputAdornment,
-  TextField,
-  Typography,
-  useTheme,
-} from "@mui/material"
+import { Button, Grid, IconButton, Typography, useTheme } from "@mui/material"
+import { getEmailPasswordFields } from "./Login"
+import Fields from "./Fields"
 
 const SignUp = ({ setSelectedStep, steps }) => {
-  const [name, setName] = useState("")
+  const [values, setValues] = useState({
+    name: "",
+  })
+  const [errors, setErrors] = useState({})
+  const [visible, setVisible] = useState(false)
   const [info, setInfo] = useState(false)
   const theme = useTheme()
+  const nameField = useMemo(
+    () => ({
+      name: {
+        helperText: "you must enter a name",
+        placeholder: "Name",
+        startAdornment: <img src={nameAdornment} alt="name" />,
+      },
+    }),
+    []
+  )
+  const fields = info
+    ? getEmailPasswordFields(false, false, visible, setVisible)
+    : nameField
 
   // sx prop
   const sx = {
@@ -35,7 +46,7 @@ const SignUp = ({ setSelectedStep, steps }) => {
     facebookSignUp: {
       width: "20rem",
       borderRadius: "50px",
-      marginTop: "-3rem",
+      marginTop: info ? 0 : "-3rem",
     },
     facebookText: {
       textTransform: "none",
@@ -47,12 +58,13 @@ const SignUp = ({ setSelectedStep, steps }) => {
   const handleNavigate = useCallback(
     direction => {
       if (direction === "forward") setInfo(true)
+      else if (info) setInfo(false)
       else {
         const loginIndex = steps.findIndex(step => step.label === "Login")
         setSelectedStep(loginIndex)
       }
     },
-    [setInfo, steps, setSelectedStep]
+    [info, setInfo, steps, setSelectedStep]
   )
 
   // styled components
@@ -72,26 +84,17 @@ const SignUp = ({ setSelectedStep, steps }) => {
       <Grid item>
         <AddUserIcon src={addUserIcon} alt="new user" />
       </Grid>
-      <Grid item>
-        <TextField
-          value={name}
-          variant="standard"
-          placeholder="Name"
-          onChange={e => setName(e.target.value)}
-          sx={sx.textfield}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <img src={nameAdornment} alt="name" />
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Grid>
+      <Fields
+        fields={fields}
+        errors={errors}
+        setErrors={setErrors}
+        values={values}
+        setValues={setValues}
+      />
       <Grid item>
         <Button variant="contained" sx={sx.facebookSignUp} color="secondary">
           <Typography sx={sx.facebookText} variant="h5">
-            Sign Up with Facebook
+            Sign up{!info && " with Facebook"}
           </Typography>
         </Button>
       </Grid>
@@ -101,11 +104,13 @@ const SignUp = ({ setSelectedStep, steps }) => {
             <NavigationIcon src={backward} alt="back to login" />
           </IconButton>
         </Grid>
-        <Grid item>
-          <IconButton onClick={() => handleNavigate("forward")}>
-            <NavigationIcon src={forward} alt="continue registration" />
-          </IconButton>
-        </Grid>
+        {info ? null : (
+          <Grid item>
+            <IconButton onClick={() => handleNavigate("forward")}>
+              <NavigationIcon src={forward} alt="continue registration" />
+            </IconButton>
+          </Grid>
+        )}
       </Grid>
     </Fragment>
   )

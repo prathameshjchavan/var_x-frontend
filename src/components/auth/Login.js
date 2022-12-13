@@ -11,12 +11,11 @@ import { Button, Grid, IconButton, Typography } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import Fields from "./Fields"
 
-export const getFields = (
+export const getEmailPasswordFields = (
   hideEmail,
   hidePassword,
   visible,
-  setVisible,
-  visibleIconSx
+  setVisible
 ) => {
   // styled components
   const EmailAdornmentContainer = styled("span")(() => ({
@@ -46,7 +45,7 @@ export const getFields = (
       type: visible ? "text" : "password",
       startAdornment: <img src={passwordAdornment} alt="password" />,
       endAdornment: (
-        <IconButton sx={visibleIconSx} onClick={() => setVisible(!visible)}>
+        <IconButton sx={{ padding: 0 }} onClick={() => setVisible(!visible)}>
           <img
             src={visible ? showPasswordIcon : hidePasswordIcon}
             alt={`${visible ? "Show" : "Hide"} Password`}
@@ -69,14 +68,10 @@ const Login = ({ setSelectedStep, steps }) => {
   // sx prop
   const sx = {
     accountIcon: { marginTop: "2rem" },
-    visibleIcon: { padding: 0 },
     login: {
       width: "20rem",
       borderRadius: "50px",
       textTransform: "none",
-    },
-    reset: {
-      marginTop: "-4rem",
     },
     facebookButton: {
       marginTop: errors.password ? 0 : "-1rem",
@@ -105,8 +100,8 @@ const Login = ({ setSelectedStep, steps }) => {
   }
 
   const fields = useMemo(
-    () => getFields(false, false, visible, setVisible, sx.visibleIcon),
-    [visible, setVisible, sx.visibleIcon]
+    () => getEmailPasswordFields(false, false, visible, setVisible),
+    [visible, setVisible]
   )
 
   return (
