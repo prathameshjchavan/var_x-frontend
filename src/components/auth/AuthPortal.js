@@ -3,6 +3,7 @@ import Paper from "@mui/material/Paper"
 import Login from "./Login"
 import React, { useMemo, useState } from "react"
 import SignUp from "./SignUp"
+import Complete from "./Complete"
 
 const AuthPortal = () => {
   const theme = useTheme()
@@ -11,6 +12,7 @@ const AuthPortal = () => {
     () => [
       { component: Login, label: "Login" },
       { component: SignUp, label: "Sign Up" },
+      { component: Complete, label: "Complete" },
     ],
     []
   )

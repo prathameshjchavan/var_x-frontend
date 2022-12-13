@@ -67,6 +67,11 @@ const SignUp = ({ setSelectedStep, steps }) => {
     [info, setInfo, steps, setSelectedStep]
   )
 
+  const handleComplete = useCallback(() => {
+    const completeIndex = steps.findIndex(step => step.label === "Complete")
+    setSelectedStep(completeIndex)
+  }, [steps, setSelectedStep])
+
   // styled components
   const AddUserIcon = styled("img")(() => ({
     height: "10rem",
@@ -92,7 +97,12 @@ const SignUp = ({ setSelectedStep, steps }) => {
         setValues={setValues}
       />
       <Grid item>
-        <Button variant="contained" sx={sx.facebookSignUp} color="secondary">
+        <Button
+          variant="contained"
+          onClick={() => info && handleComplete()}
+          sx={sx.facebookSignUp}
+          color="secondary"
+        >
           <Typography sx={sx.facebookText} variant="h5">
             Sign up{!info && " with Facebook"}
           </Typography>
