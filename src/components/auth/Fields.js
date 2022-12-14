@@ -24,7 +24,6 @@ const Fields = ({ fields, errors, setErrors, values, setValues }) => {
   return Object.keys(fields).map((field, index) => {
     const validateHelper = event => {
       return validate({ [field]: event.target.value })
-      // setErrors({ ...errors, [field]: !valid[field] })
     }
 
     return !fields[field].hidden ? (

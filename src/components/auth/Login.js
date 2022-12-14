@@ -10,6 +10,7 @@ import close from "../../images/close.svg"
 import { Button, Grid, IconButton, Typography } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import Fields from "./Fields"
+import axios from "axios"
 
 export const getEmailPasswordFields = (
   hideEmail,
@@ -64,6 +65,9 @@ const Login = ({ setSelectedStep, steps }) => {
   const [errors, setErrors] = useState({})
   const [visible, setVisible] = useState(false)
   const [forgot, setForgot] = useState(false)
+  const disabled =
+    Object.keys(errors).some(error => errors[error] === true) ||
+    Object.keys(values).some(value => values[value] === "")
 
   // sx prop
   const sx = {
@@ -99,6 +103,22 @@ const Login = ({ setSelectedStep, steps }) => {
     setSelectedStep(signUpIndex)
   }
 
+  const handleLogin = () => {
+    axios
+      .post(`${process.env.STRAPI_API_URL}/api/auth/local`, {
+        identifier: values.email,
+        password: values.password,
+      })
+      .then(response => {
+        console.log("User Profile >> ", response.data.user)
+        console.log("JWT >> ", response.data.jwt)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+
+  // variables
   const fields = useMemo(
     () => getEmailPasswordFields(false, false, visible, setVisible),
     [visible, setVisible]
@@ -117,7 +137,13 @@ const Login = ({ setSelectedStep, steps }) => {
         setValues={setValues}
       />
       <Grid item>
-        <Button sx={getButtonSx()} variant="contained" color="secondary">
+        <Button
+          sx={getButtonSx()}
+          onClick={() => (forgot ? null : handleLogin())}
+          disabled={!forgot && disabled}
+          variant="contained"
+          color="secondary"
+        >
           <Typography variant="h5">
             {forgot ? "Reset Password" : "Login"}
           </Typography>
