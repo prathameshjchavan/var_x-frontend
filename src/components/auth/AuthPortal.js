@@ -18,7 +18,6 @@ const AuthPortal = () => {
     []
   )
   const { user, dispatchUser } = useContext(UserContext)
-  console.log(user)
 
   // sx prop
   const sx = {
@@ -53,6 +52,8 @@ const AuthPortal = () => {
               selectedStep === index ? (
                 <Step.component
                   key={Step.label}
+                  user={user}
+                  dispatchUser={dispatchUser}
                   setSelectedStep={setSelectedStep}
                   steps={steps}
                 />

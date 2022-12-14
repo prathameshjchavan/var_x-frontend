@@ -11,6 +11,7 @@ import { Button, Grid, IconButton, Typography } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import Fields from "./Fields"
 import axios from "axios"
+import { setUser } from "../../contexts/actions"
 
 export const getEmailPasswordFields = (
   hideEmail,
@@ -57,7 +58,7 @@ export const getEmailPasswordFields = (
   }
 }
 
-const Login = ({ setSelectedStep, steps }) => {
+const Login = ({ user, dispatchUser, setSelectedStep, steps }) => {
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -110,8 +111,7 @@ const Login = ({ setSelectedStep, steps }) => {
         password: values.password,
       })
       .then(response => {
-        console.log("User Profile >> ", response.data.user)
-        console.log("JWT >> ", response.data.jwt)
+        dispatchUser(setUser({ ...response.data.user, jwt: response.data.jwt }))
       })
       .catch(error => {
         console.log(error)

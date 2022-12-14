@@ -8,8 +8,9 @@ import { Button, Grid, IconButton, Typography, useTheme } from "@mui/material"
 import { getEmailPasswordFields } from "./Login"
 import Fields from "./Fields"
 import axios from "axios"
+import { setUser } from "../../contexts/actions"
 
-const SignUp = ({ setSelectedStep, steps }) => {
+const SignUp = ({ dispatchUser, setSelectedStep, steps }) => {
   const [values, setValues] = useState({
     name: "",
     email: "",
@@ -81,13 +82,15 @@ const SignUp = ({ setSelectedStep, steps }) => {
         password: values.password,
       })
       .then(response => {
+        dispatchUser(setUser({ ...response.data.user, jwt: response.data.jwt }))
+
         const completeIndex = steps.findIndex(step => step.label === "Complete")
         setSelectedStep(completeIndex)
       })
       .catch(error => {
         console.log(error)
       })
-  }, [values, steps, setSelectedStep])
+  }, [values, steps, setSelectedStep, dispatchUser])
 
   // styled components
   const AddUserIcon = styled("img")(() => ({
