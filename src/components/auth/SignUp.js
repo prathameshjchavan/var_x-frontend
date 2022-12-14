@@ -7,10 +7,13 @@ import { styled } from "@mui/material/styles"
 import { Button, Grid, IconButton, Typography, useTheme } from "@mui/material"
 import { getEmailPasswordFields } from "./Login"
 import Fields from "./Fields"
+import axios from "axios"
 
 const SignUp = ({ setSelectedStep, steps }) => {
   const [values, setValues] = useState({
     name: "",
+    email: "",
+    password: "",
   })
   const [errors, setErrors] = useState({})
   const [visible, setVisible] = useState(false)
@@ -68,9 +71,20 @@ const SignUp = ({ setSelectedStep, steps }) => {
   )
 
   const handleComplete = useCallback(() => {
-    const completeIndex = steps.findIndex(step => step.label === "Complete")
-    setSelectedStep(completeIndex)
-  }, [steps, setSelectedStep])
+    axios
+      .post(`${process.env.STRAPI_API_URL}/api/auth/local/register`, {
+        username: values.name,
+        email: values.email,
+        password: values.password,
+      })
+      .then(response => {
+        const completeIndex = steps.findIndex(step => step.label === "Complete")
+        setSelectedStep(completeIndex)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }, [values, steps, setSelectedStep])
 
   // styled components
   const AddUserIcon = styled("img")(() => ({
