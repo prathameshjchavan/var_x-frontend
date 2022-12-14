@@ -32,6 +32,9 @@ const SignUp = ({ setSelectedStep, steps }) => {
   const fields = info
     ? getEmailPasswordFields(false, false, visible, setVisible)
     : nameField
+  const disabled =
+    Object.keys(errors).some(error => errors[error] === true) ||
+    Object.keys(values).some(value => values[value] === "")
 
   // sx prop
   const sx = {
@@ -113,6 +116,7 @@ const SignUp = ({ setSelectedStep, steps }) => {
       <Grid item>
         <Button
           variant="contained"
+          disabled={info && disabled}
           onClick={() => info && handleComplete()}
           sx={sx.facebookSignUp}
           color="secondary"

@@ -23,8 +23,8 @@ const Fields = ({ fields, errors, setErrors, values, setValues }) => {
 
   return Object.keys(fields).map((field, index) => {
     const validateHelper = event => {
-      const valid = validate({ [field]: event.target.value })
-      setErrors({ ...errors, [field]: !valid[field] })
+      return validate({ [field]: event.target.value })
+      // setErrors({ ...errors, [field]: !valid[field] })
     }
 
     return !fields[field].hidden ? (
@@ -35,14 +35,15 @@ const Fields = ({ fields, errors, setErrors, values, setValues }) => {
           placeholder={fields[field].placeholder}
           type={fields[field].type}
           onChange={e => {
+            const valid = validateHelper(e)
+            if (errors[field] || valid[field] === true)
+              setErrors({ ...errors, [field]: !valid[field] })
             setValues({ ...values, [field]: e.target.value })
-            if (
-              errors[field] ||
-              (values[field] !== "" && errors[field] !== null)
-            )
-              validateHelper(e)
           }}
-          onBlur={e => validateHelper(e)}
+          onBlur={e => {
+            const valid = validateHelper(e)
+            setErrors({ ...errors, [field]: !valid[field] })
+          }}
           error={errors[field]}
           helperText={errors[field] && fields[field].helperText}
           sx={sx.textfield}
