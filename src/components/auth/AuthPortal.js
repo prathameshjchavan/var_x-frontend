@@ -1,7 +1,8 @@
 import { Grid, useTheme } from "@mui/material"
 import Paper from "@mui/material/Paper"
 import Login from "./Login"
-import React, { useMemo, useState } from "react"
+import React, { useMemo, useState, useContext } from "react"
+import { UserContext } from "../../contexts"
 import SignUp from "./SignUp"
 import Complete from "./Complete"
 
@@ -16,6 +17,8 @@ const AuthPortal = () => {
     ],
     []
   )
+  const { user, dispatchUser } = useContext(UserContext)
+  console.log(user)
 
   // sx prop
   const sx = {

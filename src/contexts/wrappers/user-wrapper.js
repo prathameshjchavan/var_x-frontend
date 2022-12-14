@@ -1,6 +1,5 @@
 import React, { useReducer, createContext } from "react"
 import userReducer from "../reducers/user-reducer"
-import { setUser } from "../actions"
 
 export const UserContext = createContext()
 const UserProvider = UserContext.Provider
