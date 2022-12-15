@@ -9,6 +9,7 @@ import forgotPasswordIcon from "../../images/forgot.svg"
 import close from "../../images/close.svg"
 import { Button, Grid, IconButton, Typography } from "@mui/material"
 import { styled } from "@mui/material/styles"
+import CircularProgress from "@mui/material/CircularProgress"
 import Fields from "./Fields"
 import axios from "axios"
 import { setUser } from "../../contexts/actions"
@@ -66,6 +67,7 @@ const Login = ({ user, dispatchUser, setSelectedStep, steps }) => {
   const [errors, setErrors] = useState({})
   const [visible, setVisible] = useState(false)
   const [forgot, setForgot] = useState(false)
+  const [loading, setLoading] = useState(false)
   const disabled =
     Object.keys(errors).some(error => errors[error] === true) ||
     Object.keys(values).some(value => values[value] === "")
@@ -99,12 +101,14 @@ const Login = ({ user, dispatchUser, setSelectedStep, steps }) => {
     return buttonSx
   }, [forgot, sx.login, sx.reset])
 
-  const navigateSignUp = () => {
+  const navigateSignUp = useCallback(() => {
     const signUpIndex = steps.findIndex(step => step.label === "Sign Up")
     setSelectedStep(signUpIndex)
-  }
+  }, [steps, setSelectedStep])
 
-  const handleLogin = () => {
+  const handleLogin = useCallback(() => {
+    setLoading(true)
+
     axios
       .post(`${process.env.STRAPI_API_URL}/api/auth/local`, {
         identifier: values.email,
@@ -116,7 +120,10 @@ const Login = ({ user, dispatchUser, setSelectedStep, steps }) => {
       .catch(error => {
         console.log(error)
       })
-  }
+      .finally(() => {
+        setLoading(false)
+      })
+  }, [setLoading, values, dispatchUser])
 
   // variables
   const fields = useMemo(
@@ -140,13 +147,17 @@ const Login = ({ user, dispatchUser, setSelectedStep, steps }) => {
         <Button
           sx={getButtonSx()}
           onClick={() => (forgot ? null : handleLogin())}
-          disabled={!forgot && disabled}
+          disabled={loading || (!forgot && disabled)}
           variant="contained"
           color="secondary"
         >
-          <Typography variant="h5">
-            {forgot ? "Reset Password" : "Login"}
-          </Typography>
+          {loading ? (
+            <CircularProgress />
+          ) : (
+            <Typography variant="h5">
+              {forgot ? "Reset Password" : "Login"}
+            </Typography>
+          )}
         </Button>
       </Grid>
       {forgot ? null : (

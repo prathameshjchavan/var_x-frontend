@@ -6,6 +6,7 @@ import backward from "../../images/backwards-outline.svg"
 import { styled } from "@mui/material/styles"
 import { Button, Grid, IconButton, Typography, useTheme } from "@mui/material"
 import { getEmailPasswordFields } from "./Login"
+import CircularProgress from "@mui/material/CircularProgress"
 import Fields from "./Fields"
 import axios from "axios"
 import { setUser } from "../../contexts/actions"
@@ -19,6 +20,7 @@ const SignUp = ({ dispatchUser, setSelectedStep, steps }) => {
   const [errors, setErrors] = useState({})
   const [visible, setVisible] = useState(false)
   const [info, setInfo] = useState(false)
+  const [loading, setLoading] = useState(false)
   const theme = useTheme()
   const nameField = useMemo(
     () => ({
@@ -75,6 +77,8 @@ const SignUp = ({ dispatchUser, setSelectedStep, steps }) => {
   )
 
   const handleComplete = useCallback(() => {
+    setLoading(true)
+
     axios
       .post(`${process.env.STRAPI_API_URL}/api/auth/local/register`, {
         username: values.name,
@@ -90,7 +94,10 @@ const SignUp = ({ dispatchUser, setSelectedStep, steps }) => {
       .catch(error => {
         console.log(error)
       })
-  }, [values, steps, setSelectedStep, dispatchUser])
+      .finally(() => {
+        setLoading(false)
+      })
+  }, [values, steps, setSelectedStep, dispatchUser, setLoading])
 
   // styled components
   const AddUserIcon = styled("img")(() => ({
@@ -119,14 +126,18 @@ const SignUp = ({ dispatchUser, setSelectedStep, steps }) => {
       <Grid item>
         <Button
           variant="contained"
-          disabled={info && disabled}
+          disabled={loading || (info && disabled)}
           onClick={() => info && handleComplete()}
           sx={sx.facebookSignUp}
           color="secondary"
         >
-          <Typography sx={sx.facebookText} variant="h5">
-            Sign up{!info && " with Facebook"}
-          </Typography>
+          {loading ? (
+            <CircularProgress />
+          ) : (
+            <Typography sx={sx.facebookText} variant="h5">
+              Sign up{!info && " with Facebook"}
+            </Typography>
+          )}
         </Button>
       </Grid>
       <Grid item container justifyContent="space-between">

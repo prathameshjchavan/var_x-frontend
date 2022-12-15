@@ -1,4 +1,4 @@
-import React, { useReducer, createContext, useEffect } from "react"
+import React, { useReducer, createContext, useEffect, useMemo } from "react"
 import userReducer from "../reducers/user-reducer"
 import axios from "axios"
 import { setUser } from "../actions"
@@ -7,8 +7,8 @@ export const UserContext = createContext()
 const UserProvider = UserContext.Provider
 
 export function UserWrapper({ children }) {
-  const defaultUser = { username: "Guest" }
-  const storedUser = JSON.parse(localStorage.getItem("user"))
+  const defaultUser = useMemo(() => ({ username: "Guest" }), [])
+  const storedUser = useMemo(() => JSON.parse(localStorage.getItem("user")), [])
   const [user, dispatchUser] = useReducer(
     userReducer,
     storedUser || defaultUser
@@ -33,7 +33,7 @@ export function UserWrapper({ children }) {
           })
       }, 3000)
     }
-  }, [])
+  }, [defaultUser, storedUser])
 
   return (
     <UserProvider value={{ user, dispatchUser, defaultUser }}>
