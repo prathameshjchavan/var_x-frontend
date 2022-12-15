@@ -12,7 +12,7 @@ import { styled } from "@mui/material/styles"
 import CircularProgress from "@mui/material/CircularProgress"
 import Fields from "./Fields"
 import axios from "axios"
-import { setUser } from "../../contexts/actions"
+import { setUser, setSnackbar } from "../../contexts/actions"
 
 export const getEmailPasswordFields = (
   hideEmail,
@@ -59,7 +59,13 @@ export const getEmailPasswordFields = (
   }
 }
 
-const Login = ({ user, dispatchUser, setSelectedStep, steps }) => {
+const Login = ({
+  user,
+  dispatchUser,
+  dispatchFeedback,
+  setSelectedStep,
+  steps,
+}) => {
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -118,12 +124,13 @@ const Login = ({ user, dispatchUser, setSelectedStep, steps }) => {
         dispatchUser(setUser({ ...response.data.user, jwt: response.data.jwt }))
       })
       .catch(error => {
-        console.log(error)
+        const { message } = error.response.data.error
+        dispatchFeedback(setSnackbar({ status: "error", message }))
       })
       .finally(() => {
         setLoading(false)
       })
-  }, [setLoading, values, dispatchUser])
+  }, [setLoading, values, dispatchUser, dispatchFeedback])
 
   // variables
   const fields = useMemo(

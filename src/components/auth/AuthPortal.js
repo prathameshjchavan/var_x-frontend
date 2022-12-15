@@ -2,7 +2,7 @@ import { Grid, useTheme } from "@mui/material"
 import Paper from "@mui/material/Paper"
 import Login from "./Login"
 import React, { useMemo, useState, useContext } from "react"
-import { UserContext } from "../../contexts"
+import { UserContext, FeedbackContext } from "../../contexts"
 import SignUp from "./SignUp"
 import Complete from "./Complete"
 
@@ -18,6 +18,7 @@ const AuthPortal = () => {
     []
   )
   const { user, dispatchUser } = useContext(UserContext)
+  const { feedback, dispatchFeedback } = useContext(FeedbackContext)
 
   // sx prop
   const sx = {
@@ -54,6 +55,8 @@ const AuthPortal = () => {
                   key={Step.label}
                   user={user}
                   dispatchUser={dispatchUser}
+                  feedback={feedback}
+                  dispatchFeedback={dispatchFeedback}
                   setSelectedStep={setSelectedStep}
                   steps={steps}
                 />

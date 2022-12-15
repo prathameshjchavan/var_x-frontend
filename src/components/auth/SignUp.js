@@ -9,9 +9,9 @@ import { getEmailPasswordFields } from "./Login"
 import CircularProgress from "@mui/material/CircularProgress"
 import Fields from "./Fields"
 import axios from "axios"
-import { setUser } from "../../contexts/actions"
+import { setUser, setSnackbar } from "../../contexts/actions"
 
-const SignUp = ({ dispatchUser, setSelectedStep, steps }) => {
+const SignUp = ({ dispatchUser, dispatchFeedback, setSelectedStep, steps }) => {
   const [values, setValues] = useState({
     name: "",
     email: "",
@@ -92,12 +92,21 @@ const SignUp = ({ dispatchUser, setSelectedStep, steps }) => {
         setSelectedStep(completeIndex)
       })
       .catch(error => {
+        const { message } = error.response.data.error
         console.log(error)
+        dispatchFeedback(setSnackbar({ status: "error", message }))
       })
       .finally(() => {
         setLoading(false)
       })
-  }, [values, steps, setSelectedStep, dispatchUser, setLoading])
+  }, [
+    values,
+    steps,
+    setSelectedStep,
+    dispatchUser,
+    dispatchFeedback,
+    setLoading,
+  ])
 
   // styled components
   const AddUserIcon = styled("img")(() => ({
