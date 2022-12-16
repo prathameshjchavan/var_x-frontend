@@ -141,10 +141,35 @@ const Login = ({
       })
   }, [setLoading, values, dispatchUser, dispatchFeedback])
 
+  const handleForgot = useCallback(() => {
+    setLoading(true)
+
+    axios
+      .post(`${process.env.STRAPI_API_URL}/api/auth/forgot-password`, {
+        email: values.email,
+      })
+      .then(response => {
+        dispatchFeedback(
+          setSnackbar({ status: "success", message: "Reset Code Sent" })
+        )
+
+        setTimeout(() => {
+          setForgot(false)
+        }, 6000)
+      })
+      .catch(error => {
+        const { message } = error.response.data.error
+        dispatchFeedback(setSnackbar({ status: "error", message }))
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }, [dispatchFeedback, values])
+
   // variables
   const fields = useMemo(
-    () => getEmailPasswordFields(false, false, visible, setVisible),
-    [visible, setVisible]
+    () => getEmailPasswordFields(false, forgot, visible, setVisible),
+    [visible, setVisible, forgot]
   )
 
   return (
@@ -162,7 +187,7 @@ const Login = ({
       <Grid item>
         <Button
           sx={getButtonSx()}
-          onClick={() => (forgot ? null : handleLogin())}
+          onClick={() => (forgot ? handleForgot() : handleLogin())}
           disabled={loading || (!forgot && disabled)}
           variant="contained"
           color="secondary"
