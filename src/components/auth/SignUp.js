@@ -32,12 +32,19 @@ const SignUp = ({ dispatchUser, dispatchFeedback, setSelectedStep, steps }) => {
     }),
     []
   )
-  const fields = info
-    ? getEmailPasswordFields(false, false, visible, setVisible)
-    : nameField
-  const disabled =
-    Object.keys(errors).some(error => errors[error] === true) ||
-    Object.keys(values).some(value => values[value] === "")
+  const fields = useMemo(
+    () =>
+      info
+        ? getEmailPasswordFields(false, false, visible, setVisible)
+        : nameField,
+    [info, visible, setVisible, nameField]
+  )
+  const disabled = useMemo(
+    () =>
+      Object.keys(errors).some(error => errors[error] === true) ||
+      Object.keys(errors).length !== Object.keys(values).length,
+    [errors, values]
+  )
 
   // sx prop
   const sx = {

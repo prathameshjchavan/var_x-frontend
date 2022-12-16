@@ -34,10 +34,10 @@ const Fields = ({ fields, errors, setErrors, values, setValues }) => {
           placeholder={fields[field].placeholder}
           type={fields[field].type}
           onChange={e => {
+            setValues({ ...values, [field]: e.target.value })
             const valid = validateHelper(e)
             if (errors[field] || valid[field] === true)
               setErrors({ ...errors, [field]: !valid[field] })
-            setValues({ ...values, [field]: e.target.value })
           }}
           onBlur={e => {
             const valid = validateHelper(e)

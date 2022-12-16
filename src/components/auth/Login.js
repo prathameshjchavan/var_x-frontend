@@ -74,9 +74,12 @@ const Login = ({
   const [visible, setVisible] = useState(false)
   const [forgot, setForgot] = useState(false)
   const [loading, setLoading] = useState(false)
-  const disabled =
-    Object.keys(errors).some(error => errors[error] === true) ||
-    Object.keys(values).some(value => values[value] === "")
+  const disabled = useMemo(
+    () =>
+      Object.keys(errors).some(error => errors[error] === true) ||
+      Object.keys(errors).length !== Object.keys(values).length,
+    [errors, values]
+  )
 
   // sx prop
   const sx = {
