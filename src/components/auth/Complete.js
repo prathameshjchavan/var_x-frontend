@@ -1,11 +1,18 @@
 import { Button, Grid, Typography, useTheme } from "@mui/material"
-import React, { Fragment } from "react"
+import React, { useEffect, Fragment } from "react"
 import { styled } from "@mui/material/styles"
 import checkmark from "../../images/checkmark-outline.svg"
 import forward from "../../images/forward-outline.svg"
+import { setUser } from "../../contexts/actions"
 
-const Complete = () => {
+const Complete = ({ user, dispatchUser }) => {
   const theme = useTheme()
+
+  useEffect(() => {
+    return () => {
+      dispatchUser(setUser({ ...user, onboarding: true }))
+    }
+  }, [dispatchUser, user])
 
   // sx prop
   const sx = {

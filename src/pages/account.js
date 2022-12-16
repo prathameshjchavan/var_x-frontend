@@ -15,7 +15,7 @@ const Account = () => {
 
   return (
     <Layout>
-      {user.jwt ? (
+      {user.jwt && user.onboarding ? (
         <Button variant="contained" onClick={handleLogout}>
           Logout
         </Button>
