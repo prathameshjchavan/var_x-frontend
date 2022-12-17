@@ -1,10 +1,11 @@
 import { Grid, useTheme } from "@mui/material"
 import Paper from "@mui/material/Paper"
 import Login from "./Login"
-import React, { useMemo, useState, useContext } from "react"
+import React, { useMemo, useState, useEffect, useContext } from "react"
 import { UserContext, FeedbackContext } from "../../contexts"
 import SignUp from "./SignUp"
 import Complete from "./Complete"
+import Reset from "./reset"
 
 const AuthPortal = () => {
   const theme = useTheme()
@@ -14,6 +15,7 @@ const AuthPortal = () => {
       { component: Login, label: "Login" },
       { component: SignUp, label: "Sign Up" },
       { component: Complete, label: "Complete" },
+      { component: Reset, label: "Reset" },
     ],
     []
   )
@@ -37,6 +39,11 @@ const AuthPortal = () => {
       border: `2rem solid ${theme.palette.primary.main}`,
     },
   }
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const code = params.get("code")
+  }, [])
 
   return (
     <Grid container justifyContent="center" sx={sx.container}>
