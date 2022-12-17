@@ -48,7 +48,7 @@ const AuthPortal = () => {
       const resetStepIndex = steps.findIndex(step => step.label === "Reset")
       setSelectedStep(resetStepIndex)
     }
-  }, [])
+  }, [steps])
 
   return (
     <Grid container justifyContent="center" sx={sx.container}>
