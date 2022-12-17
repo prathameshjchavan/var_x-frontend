@@ -43,6 +43,11 @@ const AuthPortal = () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const code = params.get("code")
+
+    if (code) {
+      const resetStepIndex = steps.findIndex(step => step.label === "Reset")
+      setSelectedStep(resetStepIndex)
+    }
   }, [])
 
   return (
