@@ -1,4 +1,10 @@
-import React, { Fragment, useCallback, useMemo, useState } from "react"
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react"
 import { getEmailPasswordFields } from "./Login"
 import accountIcon from "../../images/account.svg"
 import { Button, Grid, Typography } from "@mui/material"
@@ -15,6 +21,7 @@ const Reset = ({ steps, setSelectedStep, dispatchFeedback }) => {
   })
   const [errors, setErrors] = useState({})
   const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
   const disabled = useMemo(
     () =>
       Object.keys(errors).some(error => errors[error] === true) ||
@@ -65,19 +72,13 @@ const Reset = ({ steps, setSelectedStep, dispatchFeedback }) => {
         passwordConfirmation: values.confirmation,
       })
       .then(response => {
+        setSuccess(true)
         dispatchFeedback(
           setSnackbar({
             status: "success",
             message: "Password Reset Successfully",
           })
         )
-
-        setTimeout(() => {
-          window.history.replaceState(null, null, window.location.pathname)
-
-          const loginStep = steps.findIndex(step => step.label === "Login")
-          setSelectedStep(loginStep)
-        }, 6000)
       })
       .catch(error => {
         const { message } = error.response.data.error
@@ -87,7 +88,20 @@ const Reset = ({ steps, setSelectedStep, dispatchFeedback }) => {
       .finally(() => {
         setLoading(false)
       })
-  }, [dispatchFeedback, setSelectedStep, steps, values])
+  }, [dispatchFeedback, values])
+
+  useEffect(() => {
+    if (!success) return
+
+    const timer = setTimeout(() => {
+      window.history.replaceState(null, null, window.location.pathname)
+
+      const loginStep = steps.findIndex(step => step.label === "Login")
+      setSelectedStep(loginStep)
+    }, 6000)
+
+    return () => clearTimeout(timer)
+  }, [success, setSelectedStep, steps])
 
   return (
     <Fragment>

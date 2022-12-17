@@ -1,4 +1,10 @@
-import React, { Fragment, useCallback, useMemo, useState } from "react"
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react"
 import accountIcon from "../../images/account.svg"
 import EmailAdornment from "../../images/EmailAdornment"
 import passwordAdornment from "../../images/password-adornment.svg"
@@ -80,6 +86,7 @@ const Login = ({
       Object.keys(errors).length !== Object.keys(values).length,
     [errors, values]
   )
+  const [success, setSuccess] = useState(false)
 
   // sx prop
   const sx = {
@@ -149,13 +156,10 @@ const Login = ({
         email: values.email,
       })
       .then(response => {
+        setSuccess(true)
         dispatchFeedback(
           setSnackbar({ status: "success", message: "Reset Code Sent" })
         )
-
-        setTimeout(() => {
-          setForgot(false)
-        }, 6000)
       })
       .catch(error => {
         const { message } = error.response.data.error
@@ -171,6 +175,17 @@ const Login = ({
     () => getEmailPasswordFields(false, forgot, visible, setVisible),
     [visible, setVisible, forgot]
   )
+
+  // useEffect
+  useEffect(() => {
+    if (!success) return
+
+    const timer = setTimeout(() => {
+      setForgot(false)
+    }, 6000)
+
+    return () => clearTimeout(timer)
+  }, [success])
 
   return (
     <Fragment>
