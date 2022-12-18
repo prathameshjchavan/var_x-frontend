@@ -115,6 +115,20 @@ const SignUp = ({ dispatchUser, dispatchFeedback, setSelectedStep, steps }) => {
     setLoading,
   ])
 
+  const handleFacebookSignup = useCallback(() => {
+    setLoading(true)
+
+    axios
+      .get(`${process.env.STRAPI_API_URL}/api/connect/facebook`)
+      .then(response => {})
+      .catch(error => {
+        console.error(error)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }, [])
+
   // styled components
   const AddUserIcon = styled("img")(() => ({
     height: "10rem",
@@ -143,7 +157,7 @@ const SignUp = ({ dispatchUser, dispatchFeedback, setSelectedStep, steps }) => {
         <Button
           variant="contained"
           disabled={loading || (info && disabled)}
-          onClick={() => info && handleComplete()}
+          onClick={() => (info ? handleComplete() : handleFacebookSignup())}
           sx={sx.facebookSignUp}
           color="secondary"
         >

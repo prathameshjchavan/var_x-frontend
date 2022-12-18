@@ -170,6 +170,12 @@ const Login = ({
       })
   }, [dispatchFeedback, values])
 
+  const handleFacebookLogin = useCallback(() => {
+    setLoading(true)
+
+    axios.get(`${process.env.STRAPI_API_URL}/api/connect/facebook`)
+  }, [])
+
   // variables
   const fields = useMemo(
     () => getEmailPasswordFields(false, forgot, visible, setVisible),
@@ -218,7 +224,7 @@ const Login = ({
       </Grid>
       {forgot ? null : (
         <Grid item>
-          <Button sx={sx.facebookButton}>
+          <Button onClick={handleFacebookLogin} sx={sx.facebookButton}>
             <Typography variant="h3" sx={sx.facebookText}>
               Login with Facebook
             </Typography>

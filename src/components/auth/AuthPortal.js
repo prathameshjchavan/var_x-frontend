@@ -6,6 +6,8 @@ import { UserContext, FeedbackContext } from "../../contexts"
 import SignUp from "./SignUp"
 import Complete from "./Complete"
 import Reset from "./reset"
+import { setSnackbar, setUser } from "../../contexts/actions"
+import axios from "axios"
 
 const AuthPortal = () => {
   const theme = useTheme()
@@ -43,12 +45,40 @@ const AuthPortal = () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const code = params.get("code")
+    const access_token = params.get("access_token")
 
     if (code) {
       const resetStepIndex = steps.findIndex(step => step.label === "Reset")
       setSelectedStep(resetStepIndex)
+    } else if (access_token) {
+      axios
+        .get(`${process.env.STRAPI_API_URL}/auth/facebook/callback`, {
+          params: {
+            access_token,
+          },
+        })
+        .then(response => {
+          dispatchUser(
+            setUser({
+              ...response.data.user,
+              jwt: response.data.jwt,
+              onboarding: true,
+            })
+          )
+
+          window.history.replaceState(null, null, window.location.pathname)
+        })
+        .catch(error => {
+          console.error(error)
+          dispatchFeedback(
+            setSnackbar({
+              status: "error",
+              message: "Connecting to Facebook failed, please try again.",
+            })
+          )
+        })
     }
-  }, [steps])
+  }, [steps, dispatchFeedback, dispatchUser])
 
   return (
     <Grid container justifyContent="center" sx={sx.container}>
