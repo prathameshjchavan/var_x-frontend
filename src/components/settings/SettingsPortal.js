@@ -80,6 +80,17 @@ const SettingsPortal = () => {
   // animated components
   const AnimatedButton = animated(Button)
 
+  // springs
+  const springs = useSprings(
+    buttons.length,
+    buttons.map(button => ({
+      transform:
+        selectedSetting === button.label || selectedSetting === null
+          ? "scale(1)"
+          : "scale(0)",
+    }))
+  )
+
   return (
     <Grid container direction="column" alignItems="center">
       <Grid item>
@@ -97,23 +108,24 @@ const SettingsPortal = () => {
         alignItems="center"
         justifyContent="space-around"
       >
-        {buttons.map(button => (
-          <Grid item key={button.label}>
-            <Button
+        {springs.map((style, index) => (
+          <Grid item key={index}>
+            <AnimatedButton
               variant="contained"
               color="primary"
               sx={sx.button}
-              onClick={() => handleClick(button.label)}
+              onClick={() => handleClick(buttons[index].label)}
+              style={style}
             >
               <Grid container direction="column">
                 <Grid item>
-                  <Icon src={button.icon} alt={button.label} />
+                  <Icon src={buttons[index].icon} alt={buttons[index].label} />
                 </Grid>
                 <Grid item>
-                  <Typography variant="h5">{button.label}</Typography>
+                  <Typography variant="h5">{buttons[index].label}</Typography>
                 </Grid>
               </Grid>
-            </Button>
+            </AnimatedButton>
           </Grid>
         ))}
       </Grid>
