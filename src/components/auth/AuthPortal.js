@@ -1,4 +1,4 @@
-import { Grid, useTheme } from "@mui/material"
+import { Grid, useMediaQuery, useTheme } from "@mui/material"
 import Paper from "@mui/material/Paper"
 import Login from "./Login"
 import React, { useMemo, useState, useEffect, useContext } from "react"
@@ -23,6 +23,7 @@ const AuthPortal = () => {
   )
   const { user, dispatchUser } = useContext(UserContext)
   const { feedback, dispatchFeedback } = useContext(FeedbackContext)
+  const matchesSmall = useMediaQuery("(max-width: 1100px)")
 
   // sx prop
   const sx = {
@@ -31,9 +32,12 @@ const AuthPortal = () => {
     },
     paper: {
       border: `2rem solid ${theme.palette.secondary.main}`,
-      width: "50rem",
+      width: matchesSmall ? "30rem" : "50rem",
       height: "40rem",
       borderRadius: 0,
+      [theme.breakpoints.down("sm")]: {
+        width: "100vw",
+      },
     },
     inner: {
       height: "40rem",

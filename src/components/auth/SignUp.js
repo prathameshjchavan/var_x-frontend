@@ -142,9 +142,11 @@ const SignUp = ({ dispatchUser, dispatchFeedback, setSelectedStep, steps }) => {
       <Grid item>
         <Button
           variant="contained"
-          component={!info && "a"}
+          component={!info ? "a" : undefined}
           href={
-            !info && `${process.env.STRAPI_API_PROXY_URL}/api/connect/facebook`
+            !info
+              ? `${process.env.STRAPI_API_PROXY_URL}/api/connect/facebook`
+              : undefined
           }
           disabled={loading || (info && disabled)}
           onClick={() => info && handleComplete()}
