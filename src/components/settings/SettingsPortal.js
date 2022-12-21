@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from "react"
+import React, { useCallback, useContext, useMemo, useState } from "react"
 import accountIcon from "../../images/account.svg"
 import settingsIcon from "../../images/settings.svg"
 import orderHistoryIcon from "../../images/order-history.svg"
@@ -8,10 +8,12 @@ import background from "../../images/toolbar-background.svg"
 import { Button, Grid, Typography, useTheme } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { UserContext } from "../../contexts"
+import { useSprings, animated } from "@react-spring/web"
 
 const SettingsPortal = () => {
   const { user } = useContext(UserContext)
   const theme = useTheme()
+  const [selectedSetting, setSelectedSetting] = useState(null)
   const buttons = useMemo(
     () => [
       {
@@ -56,11 +58,27 @@ const SettingsPortal = () => {
       borderRadius: "25px",
     },
   }
+
   // styled components
   const Icon = styled("img")(() => ({
     height: "12rem",
     width: "12rem",
   }))
+
+  // functions
+  const handleClick = useCallback(
+    setting => {
+      if (selectedSetting === setting) {
+        setSelectedSetting(null)
+      } else {
+        setSelectedSetting(setting)
+      }
+    },
+    [selectedSetting, setSelectedSetting]
+  )
+
+  // animated components
+  const AnimatedButton = animated(Button)
 
   return (
     <Grid container direction="column" alignItems="center">
@@ -81,7 +99,12 @@ const SettingsPortal = () => {
       >
         {buttons.map(button => (
           <Grid item key={button.label}>
-            <Button variant="contained" color="primary" sx={sx.button}>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={sx.button}
+              onClick={() => handleClick(button.label)}
+            >
               <Grid container direction="column">
                 <Grid item>
                   <Icon src={button.icon} alt={button.label} />
