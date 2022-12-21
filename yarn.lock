@@ -8952,6 +8952,11 @@ react-refresh@^0.14.0:
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.14.0.tgz#4e02825378a5f227079554d4284889354e5f553e"
   integrity sha512-wViHqhAd8OHeLS/IRMJjTSDHF3U9eWi62F/MledQGPdJGDhodXJ9PBLNGr6WWL7qlH12Mt3TyTpbS+hGXMjCzQ==
 
+react-resize-aware@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/react-resize-aware/-/react-resize-aware-3.1.2.tgz#a5e6fe4691a3ac8d3b0fadd37008339db2294c4f"
+  integrity sha512-sBtMIEy/9oI+Xf2o7IdWdkTokpZSPo9TWn60gqWKPG3BXg44Rg3FCIMiIjmgvRUF4eQptw6pqYTUhYwkeVSxXA==
+
 react-server-dom-webpack@0.0.0-experimental-c8b778b7f-20220825:
   version "0.0.0-experimental-c8b778b7f-20220825"
   resolved "https://registry.yarnpkg.com/react-server-dom-webpack/-/react-server-dom-webpack-0.0.0-experimental-c8b778b7f-20220825.tgz#b147886ed7cff5b31d9452d6ffe6987bfd876ceb"

@@ -9,6 +9,7 @@ import { Button, Grid, Typography, useTheme } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { UserContext } from "../../contexts"
 import { useSprings, animated } from "@react-spring/web"
+import useResizeAware from "react-resize-aware"
 
 const SettingsPortal = () => {
   const { user } = useContext(UserContext)
@@ -35,6 +36,8 @@ const SettingsPortal = () => {
     ],
     []
   )
+  const AnimatedButton = useMemo(() => animated(Button), [])
+  const [resizeListener, sizes] = useResizeAware()
 
   // sx prop
   const sx = {
@@ -77,9 +80,6 @@ const SettingsPortal = () => {
     [selectedSetting, setSelectedSetting]
   )
 
-  // animated components
-  const AnimatedButton = animated(Button)
-
   // springs
   const springs = useSprings(
     buttons.length,
@@ -93,9 +93,11 @@ const SettingsPortal = () => {
 
   return (
     <Grid container direction="column" alignItems="center">
+      {resizeListener}
       <Grid item>
         <img src={accountIcon} alt="settings page" />
       </Grid>
+      {sizes.width} X {sizes.height}
       <Grid item>
         <Typography variant="h4" sx={sx.name}>
           Welcome back, {user.username}
