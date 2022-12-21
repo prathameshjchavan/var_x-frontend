@@ -13,7 +13,7 @@ import showPasswordIcon from "../../images/show-password.svg"
 import addUserIcon from "../../images/add-user.svg"
 import forgotPasswordIcon from "../../images/forgot.svg"
 import close from "../../images/close.svg"
-import { Button, Grid, IconButton, Typography } from "@mui/material"
+import { Button, Grid, IconButton, Typography, useTheme } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import CircularProgress from "@mui/material/CircularProgress"
 import Fields from "./Fields"
@@ -87,6 +87,7 @@ const Login = ({
     [errors, values]
   )
   const [success, setSuccess] = useState(false)
+  const theme = useTheme()
 
   // sx prop
   const sx = {
@@ -95,6 +96,9 @@ const Login = ({
       width: "20rem",
       borderRadius: "50px",
       textTransform: "none",
+      [theme.breakpoints.down("sm")]: {
+        width: "15rem",
+      },
     },
     facebookButton: {
       marginTop: errors.password ? 0 : "-1rem",
@@ -106,6 +110,11 @@ const Login = ({
     },
     close: {
       paddingTop: forgot && "5px",
+    },
+    buttonText: {
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "1.5rem",
+      },
     },
   }
 
@@ -210,8 +219,8 @@ const Login = ({
           {loading ? (
             <CircularProgress />
           ) : (
-            <Typography variant="h5">
-              {forgot ? "Reset Password" : "Login"}
+            <Typography variant="h5" sx={sx.buttonText}>
+              {forgot ? "Forgot Password" : "Login"}
             </Typography>
           )}
         </Button>

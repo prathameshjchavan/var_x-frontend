@@ -18,6 +18,9 @@ const Fields = ({ fields, errors, setErrors, values, setValues }) => {
           borderBottom: `2px solid ${theme.palette.primary.main}`,
         },
       },
+      [theme.breakpoints.down("sm")]: {
+        width: "15rem",
+      },
     },
   }
 

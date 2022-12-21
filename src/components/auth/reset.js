@@ -7,7 +7,7 @@ import React, {
 } from "react"
 import { getEmailPasswordFields } from "./Login"
 import accountIcon from "../../images/account.svg"
-import { Button, Grid, Typography } from "@mui/material"
+import { Button, Grid, Typography, useTheme } from "@mui/material"
 import Fields from "./Fields"
 import CircularProgress from "@mui/material/CircularProgress"
 import { setSnackbar } from "../../contexts/actions"
@@ -41,6 +41,7 @@ const Reset = ({ steps, setSelectedStep, dispatchFeedback }) => {
       confirmation: { ...password, placeholder: "Confirm Password" },
     }
   }, [visible, setVisible])
+  const theme = useTheme()
 
   // sx prop
   const sx = {
@@ -55,6 +56,14 @@ const Reset = ({ steps, setSelectedStep, dispatchFeedback }) => {
         Object.values(errors).filter(value => value).length === 2
           ? "2rem"
           : "4rem",
+      [theme.breakpoints.down("sm")]: {
+        width: "15rem",
+      },
+    },
+    buttonText: {
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "1.5rem",
+      },
     },
   }
 
@@ -126,7 +135,9 @@ const Reset = ({ steps, setSelectedStep, dispatchFeedback }) => {
           {loading ? (
             <CircularProgress />
           ) : (
-            <Typography variant="h5">Reset Password</Typography>
+            <Typography variant="h5" sx={sx.buttonText}>
+              Reset Password
+            </Typography>
           )}
         </Button>
       </Grid>

@@ -48,25 +48,20 @@ const SignUp = ({ dispatchUser, dispatchFeedback, setSelectedStep, steps }) => {
 
   // sx prop
   const sx = {
-    textfield: {
-      width: "20rem",
-      "& .MuiInput-input": {
-        color: theme.palette.secondary.main,
-      },
-      "& .MuiInput-underline": {
-        "&:before, &:hover:not(.Mui-disabled):before": {
-          borderBottom: `2px solid ${theme.palette.primary.main}`,
-        },
-      },
-    },
     facebookSignUp: {
       width: "20rem",
       borderRadius: "50px",
       marginTop: info ? 0 : "-3rem",
+      [theme.breakpoints.down("sm")]: {
+        width: "15rem",
+      },
     },
     facebookText: {
       textTransform: "none",
       fontSize: "1.5rem",
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "1.25rem",
+      },
     },
   }
 

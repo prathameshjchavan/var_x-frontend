@@ -36,13 +36,17 @@ const AuthPortal = () => {
       height: "40rem",
       borderRadius: 0,
       [theme.breakpoints.down("sm")]: {
-        width: "100vw",
+        borderWidth: "1rem",
+        width: "calc(100vw - 2rem)",
       },
     },
     inner: {
       height: "40rem",
       width: "100%",
       border: `2rem solid ${theme.palette.primary.main}`,
+      [theme.breakpoints.down("sm")]: {
+        borderWidth: "1rem",
+      },
     },
   }
 
