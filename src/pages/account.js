@@ -1,27 +1,15 @@
-import { Button } from "@mui/material"
-import React, { useCallback, useContext } from "react"
+import React, { useContext } from "react"
 import AuthPortal from "../components/auth/AuthPortal"
+import SettingsPortal from "../components/settings/SettingsPortal"
 import Layout from "../components/ui/layout"
 import { UserContext } from "../contexts"
-import { setUser } from "../contexts/actions"
 
 const Account = () => {
-  const { user, dispatchUser, defaultUser } = useContext(UserContext)
-
-  // functions
-  const handleLogout = useCallback(() => {
-    dispatchUser(setUser(defaultUser))
-  }, [dispatchUser, defaultUser])
+  const { user } = useContext(UserContext)
 
   return (
     <Layout>
-      {user.jwt && user.onboarding ? (
-        <Button variant="contained" onClick={handleLogout}>
-          Logout
-        </Button>
-      ) : (
-        <AuthPortal />
-      )}
+      {user.jwt && user.onboarding ? <SettingsPortal /> : <AuthPortal />}
     </Layout>
   )
 }
