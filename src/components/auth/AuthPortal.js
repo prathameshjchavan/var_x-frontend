@@ -52,7 +52,7 @@ const AuthPortal = () => {
       setSelectedStep(resetStepIndex)
     } else if (access_token) {
       axios
-        .get(`${process.env.STRAPI_API_URL}/auth/facebook/callback`, {
+        .get(`${process.env.STRAPI_API_URL}/api/auth/facebook/callback`, {
           params: {
             access_token,
           },

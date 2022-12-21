@@ -115,20 +115,6 @@ const SignUp = ({ dispatchUser, dispatchFeedback, setSelectedStep, steps }) => {
     setLoading,
   ])
 
-  const handleFacebookSignup = useCallback(() => {
-    setLoading(true)
-
-    axios
-      .get(`${process.env.STRAPI_API_URL}/api/connect/facebook`)
-      .then(response => {})
-      .catch(error => {
-        console.error(error)
-      })
-      .finally(() => {
-        setLoading(false)
-      })
-  }, [])
-
   // styled components
   const AddUserIcon = styled("img")(() => ({
     height: "10rem",
@@ -156,8 +142,12 @@ const SignUp = ({ dispatchUser, dispatchFeedback, setSelectedStep, steps }) => {
       <Grid item>
         <Button
           variant="contained"
+          component={!info && "a"}
+          href={
+            !info && `${process.env.STRAPI_API_PROXY_URL}/api/connect/facebook`
+          }
           disabled={loading || (info && disabled)}
-          onClick={() => (info ? handleComplete() : handleFacebookSignup())}
+          onClick={() => info && handleComplete()}
           sx={sx.facebookSignUp}
           color="secondary"
         >
