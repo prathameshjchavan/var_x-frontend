@@ -1,8 +1,13 @@
 import { Grid } from "@mui/material"
 import React from "react"
+import Details from "./Details"
 
 const Settings = () => {
-  return <Grid>User Settings</Grid>
+  return (
+    <Grid container>
+      <Details />
+    </Grid>
+  )
 }
 
 export default Settings
