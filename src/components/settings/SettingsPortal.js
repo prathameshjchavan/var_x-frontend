@@ -55,11 +55,6 @@ const SettingsPortal = () => {
       borderBottom: `0.5rem solid ${theme.palette.primary.main}`,
       margin: "5rem 0",
     },
-    button: {
-      height: "22rem",
-      width: "22rem",
-      borderRadius: "25px",
-    },
   }
 
   // styled components
@@ -84,10 +79,23 @@ const SettingsPortal = () => {
   const springs = useSprings(
     buttons.length,
     buttons.map(button => ({
-      transform:
-        selectedSetting === button.label || selectedSetting === null
-          ? "scale(1)"
-          : "scale(0)",
+      to: async (next, cancel) => {
+        const scale = {
+          transform:
+            selectedSetting === button.label || selectedSetting === null
+              ? "scale(1)"
+              : "scale(0)",
+        }
+        const size = {
+          height: selectedSetting === button.label ? "60rem" : "22rem",
+          width:
+            selectedSetting === button.label ? `${sizes.width}px` : "352px",
+          borderRadius: selectedSetting === button.label ? "0px" : "25px",
+        }
+
+        await next(selectedSetting !== null ? scale : size)
+        await next(selectedSetting !== null ? size : scale)
+      },
     }))
   )
 
@@ -107,7 +115,6 @@ const SettingsPortal = () => {
           Welcome back, {user.username}
         </Typography>
       </Grid>
-      {sizes.width} X {sizes.height}
       <Grid
         item
         container
@@ -120,7 +127,6 @@ const SettingsPortal = () => {
             <AnimatedButton
               variant="contained"
               color="primary"
-              sx={sx.button}
               onClick={() => handleClick(buttons[index].label)}
               style={style}
             >
