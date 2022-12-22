@@ -92,17 +92,22 @@ const SettingsPortal = () => {
   )
 
   return (
-    <Grid container direction="column" alignItems="center">
+    <Grid
+      container
+      style={{ position: "relative" }}
+      direction="column"
+      alignItems="center"
+    >
       {resizeListener}
       <Grid item>
         <img src={accountIcon} alt="settings page" />
       </Grid>
-      {sizes.width} X {sizes.height}
       <Grid item>
         <Typography variant="h4" sx={sx.name}>
           Welcome back, {user.username}
         </Typography>
       </Grid>
+      {sizes.width} X {sizes.height}
       <Grid
         item
         container
