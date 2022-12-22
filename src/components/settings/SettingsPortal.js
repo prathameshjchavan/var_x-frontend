@@ -49,7 +49,6 @@ const SettingsPortal = () => {
     ],
     []
   )
-  const AnimatedButton = useMemo(() => animated(Button), [])
   const animatedGridStyles = useSpring({
     opacity: selectedSetting === null || showComponent ? 1 : 0,
     delay: selectedSetting === null || showComponent ? 0 : 1350,
@@ -61,6 +60,15 @@ const SettingsPortal = () => {
   const sx = {
     name: {
       color: theme.palette.secondary.main,
+    },
+    button: {
+      backgroundColor: theme.palette.primary.main,
+      "&:hover": !showComponent
+        ? {
+            cursor: "pointer",
+            backgroundColor: theme.palette.secondary.main,
+          }
+        : undefined,
     },
     dashboard: {
       width: "100%",
@@ -162,33 +170,34 @@ const SettingsPortal = () => {
           const button = buttons[index]
 
           return (
-            <Grid item key={index}>
-              <AnimatedButton
-                variant="contained"
-                color="primary"
-                onClick={() => handleClick(button.label)}
-                style={style}
+            <AnimatedGrid
+              key={index}
+              sx={sx.button}
+              item
+              onClick={() => (showComponent ? null : handleClick(button.label))}
+              style={style}
+            >
+              <AnimatedGrid
+                style={animatedGridStyles}
+                alignItems="center"
+                justifyContent="center"
+                container
+                direction="column"
               >
-                <AnimatedGrid
-                  style={animatedGridStyles}
-                  container
-                  direction="column"
-                >
-                  {selectedSetting === button.label && showComponent ? (
-                    <button.component />
-                  ) : (
-                    <Fragment>
-                      <Grid item>
-                        <Icon src={button.icon} alt={button.label} />
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="h5">{button.label}</Typography>
-                      </Grid>
-                    </Fragment>
-                  )}
-                </AnimatedGrid>
-              </AnimatedButton>
-            </Grid>
+                {selectedSetting === button.label && showComponent ? (
+                  <button.component />
+                ) : (
+                  <Fragment>
+                    <Grid item>
+                      <Icon src={button.icon} alt={button.label} />
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="h5">{button.label}</Typography>
+                    </Grid>
+                  </Fragment>
+                )}
+              </AnimatedGrid>
+            </AnimatedGrid>
           )
         })}
       </Grid>
