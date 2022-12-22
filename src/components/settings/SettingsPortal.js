@@ -2,6 +2,7 @@ import React, {
   Fragment,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from "react"
@@ -50,7 +51,8 @@ const SettingsPortal = () => {
   )
   const AnimatedButton = useMemo(() => animated(Button), [])
   const animatedGridStyles = useSpring({
-    opacity: selectedSetting === null ? 1 : 0,
+    opacity: selectedSetting === null || showComponent ? 1 : 0,
+    delay: selectedSetting === null || showComponent ? 0 : 1350,
   })
   const AnimatedGrid = useMemo(() => animated(Grid), [])
   const [resizeListener, sizes] = useResizeAware()
@@ -125,6 +127,14 @@ const SettingsPortal = () => {
     }))
   )
 
+  useEffect(() => {
+    if (selectedSetting === null) return setShowComponent(false)
+
+    const timer = setTimeout(() => setShowComponent(true), 2000)
+
+    return () => clearTimeout(timer)
+  }, [selectedSetting])
+
   return (
     <Grid
       container
@@ -164,7 +174,7 @@ const SettingsPortal = () => {
                   container
                   direction="column"
                 >
-                  {selectedSetting === button.label ? (
+                  {selectedSetting === button.label && showComponent ? (
                     <button.component />
                   ) : (
                     <Fragment>
