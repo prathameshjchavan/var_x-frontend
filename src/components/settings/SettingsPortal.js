@@ -4,7 +4,7 @@ import settingsIcon from "../../images/settings.svg"
 import orderHistoryIcon from "../../images/order-history.svg"
 import favoritesIcon from "../../images/favorite.svg"
 import subscriptionIcon from "../../images/subscription.svg"
-import background from "../../images/toolbar-background.svg"
+import background from "../../images/repeating-smallest.svg"
 import { Button, Grid, Typography, useTheme } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { UserContext } from "../../contexts"
@@ -46,11 +46,11 @@ const SettingsPortal = () => {
     },
     dashboard: {
       width: "100%",
-      height: "30rem",
+      minHeight: "30rem",
+      height: "auto",
       backgroundImage: `url(${background})`,
-      backgroundSize: "cover",
       backgroundPosition: "center",
-      backgroundRepeat: "no-repeat",
+      backgroundRepeat: "repeat",
       borderTop: `0.5rem solid ${theme.palette.primary.main}`,
       borderBottom: `0.5rem solid ${theme.palette.primary.main}`,
       margin: "5rem 0",

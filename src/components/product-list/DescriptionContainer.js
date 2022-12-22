@@ -7,7 +7,7 @@ import {
   useTheme,
 } from "@mui/material"
 import React from "react"
-import background from "../../images/toolbar-background.svg"
+import background from "../../images/repeating-smallest.svg"
 import ListIcon from "../../images/List"
 import GridIcon from "../../images/Grid"
 
@@ -19,9 +19,8 @@ const DescriptionContainer = ({ name, description, layout, setLayout }) => {
     mainContainer: {
       padding: "3rem",
       backgroundImage: `url(${background})`,
-      backgroundSize: "cover",
       backgroundPosition: "center",
-      backgroundRepeat: "no-repeat",
+      backgroundRepeat: "repeat",
       position: "relative",
       [theme.breakpoints.down("sm")]: {
         padding: "3rem 0",
