@@ -85,15 +85,25 @@ const SettingsPortal = () => {
             selectedSetting === button.label || selectedSetting === null
               ? "scale(1)"
               : "scale(0)",
+          delay: selectedSetting !== null ? 0 : 600,
         }
         const size = {
           height: selectedSetting === button.label ? "60rem" : "22rem",
           width:
             selectedSetting === button.label ? `${sizes.width}px` : "352px",
           borderRadius: selectedSetting === button.label ? "0px" : "25px",
+          delay: selectedSetting !== null ? 600 : 0,
+        }
+        const hide = {
+          display:
+            selectedSetting === button.label || selectedSetting === null
+              ? "flex"
+              : "none",
+          delay: 150,
         }
 
         await next(selectedSetting !== null ? scale : size)
+        await next(hide)
         await next(selectedSetting !== null ? size : scale)
       },
     }))
