@@ -1,5 +1,5 @@
-import { Button, Grid } from "@mui/material"
-import React, { useMemo, useState } from "react"
+import { Button, Grid, Typography, useTheme } from "@mui/material"
+import React, { useState } from "react"
 import fingerprint from "../../images/fingerprint.svg"
 import nameAdornment from "../../images/name-adornment.svg"
 import PhoneAdornment from "../../images/PhoneAdornment"
@@ -16,6 +16,7 @@ const Details = () => {
     password: "",
   })
   const [errors, setErrors] = useState({})
+  const theme = useTheme()
   const emailPasswordFields = getEmailPasswordFields(
     false,
     false,
@@ -35,7 +36,11 @@ const Details = () => {
     phone: {
       helperText: "invalid phone number",
       placeholder: "Phone",
-      startAdornment: <PhoneAdornmentContainer></PhoneAdornmentContainer>,
+      startAdornment: (
+        <PhoneAdornmentContainer>
+          <PhoneAdornment />
+        </PhoneAdornmentContainer>
+      ),
     },
   }
   const fields = [namePhoneFields, emailPasswordFields]
@@ -50,28 +55,70 @@ const Details = () => {
       width: 22,
       marginBottom: 10,
     },
+    slot: {
+      color: "#000",
+      backgroundColor: "#fff",
+      borderRadius: "25px",
+      width: "2.5rem",
+      height: "2.5rem",
+      minWidth: 0,
+      border: `0.15rem solid ${theme.palette.secondary.main}`,
+      "&:hover": {
+        backgroundColor: "#fff",
+      },
+    },
+    slotWrapper: {
+      marginLeft: "2rem",
+      "& > :not(:first-child)": {
+        marginLeft: "-0.5rem",
+      },
+    },
+    slotText: {
+      color: theme.palette.secondary.main,
+      marginLeft: "-0.25rem",
+    },
+    fieldContainer: {
+      "& > :not(:first-child)": {
+        marginLeft: "5rem",
+      },
+    },
   }
+
+  // styled components
+  const Icon = styled("img")(() => ({
+    marginBottom: "3rem",
+  }))
 
   return (
     <Grid item container direction="column" xs={6} alignItems="center">
       <Grid item>
-        <img src={fingerprint} alt="details settings" />
+        <Icon src={fingerprint} alt="details settings" />
       </Grid>
       {fields.map((pair, index) => (
-        <Grid container justifyContent="center" key={index}>
+        <Grid
+          container
+          sx={sx.fieldContainer}
+          justifyContent="center"
+          key={index}
+        >
           <Fields
             fields={pair}
             values={values}
             setValues={setValues}
             errors={errors}
             setErrors={setErrors}
+            whiteOutline
           />
         </Grid>
       ))}
       <Grid container>
-        <Grid item>
+        <Grid item sx={sx.slotWrapper}>
           {[1, 2, 3].map(slot => (
-            <Button key={slot}>{slot}</Button>
+            <Button sx={sx.slot} key={slot}>
+              <Typography variant="h5" sx={sx.slotText}>
+                {slot}
+              </Typography>
+            </Button>
           ))}
         </Grid>
       </Grid>
