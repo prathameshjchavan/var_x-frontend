@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useMemo, useState } from "react"
+import React, {
+  Fragment,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react"
 import accountIcon from "../../images/account.svg"
 import settingsIcon from "../../images/settings.svg"
 import orderHistoryIcon from "../../images/order-history.svg"
@@ -8,35 +14,45 @@ import background from "../../images/repeating-smallest.svg"
 import { Button, Grid, Typography, useTheme } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { UserContext } from "../../contexts"
-import { useSprings, animated } from "@react-spring/web"
+import { useSpring, useSprings, animated } from "@react-spring/web"
 import useResizeAware from "react-resize-aware"
+import Settings from "./Settings"
 
 const SettingsPortal = () => {
   const { user } = useContext(UserContext)
   const theme = useTheme()
   const [selectedSetting, setSelectedSetting] = useState(null)
+  const [showComponent, setShowComponent] = useState(false)
   const buttons = useMemo(
     () => [
       {
         label: "Settings",
         icon: settingsIcon,
+        component: Settings,
       },
       {
         label: "Order History",
         icon: orderHistoryIcon,
+        component: Settings,
       },
       {
         label: "Favorites",
         icon: favoritesIcon,
+        component: Settings,
       },
       {
         label: "Subscriptions",
         icon: subscriptionIcon,
+        component: Settings,
       },
     ],
     []
   )
   const AnimatedButton = useMemo(() => animated(Button), [])
+  const animatedGridStyles = useSpring({
+    opacity: selectedSetting === null ? 1 : 0,
+  })
+  const AnimatedGrid = useMemo(() => animated(Grid), [])
   const [resizeListener, sizes] = useResizeAware()
 
   // sx prop
@@ -132,25 +148,39 @@ const SettingsPortal = () => {
         alignItems="center"
         justifyContent="space-around"
       >
-        {springs.map((style, index) => (
-          <Grid item key={index}>
-            <AnimatedButton
-              variant="contained"
-              color="primary"
-              onClick={() => handleClick(buttons[index].label)}
-              style={style}
-            >
-              <Grid container direction="column">
-                <Grid item>
-                  <Icon src={buttons[index].icon} alt={buttons[index].label} />
-                </Grid>
-                <Grid item>
-                  <Typography variant="h5">{buttons[index].label}</Typography>
-                </Grid>
-              </Grid>
-            </AnimatedButton>
-          </Grid>
-        ))}
+        {springs.map((style, index) => {
+          const button = buttons[index]
+
+          return (
+            <Grid item key={index}>
+              <AnimatedButton
+                variant="contained"
+                color="primary"
+                onClick={() => handleClick(button.label)}
+                style={style}
+              >
+                <AnimatedGrid
+                  style={animatedGridStyles}
+                  container
+                  direction="column"
+                >
+                  {selectedSetting === button.label ? (
+                    <button.component />
+                  ) : (
+                    <Fragment>
+                      <Grid item>
+                        <Icon src={button.icon} alt={button.label} />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="h5">{button.label}</Typography>
+                      </Grid>
+                    </Fragment>
+                  )}
+                </AnimatedGrid>
+              </AnimatedButton>
+            </Grid>
+          )
+        })}
       </Grid>
     </Grid>
   )
