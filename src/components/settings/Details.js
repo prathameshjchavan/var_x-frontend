@@ -1,4 +1,4 @@
-import { Button, Grid, Typography, useTheme } from "@mui/material"
+import { Grid } from "@mui/material"
 import React, { useState } from "react"
 import fingerprint from "../../images/fingerprint.svg"
 import NameAdornment from "../../images/NameAdornment"
@@ -6,6 +6,7 @@ import PhoneAdornment from "../../images/PhoneAdornment"
 import Fields from "../auth/Fields"
 import { getEmailPasswordFields } from "../auth/Login"
 import { styled } from "@mui/material/styles"
+import Slots from "./Slots"
 
 const Details = () => {
   const [visible, setVisible] = useState(false)
@@ -16,7 +17,6 @@ const Details = () => {
     password: "",
   })
   const [errors, setErrors] = useState({})
-  const theme = useTheme()
   const emailPasswordFields = getEmailPasswordFields(
     false,
     false,
@@ -56,28 +56,6 @@ const Details = () => {
       width: 22,
       marginBottom: 10,
     },
-    slot: {
-      color: "#000",
-      backgroundColor: "#fff",
-      borderRadius: "25px",
-      width: "2.5rem",
-      height: "2.5rem",
-      minWidth: 0,
-      border: `0.15rem solid ${theme.palette.secondary.main}`,
-      "&:hover": {
-        backgroundColor: "#fff",
-      },
-    },
-    slotWrapper: {
-      marginLeft: "2rem",
-      "& > :not(:first-child)": {
-        marginLeft: "-0.5rem",
-      },
-    },
-    slotText: {
-      color: theme.palette.secondary.main,
-      marginLeft: "-0.25rem",
-    },
     fieldContainer: {
       marginBottom: "3rem",
       "& > :not(:first-child)": {
@@ -114,15 +92,7 @@ const Details = () => {
         </Grid>
       ))}
       <Grid container>
-        <Grid item sx={sx.slotWrapper}>
-          {[1, 2, 3].map(slot => (
-            <Button sx={sx.slot} key={slot}>
-              <Typography variant="h5" sx={sx.slotText}>
-                {slot}
-              </Typography>
-            </Button>
-          ))}
-        </Grid>
+        <Slots />
       </Grid>
     </Grid>
   )
