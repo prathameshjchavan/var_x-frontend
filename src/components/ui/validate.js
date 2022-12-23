@@ -13,6 +13,11 @@ export default function validate(values) {
       /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(
         value
       ),
+    street: value =>
+      /^(\d+) ?([A-Za-z](?= ))? (.*?) ([^ ]+?) ?((?<= )APT)? ?((?<= )\d*)?$/.test(
+        value
+      ),
+    zip: value => /^\d{5}(-\d{4})?$/.test(value),
   }
 
   const valid = {}

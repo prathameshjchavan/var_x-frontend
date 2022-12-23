@@ -57,7 +57,7 @@ const Details = () => {
       marginBottom: 10,
     },
     fieldContainer: {
-      marginBottom: "3rem",
+      marginBottom: "2rem",
       "& > :not(:first-child)": {
         marginLeft: "5rem",
       },

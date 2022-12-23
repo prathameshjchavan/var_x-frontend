@@ -1,14 +1,20 @@
 import { Grid } from "@mui/material"
-import React from "react"
+import React, { Fragment } from "react"
 import Details from "./Details"
+import Location from "./Location"
 import Payments from "./Payments"
 
 const Settings = () => {
   return (
-    <Grid container>
-      <Details />
-      <Payments />
-    </Grid>
+    <Fragment>
+      <Grid container>
+        <Details />
+        <Payments />
+      </Grid>
+      <Grid container>
+        <Location />
+      </Grid>
+    </Fragment>
   )
 }
 
