@@ -12,6 +12,7 @@ const Location = () => {
 
   // sx prop
   const sx = {
+    locationContainer: { position: "relative" },
     icon: { marginBottom: "3rem" },
     fieldContainer: {
       "& > :not(:first-child)": {
@@ -19,6 +20,10 @@ const Location = () => {
       },
     },
     chipWrapper: { marginTop: "2rem", marginBottom: "3rem" },
+    slotContainer: {
+      position: "absolute",
+      bottom: "0px",
+    },
   }
 
   const fields = useMemo(
@@ -38,7 +43,15 @@ const Location = () => {
   )
 
   return (
-    <Grid item container direction="column" xs={6} alignItems="center">
+    <Grid
+      item
+      container
+      direction="column"
+      xs={6}
+      alignItems="center"
+      justifyContent="center"
+      sx={sx.locationContainer}
+    >
       <Grid item sx={sx.icon}>
         <img src={locationIcon} alt="location settings" />
       </Grid>
@@ -61,7 +74,7 @@ const Location = () => {
       <Grid item sx={sx.chipWrapper}>
         <Chip label="City, State" color="secondary" />
       </Grid>
-      <Grid item container>
+      <Grid item container sx={sx.slotContainer}>
         <Slots />
       </Grid>
     </Grid>

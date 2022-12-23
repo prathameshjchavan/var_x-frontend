@@ -5,7 +5,7 @@ import BackwardsIcon from "../../images/BackwardsOutline"
 import editIcon from "../../images/edit.svg"
 import saveIcon from "../../images/save.svg"
 
-const Edit = () => {
+const Edit = ({ setSelectedSetting }) => {
   // sx prop
   const sx = {
     editContainer: {
@@ -31,7 +31,7 @@ const Edit = () => {
       xs={6}
     >
       <Grid item>
-        <IconButton>
+        <IconButton onClick={() => setSelectedSetting(null)}>
           <IconWrapper>
             <BackwardsIcon color="#fff" />
           </IconWrapper>

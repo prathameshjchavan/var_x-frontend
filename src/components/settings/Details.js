@@ -48,6 +48,9 @@ const Details = () => {
 
   // sx prop
   const sx = {
+    detailsContainer: {
+      position: "relative",
+    },
     visibleIcon: {
       padding: 0,
     },
@@ -62,6 +65,10 @@ const Details = () => {
         marginLeft: "5rem",
       },
     },
+    slotContainer: {
+      position: "absolute",
+      bottom: "0px",
+    },
   }
 
   // styled components
@@ -70,7 +77,15 @@ const Details = () => {
   }))
 
   return (
-    <Grid item container direction="column" xs={6} alignItems="center">
+    <Grid
+      item
+      container
+      direction="column"
+      xs={6}
+      alignItems="center"
+      justifyContent="center"
+      sx={sx.detailsContainer}
+    >
       <Grid item>
         <Icon src={fingerprint} alt="details settings" />
       </Grid>
@@ -91,7 +106,7 @@ const Details = () => {
           />
         </Grid>
       ))}
-      <Grid container>
+      <Grid item container sx={sx.slotContainer}>
         <Slots />
       </Grid>
     </Grid>

@@ -9,7 +9,7 @@ const Payments = () => {
 
   // sx prop
   const sx = {
-    paymentContainer: { borderLeft: "4px solid #fff" },
+    paymentContainer: { borderLeft: "4px solid #fff", position: "relative" },
     number: {
       color: "#fff",
       marginBottom: "5rem",
@@ -32,6 +32,10 @@ const Payments = () => {
       fontFamily: "Philosopher",
       fontStyle: "italic",
     },
+    slotContainer: {
+      position: "absolute",
+      bottom: "0px",
+    },
   }
 
   return (
@@ -42,6 +46,7 @@ const Payments = () => {
       direction="column"
       xs={6}
       alignItems="center"
+      justifyContent="center"
     >
       <Grid item sx={sx.icon}>
         <img src={card} alt="payment settings" />
@@ -66,7 +71,7 @@ const Payments = () => {
           </Grid>
         )}
       </Grid>
-      <Grid item container>
+      <Grid item container sx={sx.slotContainer}>
         <Slots />
       </Grid>
     </Grid>

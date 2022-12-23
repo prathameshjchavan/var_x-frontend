@@ -77,8 +77,12 @@ const SettingsPortal = () => {
       backgroundImage: `url(${background})`,
       backgroundPosition: "center",
       backgroundRepeat: "repeat",
-      borderTop: `0.5rem solid ${theme.palette.primary.main}`,
-      borderBottom: `0.5rem solid ${theme.palette.primary.main}`,
+      borderTop: !showComponent
+        ? `0.5rem solid ${theme.palette.primary.main}`
+        : undefined,
+      borderBottom: !showComponent
+        ? `0.5rem solid ${theme.palette.primary.main}`
+        : undefined,
       margin: "5rem 0",
     },
   }
@@ -185,7 +189,7 @@ const SettingsPortal = () => {
                 direction="column"
               >
                 {selectedSetting === button.label && showComponent ? (
-                  <button.component />
+                  <button.component setSelectedSetting={setSelectedSetting} />
                 ) : (
                   <Fragment>
                     <Grid item>

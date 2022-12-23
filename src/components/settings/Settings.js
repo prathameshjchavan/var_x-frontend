@@ -5,23 +5,26 @@ import Edit from "./Edit"
 import Location from "./Location"
 import Payments from "./Payments"
 
-const Settings = () => {
+const Settings = ({ setSelectedSetting }) => {
   // sx prop
   const sx = {
     bottomRow: {
       borderTop: "4px solid #fff",
     },
+    sectionContainer: {
+      height: "50%",
+    },
   }
 
   return (
     <Fragment>
-      <Grid container>
+      <Grid container sx={sx.sectionContainer}>
         <Details />
         <Payments />
       </Grid>
-      <Grid container sx={sx.bottomRow}>
+      <Grid container sx={{ ...sx.bottomRow, ...sx.sectionContainer }}>
         <Location />
-        <Edit />
+        <Edit setSelectedSetting={setSelectedSetting} />
       </Grid>
     </Fragment>
   )
