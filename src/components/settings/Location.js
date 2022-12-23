@@ -59,7 +59,7 @@ const Location = () => {
         />
       </Grid>
       <Grid item sx={sx.chipWrapper}>
-        <Chip label="City, State" />
+        <Chip label="City, State" color="secondary" />
       </Grid>
       <Grid item container>
         <Slots />

@@ -9,6 +9,7 @@ const Payments = () => {
 
   // sx prop
   const sx = {
+    paymentContainer: { borderLeft: "4px solid #fff" },
     number: {
       color: "#fff",
       marginBottom: "5rem",
@@ -34,7 +35,14 @@ const Payments = () => {
   }
 
   return (
-    <Grid item container direction="column" xs={6} alignItems="center">
+    <Grid
+      item
+      container
+      sx={sx.paymentContainer}
+      direction="column"
+      xs={6}
+      alignItems="center"
+    >
       <Grid item sx={sx.icon}>
         <img src={card} alt="payment settings" />
       </Grid>
