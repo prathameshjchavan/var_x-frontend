@@ -1,7 +1,7 @@
 import { Button, Grid, Typography, useTheme } from "@mui/material"
 import React, { useState } from "react"
 import fingerprint from "../../images/fingerprint.svg"
-import nameAdornment from "../../images/name-adornment.svg"
+import NameAdornment from "../../images/NameAdornment"
 import PhoneAdornment from "../../images/PhoneAdornment"
 import Fields from "../auth/Fields"
 import { getEmailPasswordFields } from "../auth/Login"
@@ -21,7 +21,8 @@ const Details = () => {
     false,
     false,
     visible,
-    setVisible
+    setVisible,
+    true
   )
   const PhoneAdornmentContainer = styled("div")(() => ({
     height: 25.122,
@@ -31,7 +32,7 @@ const Details = () => {
     name: {
       helperText: "you must enter a name",
       placeholder: "Name",
-      startAdornment: <img src={nameAdornment} alt="name" />,
+      startAdornment: <NameAdornment color="#fff" />,
     },
     phone: {
       helperText: "invalid phone number",
@@ -78,6 +79,7 @@ const Details = () => {
       marginLeft: "-0.25rem",
     },
     fieldContainer: {
+      marginBottom: "3rem",
       "& > :not(:first-child)": {
         marginLeft: "5rem",
       },
@@ -107,7 +109,7 @@ const Details = () => {
             setValues={setValues}
             errors={errors}
             setErrors={setErrors}
-            whiteOutline
+            isWhite
           />
         </Grid>
       ))}

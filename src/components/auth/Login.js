@@ -7,9 +7,9 @@ import React, {
 } from "react"
 import accountIcon from "../../images/account.svg"
 import EmailAdornment from "../../images/EmailAdornment"
-import passwordAdornment from "../../images/password-adornment.svg"
-import hidePasswordIcon from "../../images/hide-password.svg"
-import showPasswordIcon from "../../images/show-password.svg"
+import PasswordAdornment from "../../images/PasswordAdornment"
+import HidePasswordIcon from "../../images/HidePassword"
+import ShowPasswordIcon from "../../images/ShowPassword"
 import addUserIcon from "../../images/add-user.svg"
 import forgotPasswordIcon from "../../images/forgot.svg"
 import close from "../../images/close.svg"
@@ -24,7 +24,8 @@ export const getEmailPasswordFields = (
   hideEmail,
   hidePassword,
   visible,
-  setVisible
+  setVisible,
+  isWhite
 ) => {
   // styled components
   const EmailAdornmentContainer = styled("span")(() => ({
@@ -41,7 +42,7 @@ export const getEmailPasswordFields = (
       hidden: hideEmail,
       startAdornment: (
         <EmailAdornmentContainer>
-          <EmailAdornment />
+          <EmailAdornment color={isWhite ? "#fff" : null} />
         </EmailAdornmentContainer>
       ),
       endAdornment: null,
@@ -52,13 +53,14 @@ export const getEmailPasswordFields = (
       placeholder: "Password",
       hidden: hidePassword,
       type: visible ? "text" : "password",
-      startAdornment: <img src={passwordAdornment} alt="password" />,
+      startAdornment: <PasswordAdornment color={isWhite ? "#fff" : null} />,
       endAdornment: (
         <IconButton sx={{ padding: 0 }} onClick={() => setVisible(!visible)}>
-          <img
-            src={visible ? showPasswordIcon : hidePasswordIcon}
-            alt={`${visible ? "Show" : "Hide"} Password`}
-          />
+          {visible ? (
+            <ShowPasswordIcon color={isWhite ? "#fff" : null} />
+          ) : (
+            <HidePasswordIcon color={isWhite ? "#fff" : null} />
+          )}
         </IconButton>
       ),
     },

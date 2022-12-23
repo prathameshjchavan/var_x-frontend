@@ -3,26 +3,19 @@ import React from "react"
 import validate from "../ui/validate"
 import { useTheme } from "@mui/material"
 
-const Fields = ({
-  fields,
-  errors,
-  setErrors,
-  values,
-  setValues,
-  whiteOutline,
-}) => {
+const Fields = ({ fields, errors, setErrors, values, setValues, isWhite }) => {
   const theme = useTheme()
 
   // sx prop
   const sx = {
     textfield: {
       width: "20rem",
-      "& .MuiInput-input": !whiteOutline
+      "& .MuiInput-input": !isWhite
         ? {
             color: theme.palette.secondary.main,
           }
         : undefined,
-      "& .MuiInput-underline": !whiteOutline
+      "& .MuiInput-underline": !isWhite
         ? {
             "&:before, &:hover:not(.Mui-disabled):before": {
               borderBottom: `2px solid ${theme.palette.primary.main}`,
