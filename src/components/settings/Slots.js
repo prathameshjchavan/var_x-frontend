@@ -21,7 +21,7 @@ const Slots = () => {
     slotWrapper: {
       marginLeft: "1rem",
       marginBottom: "1rem",
-      "& > :not(:first-child)": {
+      "& > :not(:first-of-type)": {
         marginLeft: "-0.5rem",
       },
     },

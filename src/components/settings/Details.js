@@ -61,7 +61,7 @@ const Details = () => {
     },
     fieldContainer: {
       marginBottom: "2rem",
-      "& > :not(:first-child)": {
+      "& > :not(:first-of-type)": {
         marginLeft: "5rem",
       },
     },

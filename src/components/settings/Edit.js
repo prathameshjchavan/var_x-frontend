@@ -3,7 +3,6 @@ import React from "react"
 import { styled } from "@mui/material/styles"
 import BackwardsIcon from "../../images/BackwardsOutline"
 import editIcon from "../../images/edit.svg"
-import saveIcon from "../../images/save.svg"
 
 const Edit = ({ setSelectedSetting }) => {
   // sx prop

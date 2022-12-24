@@ -15,7 +15,7 @@ const Location = () => {
     locationContainer: { position: "relative" },
     icon: { marginBottom: "3rem" },
     fieldContainer: {
-      "& > :not(:first-child)": {
+      "& > :not(:first-of-type)": {
         marginTop: "2rem",
       },
     },
