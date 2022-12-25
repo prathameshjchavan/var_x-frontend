@@ -8,7 +8,7 @@ import { getEmailPasswordFields } from "../auth/Login"
 import { styled } from "@mui/material/styles"
 import Slots from "./Slots"
 
-const Details = ({ user, edit }) => {
+const Details = ({ user, edit, setChangesMade }) => {
   const [visible, setVisible] = useState(false)
   const [values, setValues] = useState({
     name: "",
@@ -81,6 +81,14 @@ const Details = ({ user, edit }) => {
   useEffect(() => {
     setValues({ ...user.contactInfo[slot], password: "********" })
   }, [slot, user.contactInfo])
+
+  useEffect(() => {
+    const changed = Object.keys(user.contactInfo[slot]).some(
+      field => values[field] !== user.contactInfo[slot][field]
+    )
+
+    setChangesMade(changed)
+  }, [user, slot, values, setChangesMade])
 
   return (
     <Grid

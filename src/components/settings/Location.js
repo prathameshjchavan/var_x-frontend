@@ -6,7 +6,7 @@ import zipAdornment from "../../images/zip-adornment.svg"
 import Fields from "../auth/Fields"
 import Slots from "./Slots"
 
-const Location = ({ user, edit }) => {
+const Location = ({ user, edit, setChangesMade }) => {
   const [values, setValues] = useState({
     street: "",
     zip: "",
@@ -51,6 +51,14 @@ const Location = ({ user, edit }) => {
   useEffect(() => {
     setValues(user.locations[slot])
   }, [user, slot])
+
+  useEffect(() => {
+    const changed = Object.keys(user.locations[slot]).some(
+      field => values[field] !== user.locations[slot][field]
+    )
+
+    setChangesMade(changed)
+  }, [user, slot, values, setChangesMade])
 
   return (
     <Grid
