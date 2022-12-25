@@ -7,7 +7,7 @@ export const UserContext = createContext()
 const UserProvider = UserContext.Provider
 
 export function UserWrapper({ children }) {
-  const defaultUser = useMemo(() => ({ username: "Guest" }), [])
+  const defaultUser = useMemo(() => ({ name: "Guest" }), [])
   const storedUser = useMemo(() => JSON.parse(localStorage.getItem("user")), [])
   const [user, dispatchUser] = useReducer(
     userReducer,

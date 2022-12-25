@@ -81,11 +81,31 @@ const SignUp = ({ dispatchUser, dispatchFeedback, setSelectedStep, steps }) => {
   const handleComplete = useCallback(() => {
     setLoading(true)
 
+    const data = {
+      paymentMethods: [
+        { brand: "", last4: "" },
+        { brand: "", last4: "" },
+        { brand: "", last4: "" },
+      ],
+      contactInfo: [
+        { name: values.name, email: values.email, phone: "" },
+        { name: "", email: "", phone: "" },
+        { name: "", email: "", phone: "" },
+      ],
+      locations: [
+        { street: "", zip: "", city: "", state: "" },
+        { street: "", zip: "", city: "", state: "" },
+        { street: "", zip: "", city: "", state: "" },
+      ],
+    }
+
     axios
       .post(`${process.env.STRAPI_API_URL}/api/auth/local/register`, {
-        username: values.name,
+        name: values.name,
+        username: values.email,
         email: values.email,
         password: values.password,
+        ...data,
       })
       .then(response => {
         dispatchUser(setUser({ ...response.data.user, jwt: response.data.jwt }))

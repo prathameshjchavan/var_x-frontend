@@ -160,7 +160,7 @@ const SettingsPortal = () => {
       </Grid>
       <Grid item>
         <Typography variant="h4" sx={sx.name}>
-          Welcome back, {user.username}
+          Welcome back, {user.name}
         </Typography>
       </Grid>
       <Grid
