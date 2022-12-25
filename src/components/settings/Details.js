@@ -8,7 +8,7 @@ import { getEmailPasswordFields } from "../auth/Login"
 import { styled } from "@mui/material/styles"
 import Slots from "./Slots"
 
-const Details = ({ user }) => {
+const Details = ({ user, edit }) => {
   const [visible, setVisible] = useState(false)
   const [values, setValues] = useState({
     name: "",
@@ -109,6 +109,7 @@ const Details = ({ user }) => {
             errors={errors}
             setErrors={setErrors}
             isWhite
+            disabled={!edit}
           />
         </Grid>
       ))}

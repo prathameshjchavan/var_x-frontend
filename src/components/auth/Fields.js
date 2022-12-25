@@ -3,7 +3,15 @@ import React from "react"
 import validate from "../ui/validate"
 import { useTheme } from "@mui/material"
 
-const Fields = ({ fields, errors, setErrors, values, setValues, isWhite }) => {
+const Fields = ({
+  fields,
+  errors,
+  setErrors,
+  values,
+  setValues,
+  isWhite,
+  disabled,
+}) => {
   const theme = useTheme()
 
   // sx prop
@@ -40,6 +48,7 @@ const Fields = ({ fields, errors, setErrors, values, setValues, isWhite }) => {
           variant="standard"
           placeholder={fields[field].placeholder}
           type={fields[field].type}
+          disabled={disabled}
           onChange={e => {
             setValues({ ...values, [field]: e.target.value })
             const valid = validateHelper(e)

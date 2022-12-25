@@ -6,7 +6,7 @@ import zipAdornment from "../../images/zip-adornment.svg"
 import Fields from "../auth/Fields"
 import Slots from "./Slots"
 
-const Location = ({ user }) => {
+const Location = ({ user, edit }) => {
   const [values, setValues] = useState({
     street: "",
     zip: "",
@@ -79,6 +79,7 @@ const Location = ({ user }) => {
           errors={errors}
           setErrors={setErrors}
           isWhite
+          disabled={!edit}
         />
       </Grid>
       <Grid item sx={sx.chipWrapper}>

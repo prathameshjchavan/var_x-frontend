@@ -1,10 +1,11 @@
 import { Grid, IconButton } from "@mui/material"
-import React from "react"
+import React, { useCallback } from "react"
 import { styled } from "@mui/material/styles"
 import BackwardsIcon from "../../images/BackwardsOutline"
 import editIcon from "../../images/edit.svg"
+import saveIcon from "../../images/save.svg"
 
-const Edit = ({ setSelectedSetting }) => {
+const Edit = ({ setSelectedSetting, edit, setEdit }) => {
   // sx prop
   const sx = {
     editContainer: {
@@ -15,6 +16,11 @@ const Edit = ({ setSelectedSetting }) => {
       width: "8rem",
     },
   }
+
+  // functions
+  const handleEdit = useCallback(() => {
+    setEdit(!edit)
+  }, [edit, setEdit])
 
   // styled components
   const IconWrapper = styled("span")(() => sx.icon)
@@ -37,8 +43,11 @@ const Edit = ({ setSelectedSetting }) => {
         </IconButton>
       </Grid>
       <Grid item>
-        <IconButton>
-          <Icon src={editIcon} alt="edit settings" />
+        <IconButton onClick={handleEdit}>
+          <Icon
+            src={edit ? saveIcon : editIcon}
+            alt={`edit ${edit ? "save" : "settings"}`}
+          />
         </IconButton>
       </Grid>
     </Grid>
