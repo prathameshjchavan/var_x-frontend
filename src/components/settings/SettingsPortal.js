@@ -12,15 +12,16 @@ import orderHistoryIcon from "../../images/order-history.svg"
 import favoritesIcon from "../../images/favorite.svg"
 import subscriptionIcon from "../../images/subscription.svg"
 import background from "../../images/repeating-smallest.svg"
-import { Grid, Typography, useTheme } from "@mui/material"
+import { Button, Grid, Typography, useTheme } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { UserContext } from "../../contexts"
 import { useSpring, useSprings, animated } from "@react-spring/web"
 import useResizeAware from "react-resize-aware"
 import Settings from "./Settings"
+import { setUser } from "../../contexts/actions"
 
 const SettingsPortal = () => {
-  const { user } = useContext(UserContext)
+  const { user, dispatchUser, defaultUser } = useContext(UserContext)
   const theme = useTheme()
   const [selectedSetting, setSelectedSetting] = useState(null)
   const [showComponent, setShowComponent] = useState(false)
@@ -85,6 +86,9 @@ const SettingsPortal = () => {
         : undefined,
       margin: "5rem 0",
     },
+    logout: {
+      color: theme.palette.error.main,
+    },
   }
 
   // styled components
@@ -104,6 +108,10 @@ const SettingsPortal = () => {
     },
     [selectedSetting, setSelectedSetting]
   )
+
+  const handleLogout = useCallback(() => {
+    dispatchUser(setUser(defaultUser))
+  }, [dispatchUser, defaultUser])
 
   // springs
   const springs = useSprings(
@@ -162,6 +170,13 @@ const SettingsPortal = () => {
         <Typography variant="h4" sx={sx.name}>
           Welcome back, {user.name}
         </Typography>
+      </Grid>
+      <Grid item>
+        <Button>
+          <Typography variant="h5" onClick={handleLogout} sx={sx.logout}>
+            Log Out
+          </Typography>
+        </Button>
       </Grid>
       <Grid
         item

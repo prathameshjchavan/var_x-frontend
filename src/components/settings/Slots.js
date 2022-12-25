@@ -1,7 +1,7 @@
 import { Button, Grid, Typography, useTheme } from "@mui/material"
-import React from "react"
+import React, { useCallback } from "react"
 
-const Slots = () => {
+const Slots = ({ slot, setSlot }) => {
   const theme = useTheme()
 
   // sx prop
@@ -18,6 +18,12 @@ const Slots = () => {
         backgroundColor: "#fff",
       },
     },
+    selectedSlot: {
+      backgroundColor: theme.palette.secondary.main,
+      "&:hover": {
+        backgroundColor: theme.palette.secondary.main,
+      },
+    },
     slotWrapper: {
       marginLeft: "1rem",
       marginBottom: "1rem",
@@ -29,14 +35,36 @@ const Slots = () => {
       color: theme.palette.secondary.main,
       marginLeft: "-0.25rem",
     },
+    selectedSlotText: {
+      color: "#fff",
+    },
   }
+
+  // functions
+  const getSlotSx = useCallback(
+    number =>
+      number - 1 === slot ? { ...sx.slot, ...sx.selectedSlot } : sx.slot,
+    [slot, sx.slot, sx.selectedSlot]
+  )
+
+  const getSlotTextSx = useCallback(
+    number =>
+      number - 1 === slot
+        ? { ...sx.slotText, ...sx.selectedSlotText }
+        : sx.slotText,
+    [slot, sx.slotText, sx.selectedSlotText]
+  )
 
   return (
     <Grid item sx={sx.slotWrapper}>
-      {[1, 2, 3].map(slot => (
-        <Button sx={sx.slot} key={slot}>
-          <Typography variant="h5" sx={sx.slotText}>
-            {slot}
+      {[1, 2, 3].map(number => (
+        <Button
+          onClick={() => setSlot(number - 1)}
+          sx={getSlotSx(number)}
+          key={number}
+        >
+          <Typography variant="h5" sx={getSlotTextSx(number)}>
+            {number}
           </Typography>
         </Button>
       ))}

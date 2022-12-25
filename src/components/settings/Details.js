@@ -17,6 +17,7 @@ const Details = () => {
     password: "",
   })
   const [errors, setErrors] = useState({})
+  const [slot, setSlot] = useState(0)
   const emailPasswordFields = getEmailPasswordFields(
     false,
     false,
@@ -107,7 +108,7 @@ const Details = () => {
         </Grid>
       ))}
       <Grid item container sx={sx.slotContainer}>
-        <Slots />
+        <Slots slot={slot} setSlot={setSlot} />
       </Grid>
     </Grid>
   )
