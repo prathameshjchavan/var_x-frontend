@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import fingerprint from "../../images/fingerprint.svg"
 import NameAdornment from "../../images/NameAdornment"
 import PhoneAdornment from "../../images/PhoneAdornment"
@@ -8,7 +8,7 @@ import { getEmailPasswordFields } from "../auth/Login"
 import { styled } from "@mui/material/styles"
 import Slots from "./Slots"
 
-const Details = () => {
+const Details = ({ user }) => {
   const [visible, setVisible] = useState(false)
   const [values, setValues] = useState({
     name: "",
@@ -76,6 +76,11 @@ const Details = () => {
   const Icon = styled("img")(() => ({
     marginBottom: "3rem",
   }))
+
+  // useEffect
+  useEffect(() => {
+    setValues({ ...user.contactInfo[slot], password: "********" })
+  }, [slot, user.contactInfo])
 
   return (
     <Grid

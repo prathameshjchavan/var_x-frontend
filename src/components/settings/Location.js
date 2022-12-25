@@ -1,14 +1,20 @@
 import { Chip, Grid } from "@mui/material"
-import React, { useMemo, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import locationIcon from "../../images/location.svg"
 import streetAdornment from "../../images/street-adornment.svg"
 import zipAdornment from "../../images/zip-adornment.svg"
 import Fields from "../auth/Fields"
 import Slots from "./Slots"
 
-const Location = () => {
-  const [values, setValues] = useState({ street: "", zip: "" })
+const Location = ({ user }) => {
+  const [values, setValues] = useState({
+    street: "",
+    zip: "",
+    city: "",
+    state: "",
+  })
   const [errors, setErrors] = useState({})
+  const [slot, setSlot] = useState(0)
 
   // sx prop
   const sx = {
@@ -42,6 +48,10 @@ const Location = () => {
     []
   )
 
+  useEffect(() => {
+    setValues(user.locations[slot])
+  }, [user, slot])
+
   return (
     <Grid
       item
@@ -72,10 +82,15 @@ const Location = () => {
         />
       </Grid>
       <Grid item sx={sx.chipWrapper}>
-        <Chip label="City, State" color="secondary" />
+        <Chip
+          label={
+            values.city ? `${values.city}, ${values.state}` : "City, State"
+          }
+          color="secondary"
+        />
       </Grid>
       <Grid item container sx={sx.slotContainer}>
-        <Slots />
+        <Slots slot={slot} setSlot={setSlot} />
       </Grid>
     </Grid>
   )

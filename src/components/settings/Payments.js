@@ -1,11 +1,12 @@
 import { Button, Grid, Typography, useTheme } from "@mui/material"
-import React, { useMemo } from "react"
-import card from "../../images/card.svg"
+import React, { useMemo, useState } from "react"
+import cardIcon from "../../images/card.svg"
 import Slots from "./Slots"
 
-const Payments = () => {
-  const cards = useMemo(() => [{ last4: 1234, brand: "Visa" }], [])
+const Payments = ({ user }) => {
   const theme = useTheme()
+  const [slot, setSlot] = useState(0)
+  const card = useMemo(() => user.paymentMethods[slot], [user, slot])
 
   // sx prop
   const sx = {
@@ -49,19 +50,17 @@ const Payments = () => {
       justifyContent="center"
     >
       <Grid item sx={sx.icon}>
-        <img src={card} alt="payment settings" />
+        <img src={cardIcon} alt="payment settings" />
       </Grid>
       <Grid item container justifyContent="center">
         <Grid item>
           <Typography variant="h3" sx={sx.number}>
-            {cards
-              ? `${cards[0].brand.toUpperCase()} **** **** **** ${
-                  cards[0].last4
-                }`
+            {card.last4
+              ? `${card.brand.toUpperCase()} **** **** **** ${card.last4}`
               : "Add A New Card During Checkout"}
           </Typography>
         </Grid>
-        {cards && (
+        {card.last4 && (
           <Grid item>
             <Button variant="contained" sx={sx.removeCard}>
               <Typography variant="h6" sx={sx.removeCardText}>
@@ -72,7 +71,7 @@ const Payments = () => {
         )}
       </Grid>
       <Grid item container sx={sx.slotContainer}>
-        <Slots />
+        <Slots slot={slot} setSlot={setSlot} />
       </Grid>
     </Grid>
   )

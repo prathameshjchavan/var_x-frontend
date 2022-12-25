@@ -1,11 +1,14 @@
 import { Grid } from "@mui/material"
-import React, { Fragment } from "react"
+import React, { Fragment, useContext } from "react"
 import Details from "./Details"
 import Edit from "./Edit"
 import Location from "./Location"
 import Payments from "./Payments"
+import { UserContext } from "../../contexts"
 
 const Settings = ({ setSelectedSetting }) => {
+  const { user } = useContext(UserContext)
+
   // sx prop
   const sx = {
     bottomRow: {
@@ -19,12 +22,12 @@ const Settings = ({ setSelectedSetting }) => {
   return (
     <Fragment>
       <Grid container sx={sx.sectionContainer}>
-        <Details />
-        <Payments />
+        <Details user={user} />
+        <Payments user={user} />
       </Grid>
       <Grid container sx={{ ...sx.bottomRow, ...sx.sectionContainer }}>
-        <Location />
-        <Edit setSelectedSetting={setSelectedSetting} />
+        <Location user={user} />
+        <Edit user={user} setSelectedSetting={setSelectedSetting} />
       </Grid>
     </Fragment>
   )
