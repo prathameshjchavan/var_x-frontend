@@ -8,16 +8,19 @@ import { getEmailPasswordFields } from "../auth/Login"
 import { styled } from "@mui/material/styles"
 import Slots from "./Slots"
 
-const Details = ({ user, edit, setChangesMade }) => {
+const Details = ({
+  user,
+  edit,
+  setChangesMade,
+  values,
+  setValues,
+  slot,
+  setSlot,
+}) => {
   const [visible, setVisible] = useState(false)
-  const [values, setValues] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    password: "",
-  })
+
   const [errors, setErrors] = useState({})
-  const [slot, setSlot] = useState(0)
+
   const emailPasswordFields = getEmailPasswordFields(
     false,
     false,

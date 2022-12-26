@@ -1,11 +1,26 @@
 import { Grid, IconButton } from "@mui/material"
-import React, { useCallback } from "react"
+import React, { useCallback, useContext, useState } from "react"
 import { styled } from "@mui/material/styles"
+import axios from "axios"
+import CircularProgress from "@mui/material"
+import { FeedbackContext } from "../../contexts"
 import BackwardsIcon from "../../images/BackwardsOutline"
 import editIcon from "../../images/edit.svg"
 import saveIcon from "../../images/save.svg"
 
-const Edit = ({ setSelectedSetting, edit, setEdit }) => {
+const Edit = ({
+  setSelectedSetting,
+  edit,
+  setEdit,
+  details,
+  locations,
+  detailSlot,
+  locationSlot,
+  changesMade,
+}) => {
+  const { dispatchFeedback } = useContext(FeedbackContext)
+  const [loading, setLoading] = useState(false)
+
   // sx prop
   const sx = {
     editContainer: {
@@ -20,7 +35,11 @@ const Edit = ({ setSelectedSetting, edit, setEdit }) => {
   // functions
   const handleEdit = useCallback(() => {
     setEdit(!edit)
-  }, [edit, setEdit])
+
+    if (edit && changesMade) {
+      setLoading(true)
+    }
+  }, [edit, setEdit, changesMade])
 
   // styled components
   const IconWrapper = styled("span")(() => sx.icon)

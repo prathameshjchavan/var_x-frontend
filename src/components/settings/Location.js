@@ -6,15 +6,16 @@ import zipAdornment from "../../images/zip-adornment.svg"
 import Fields from "../auth/Fields"
 import Slots from "./Slots"
 
-const Location = ({ user, edit, setChangesMade }) => {
-  const [values, setValues] = useState({
-    street: "",
-    zip: "",
-    city: "",
-    state: "",
-  })
+const Location = ({
+  user,
+  edit,
+  setChangesMade,
+  values,
+  setValues,
+  slot,
+  setSlot,
+}) => {
   const [errors, setErrors] = useState({})
-  const [slot, setSlot] = useState(0)
 
   // sx prop
   const sx = {
