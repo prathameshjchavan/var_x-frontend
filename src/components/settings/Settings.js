@@ -7,7 +7,7 @@ import Payments from "./Payments"
 import { UserContext } from "../../contexts"
 
 const Settings = ({ setSelectedSetting }) => {
-  const { user } = useContext(UserContext)
+  const { user, dispatchUser } = useContext(UserContext)
   const [edit, setEdit] = useState(false)
   const [changesMade, setChangesMade] = useState(false)
   const [detailValues, setDetailValues] = useState({
@@ -63,6 +63,7 @@ const Settings = ({ setSelectedSetting }) => {
           edit={edit}
           setEdit={setEdit}
           user={user}
+          dispatchUser={dispatchUser}
           setSelectedSetting={setSelectedSetting}
           changesMade={changesMade}
           details={detailValues}

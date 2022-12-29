@@ -2,14 +2,17 @@ import { Grid, IconButton } from "@mui/material"
 import React, { useCallback, useContext, useState } from "react"
 import { styled } from "@mui/material/styles"
 import axios from "axios"
-import CircularProgress from "@mui/material"
+import CircularProgress from "@mui/material/CircularProgress"
 import { FeedbackContext } from "../../contexts"
 import BackwardsIcon from "../../images/BackwardsOutline"
 import editIcon from "../../images/edit.svg"
 import saveIcon from "../../images/save.svg"
+import { setSnackbar, setUser } from "../../contexts/actions"
 
 const Edit = ({
   setSelectedSetting,
+  user,
+  dispatchUser,
   edit,
   setEdit,
   details,
@@ -38,8 +41,59 @@ const Edit = ({
 
     if (edit && changesMade) {
       setLoading(true)
+
+      const { password, ...newDetails } = details
+
+      axios
+        .put(
+          `${process.env.STRAPI_API_URL}/api/user/settings`,
+          {
+            details: newDetails,
+            detailSlot,
+            location: locations,
+            locationSlot,
+          },
+          {
+            headers: { Authorization: `Bearer ${user.jwt}` },
+          }
+        )
+        .then(response => {
+          dispatchFeedback(
+            setSnackbar({
+              status: "success",
+              message: "Settings Saved Successfully",
+            })
+          )
+          dispatchUser(
+            setUser({ ...response.data, jwt: user.jwt, onboarding: true })
+          )
+        })
+        .catch(error => {
+          console.error(error)
+          dispatchFeedback(
+            setSnackbar({
+              status: "error",
+              message:
+                "There was a problem saving your settings, please try again.",
+            })
+          )
+        })
+        .finally(() => {
+          setLoading(false)
+        })
     }
-  }, [edit, setEdit, changesMade])
+  }, [
+    edit,
+    setEdit,
+    changesMade,
+    detailSlot,
+    details,
+    dispatchFeedback,
+    dispatchUser,
+    locationSlot,
+    locations,
+    user.jwt,
+  ])
 
   // styled components
   const IconWrapper = styled("span")(() => sx.icon)
@@ -62,12 +116,16 @@ const Edit = ({
         </IconButton>
       </Grid>
       <Grid item>
-        <IconButton onClick={handleEdit}>
-          <Icon
-            src={edit ? saveIcon : editIcon}
-            alt={`edit ${edit ? "save" : "settings"}`}
-          />
-        </IconButton>
+        {loading ? (
+          <CircularProgress color="secondary" size="8rem" />
+        ) : (
+          <IconButton disabled={loading} onClick={handleEdit}>
+            <Icon
+              src={edit ? saveIcon : editIcon}
+              alt={`edit ${edit ? "save" : "settings"}`}
+            />
+          </IconButton>
+        )}
       </Grid>
     </Grid>
   )
