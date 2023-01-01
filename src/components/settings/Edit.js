@@ -8,6 +8,7 @@ import BackwardsIcon from "../../images/BackwardsOutline"
 import editIcon from "../../images/edit.svg"
 import saveIcon from "../../images/save.svg"
 import { setSnackbar, setUser } from "../../contexts/actions"
+import Confirmation from "./Confirmation"
 
 const Edit = ({
   setSelectedSetting,
@@ -23,6 +24,7 @@ const Edit = ({
 }) => {
   const { dispatchFeedback } = useContext(FeedbackContext)
   const [loading, setLoading] = useState(false)
+  const [dialogOpen, setDialogOpen] = useState(true)
 
   // sx prop
   const sx = {
@@ -38,11 +40,14 @@ const Edit = ({
   // functions
   const handleEdit = useCallback(() => {
     setEdit(!edit)
+    const { password, ...newDetails } = details
+
+    if (password !== "********") {
+      setDialogOpen(true)
+    }
 
     if (edit && changesMade) {
       setLoading(true)
-
-      const { password, ...newDetails } = details
 
       axios
         .put(
@@ -127,6 +132,7 @@ const Edit = ({
           </IconButton>
         )}
       </Grid>
+      <Confirmation dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} />
     </Grid>
   )
 }

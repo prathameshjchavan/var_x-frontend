@@ -83,7 +83,7 @@ const Details = ({
   // useEffect
   useEffect(() => {
     setValues({ ...user.contactInfo[slot], password: "********" })
-  }, [slot, user.contactInfo])
+  }, [slot, user.contactInfo, setValues])
 
   useEffect(() => {
     const changed = Object.keys(user.contactInfo[slot]).some(

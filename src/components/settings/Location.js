@@ -51,7 +51,7 @@ const Location = ({
 
   useEffect(() => {
     setValues(user.locations[slot])
-  }, [user, slot])
+  }, [user, slot, setValues])
 
   useEffect(() => {
     const changed = Object.keys(user.locations[slot]).some(
