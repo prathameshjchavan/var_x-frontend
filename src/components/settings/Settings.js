@@ -1,5 +1,11 @@
 import { Grid } from "@mui/material"
-import React, { Fragment, useContext, useMemo, useState } from "react"
+import React, {
+  Fragment,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react"
 import Details from "./Details"
 import Edit from "./Edit"
 import Location from "./Location"
@@ -41,6 +47,14 @@ const Settings = ({ setSelectedSetting }) => {
     },
   }
 
+  useEffect(() => {
+    setDetailErrors({})
+  }, [detailSlot])
+
+  useEffect(() => {
+    setLocationErrors({})
+  }, [locationSlot])
+
   return (
     <Fragment>
       <Grid container sx={sx.sectionContainer}>
@@ -81,6 +95,8 @@ const Settings = ({ setSelectedSetting }) => {
           locations={locationValues}
           detailSlot={detailSlot}
           locationSlot={locationSlot}
+          detailValues={detailValues}
+          setDetailValues={setDetailValues}
         />
       </Grid>
     </Fragment>

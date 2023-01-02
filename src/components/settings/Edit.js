@@ -22,6 +22,8 @@ const Edit = ({
   detailSlot,
   locationSlot,
   changesMade,
+  detailValues,
+  setDetailValues,
 }) => {
   const { dispatchFeedback } = useContext(FeedbackContext)
   const [loading, setLoading] = useState(false)
@@ -149,6 +151,8 @@ const Edit = ({
         user={user}
         dispatchFeedback={dispatchFeedback}
         setSnackbar={setSnackbar}
+        detailValues={detailValues}
+        setDetailValues={setDetailValues}
       />
     </Grid>
   )

@@ -20,6 +20,8 @@ const Confirmation = ({
   user,
   dispatchFeedback,
   setSnackbar,
+  detailValues,
+  setDetailValues,
 }) => {
   const theme = useTheme()
   const [values, setValues] = useState({ password: "", confirmation: "" })
@@ -38,6 +40,12 @@ const Confirmation = ({
       confirmation: { ...password, placeholder: "New Password" },
     }
   }, [visible, setVisible])
+  const disabled = useMemo(
+    () =>
+      Object.keys(errors).some(error => errors[error] === true) ||
+      Object.keys(errors).length !== Object.keys(values).length,
+    [errors, values]
+  )
 
   // sx prop
   const sx = {
@@ -58,7 +66,7 @@ const Confirmation = ({
         `${process.env.STRAPI_API_URL}/api/auth/change-password`,
         {
           currentPassword: values.password,
-          password: values.confirmation,
+          password: detailValues.password,
           passwordConfirmation: values.confirmation,
         },
         {
@@ -77,12 +85,20 @@ const Confirmation = ({
       })
       .catch(error => {
         console.error(error)
+        setDetailValues(values => ({ ...values, password: "********" }))
+        setValues({ password: "", confirmation: "" })
         if (
           error.response.data.error.message ===
           "The provided current password is invalid"
         ) {
           dispatchFeedback(
             setSnackbar({ status: "error", message: "Old Password Invalid." })
+          )
+        } else if (
+          error.response.data.error.message === "Passwords do not match"
+        ) {
+          dispatchFeedback(
+            setSnackbar({ status: "error", message: "Passwords do not match." })
           )
         } else {
           dispatchFeedback(
@@ -99,7 +115,27 @@ const Confirmation = ({
         setDialogOpen(false)
         setValues({ password: "", confirmation: "" })
       })
-  }, [dispatchFeedback, setSnackbar, user, values, setDialogOpen])
+  }, [
+    dispatchFeedback,
+    setSnackbar,
+    user,
+    values,
+    setDialogOpen,
+    detailValues,
+    setDetailValues,
+  ])
+
+  const handleCancel = useCallback(() => {
+    setDialogOpen(false)
+    setDetailValues(values => ({ ...values, password: "********" }))
+    setValues({ password: "", confirmation: "" })
+    dispatchFeedback(
+      setSnackbar({
+        status: "error",
+        message: "Your password has NOT been changed.",
+      })
+    )
+  }, [dispatchFeedback, setDetailValues, setDialogOpen, setSnackbar])
 
   return (
     <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
@@ -124,7 +160,7 @@ const Confirmation = ({
       </DialogContent>
       <DialogActions>
         <Button
-          onClick={() => setDialogOpen(false)}
+          onClick={handleCancel}
           disabled={loading}
           sx={sx.button}
           color="primary"
@@ -133,7 +169,7 @@ const Confirmation = ({
         </Button>
         <Button
           onClick={handleConfirm}
-          disabled={loading}
+          disabled={loading || disabled}
           sx={sx.button}
           color="secondary"
         >
