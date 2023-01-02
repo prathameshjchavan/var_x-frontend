@@ -54,27 +54,56 @@ const Confirmation = ({
     setLoading(true)
 
     axios
-      .post(`${process.env.STRAPI_API_URL}/api/auth/local`, {
-        identifier: user.email,
-        password: values.password,
-      })
+      .post(
+        `${process.env.STRAPI_API_URL}/api/auth/change-password`,
+        {
+          currentPassword: values.password,
+          password: values.confirmation,
+          passwordConfirmation: values.confirmation,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.jwt}`,
+          },
+        }
+      )
       .then(response => {
-        axios.post(`${process.env.STRAPI_API_URL}/api/auth/change-password`)
+        dispatchFeedback(
+          setSnackbar({
+            status: "success",
+            message: "Password Changed Successfully",
+          })
+        )
       })
       .catch(error => {
         console.error(error)
-        dispatchFeedback(
-          setSnackbar({ status: "error", message: "Old Password Invalid." })
-        )
+        if (
+          error.response.data.error.message ===
+          "The provided current password is invalid"
+        ) {
+          dispatchFeedback(
+            setSnackbar({ status: "error", message: "Old Password Invalid." })
+          )
+        } else {
+          dispatchFeedback(
+            setSnackbar({
+              status: "error",
+              message:
+                "There was a problem changing your password, please try again.",
+            })
+          )
+        }
       })
       .finally(() => {
         setLoading(false)
+        setDialogOpen(false)
+        setValues({ password: "", confirmation: "" })
       })
-  }, [dispatchFeedback, setSnackbar, user.email, values.password])
+  }, [dispatchFeedback, setSnackbar, user, values, setDialogOpen])
 
   return (
     <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-      <DialogTitle>
+      <DialogTitle disableTypography>
         <Typography variant="h3" sx={sx.title}>
           Change Password
         </Typography>
@@ -96,13 +125,19 @@ const Confirmation = ({
       <DialogActions>
         <Button
           onClick={() => setDialogOpen(false)}
+          disabled={loading}
           sx={sx.button}
           color="primary"
         >
           Do Not Change Password
         </Button>
-        <Button onClick={handleConfirm} sx={sx.button} color="secondary">
-          Yes, Change My Password
+        <Button
+          onClick={handleConfirm}
+          disabled={loading}
+          sx={sx.button}
+          color="secondary"
+        >
+          {loading ? <CircularProgress /> : "Yes, Change My Password"}
         </Button>
       </DialogActions>
     </Dialog>
