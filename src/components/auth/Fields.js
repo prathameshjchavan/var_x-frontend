@@ -11,13 +11,14 @@ const Fields = ({
   setValues,
   isWhite,
   disabled,
+  fullWidth,
 }) => {
   const theme = useTheme()
 
   // sx prop
   const sx = {
     textfield: {
-      width: "20rem",
+      width: fullWidth ? undefined : "20rem",
       "& .MuiInput-input": !isWhite
         ? {
             color: theme.palette.secondary.main,
@@ -31,7 +32,7 @@ const Fields = ({
           }
         : undefined,
       [theme.breakpoints.down("sm")]: {
-        width: "15rem",
+        width: fullWidth ? undefined : "15rem",
       },
     },
   }
@@ -45,6 +46,7 @@ const Fields = ({
       <Grid item key={index}>
         <TextField
           value={values[field]}
+          fullWidth={fullWidth}
           variant="standard"
           placeholder={fields[field].placeholder}
           type={fields[field].type}

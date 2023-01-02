@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react"
+import React, { useCallback, useMemo, useState } from "react"
 import axios from "axios"
 import {
   Dialog,
@@ -9,14 +9,23 @@ import {
   Button,
   Typography,
   useTheme,
+  CircularProgress,
 } from "@mui/material"
 import { getEmailPasswordFields } from "../auth/Login"
+import Fields from "../auth/Fields"
 
-const Confirmation = ({ dialogOpen, setDialogOpen }) => {
+const Confirmation = ({
+  dialogOpen,
+  setDialogOpen,
+  user,
+  dispatchFeedback,
+  setSnackbar,
+}) => {
   const theme = useTheme()
   const [values, setValues] = useState({ password: "", confirmation: "" })
   const [errors, setErrors] = useState({})
   const [visible, setVisible] = useState(false)
+  const [loading, setLoading] = useState(false)
   const fields = useMemo(() => {
     const { password } = getEmailPasswordFields(
       true,
@@ -39,6 +48,14 @@ const Confirmation = ({ dialogOpen, setDialogOpen }) => {
       fontFamily: "Montserrat",
     },
   }
+
+  // functions
+  const handleConfirm = useCallback(() => {
+    setLoading(true)
+
+    // Logic
+  }, [])
+
   return (
     <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
       <DialogTitle>
@@ -51,12 +68,24 @@ const Confirmation = ({ dialogOpen, setDialogOpen }) => {
           You are changing your account password. Please confirm old password
           and new password.
         </DialogContentText>
+        <Fields
+          fields={fields}
+          values={values}
+          setValues={setValues}
+          errors={errors}
+          setErrors={setErrors}
+          fullWidth
+        />
       </DialogContent>
       <DialogActions>
-        <Button sx={sx.button} color="primary">
+        <Button
+          onClick={() => setDialogOpen(false)}
+          sx={sx.button}
+          color="primary"
+        >
           Do Not Change Password
         </Button>
-        <Button sx={sx.button} color="secondary">
+        <Button onClick={handleConfirm} sx={sx.button} color="secondary">
           Yes, Change My Password
         </Button>
       </DialogActions>
