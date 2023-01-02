@@ -53,8 +53,24 @@ const Confirmation = ({
   const handleConfirm = useCallback(() => {
     setLoading(true)
 
-    // Logic
-  }, [])
+    axios
+      .post(`${process.env.STRAPI_API_URL}/api/auth/local`, {
+        identifier: user.email,
+        password: values.password,
+      })
+      .then(response => {
+        axios.post(`${process.env.STRAPI_API_URL}/api/auth/change-password`)
+      })
+      .catch(error => {
+        console.error(error)
+        dispatchFeedback(
+          setSnackbar({ status: "error", message: "Old Password Invalid." })
+        )
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }, [dispatchFeedback, setSnackbar, user.email, values.password])
 
   return (
     <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
