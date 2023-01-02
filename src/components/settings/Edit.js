@@ -13,6 +13,7 @@ import Confirmation from "./Confirmation"
 const Edit = ({
   setSelectedSetting,
   user,
+  isError,
   dispatchUser,
   edit,
   setEdit,
@@ -24,7 +25,7 @@ const Edit = ({
 }) => {
   const { dispatchFeedback } = useContext(FeedbackContext)
   const [loading, setLoading] = useState(false)
-  const [dialogOpen, setDialogOpen] = useState(true)
+  const [dialogOpen, setDialogOpen] = useState(false)
 
   // sx prop
   const sx = {
@@ -39,6 +40,15 @@ const Edit = ({
 
   // functions
   const handleEdit = useCallback(() => {
+    if (edit && isError) {
+      return dispatchFeedback(
+        setSnackbar({
+          status: "error",
+          message: "All fields must be valid before saving.",
+        })
+      )
+    }
+
     setEdit(!edit)
     const { password, ...newDetails } = details
 
@@ -98,6 +108,7 @@ const Edit = ({
     locationSlot,
     locations,
     user.jwt,
+    isError,
   ])
 
   // styled components

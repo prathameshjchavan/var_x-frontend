@@ -16,9 +16,9 @@ const Details = ({
   setValues,
   slot,
   setSlot,
+  errors, setErrors
 }) => {
   const [visible, setVisible] = useState(false)
-  const [errors, setErrors] = useState({})
   const emailPasswordFields = getEmailPasswordFields(
     false,
     false,

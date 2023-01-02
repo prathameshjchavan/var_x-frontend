@@ -1,5 +1,5 @@
 import { Chip, Grid } from "@mui/material"
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useEffect, useMemo } from "react"
 import locationIcon from "../../images/location.svg"
 import streetAdornment from "../../images/street-adornment.svg"
 import zipAdornment from "../../images/zip-adornment.svg"
@@ -14,9 +14,9 @@ const Location = ({
   setValues,
   slot,
   setSlot,
+  errors,
+  setErrors,
 }) => {
-  const [errors, setErrors] = useState({})
-
   // sx prop
   const sx = {
     locationContainer: { position: "relative" },

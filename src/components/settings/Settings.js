@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material"
-import React, { Fragment, useContext, useState } from "react"
+import React, { Fragment, useContext, useMemo, useState } from "react"
 import Details from "./Details"
 import Edit from "./Edit"
 import Location from "./Location"
@@ -24,6 +24,12 @@ const Settings = ({ setSelectedSetting }) => {
   })
   const [locationSlot, setLocationSlot] = useState(0)
   const [detailSlot, setDetailSlot] = useState(0)
+  const [detailErrors, setDetailErrors] = useState({})
+  const [locationErrors, setLocationErrors] = useState({})
+  const isError = useMemo(() => {
+    const allErrors = { ...detailErrors, ...locationErrors }
+    return Object.keys(allErrors).some(error => allErrors[error] === true)
+  }, [detailErrors, locationErrors])
 
   // sx prop
   const sx = {
@@ -46,6 +52,8 @@ const Settings = ({ setSelectedSetting }) => {
           setChangesMade={setChangesMade}
           slot={detailSlot}
           setSlot={setDetailSlot}
+          errors={detailErrors}
+          setErrors={setDetailErrors}
         />
         <Payments user={user} edit={edit} />
       </Grid>
@@ -58,10 +66,13 @@ const Settings = ({ setSelectedSetting }) => {
           setChangesMade={setChangesMade}
           slot={locationSlot}
           setSlot={setLocationSlot}
+          errors={locationErrors}
+          setErrors={setLocationErrors}
         />
         <Edit
           edit={edit}
           setEdit={setEdit}
+          isError={isError}
           user={user}
           dispatchUser={dispatchUser}
           setSelectedSetting={setSelectedSetting}
