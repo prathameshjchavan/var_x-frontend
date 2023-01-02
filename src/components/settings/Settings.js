@@ -14,7 +14,7 @@ const Settings = ({ setSelectedSetting }) => {
     name: "",
     phone: "",
     email: "",
-    password: "",
+    password: "********",
   })
   const [locationValues, setLocationValues] = useState({
     street: "",

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useMemo, useState } from "react"
 import axios from "axios"
 import {
   Dialog,
@@ -10,9 +10,25 @@ import {
   Typography,
   useTheme,
 } from "@mui/material"
+import { getEmailPasswordFields } from "../auth/Login"
 
 const Confirmation = ({ dialogOpen, setDialogOpen }) => {
   const theme = useTheme()
+  const [values, setValues] = useState({ password: "", confirmation: "" })
+  const [errors, setErrors] = useState({})
+  const [visible, setVisible] = useState(false)
+  const fields = useMemo(() => {
+    const { password } = getEmailPasswordFields(
+      true,
+      false,
+      visible,
+      setVisible
+    )
+    return {
+      password: { ...password, placeholder: "Old Password" },
+      confirmation: { ...password, placeholder: "New Password" },
+    }
+  }, [visible, setVisible])
 
   // sx prop
   const sx = {
