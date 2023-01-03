@@ -1,11 +1,19 @@
-import { Chip, Grid } from "@mui/material"
+import { Chip, CircularProgress, Grid } from "@mui/material"
 import axios from "axios"
-import React, { useCallback, useEffect, useMemo, useState } from "react"
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react"
 import locationIcon from "../../images/location.svg"
 import streetAdornment from "../../images/street-adornment.svg"
 import zipAdornment from "../../images/zip-adornment.svg"
 import Fields from "../auth/Fields"
 import Slots from "./Slots"
+import { FeedbackContext } from "../../contexts"
+import { setSnackbar } from "../../contexts/actions"
 
 const Location = ({
   user,
@@ -19,6 +27,7 @@ const Location = ({
   setErrors,
 }) => {
   const [loading, setLoading] = useState(false)
+  const { dispatchFeedback } = useContext(FeedbackContext)
 
   // sx prop
   const sx = {
@@ -60,15 +69,30 @@ const Location = ({
       .get(
         `https://public.opendatasoft.com/api/records/1.0/search/?dataset=geonames-postal-code&q=&facet=country_code&facet=admin_name1&facet=place_name&facet=postal_code&refine.country_code=US&refine.postal_code=${values.zip}`
       )
-      .then(response => {})
+      .then(response => {
+        const { place_name, admin_name1 } = response.data.records[0].fields
+
+        setValues(values => ({
+          ...values,
+          city: place_name,
+          state: admin_name1,
+        }))
+      })
       .catch(error => {
         console.error(error)
+        dispatchFeedback(
+          setSnackbar({
+            status: "error",
+            message: "There was a problem with your zipcode, please try again.",
+          })
+        )
       })
       .finally(() => {
         setLoading(false)
       })
-  }, [values.zip])
+  }, [values.zip, setValues])
 
+  // useEffects
   useEffect(() => {
     setValues(user.locations[slot])
   }, [user, slot, setValues])
@@ -79,7 +103,13 @@ const Location = ({
     )
 
     setChangesMade(changed)
-  }, [user, slot, values, setChangesMade])
+
+    if (values.zip.length === 5 && !values.city) {
+      getLocation()
+    } else if (values.zip.length < 5 && values.city) {
+      setValues(values => ({ ...values, city: "", state: "" }))
+    }
+  }, [user, slot, values, setChangesMade, getLocation])
 
   return (
     <Grid
@@ -112,12 +142,16 @@ const Location = ({
         />
       </Grid>
       <Grid item sx={sx.chipWrapper}>
-        <Chip
-          label={
-            values.city ? `${values.city}, ${values.state}` : "City, State"
-          }
-          color="secondary"
-        />
+        {loading ? (
+          <CircularProgress color="secondary" />
+        ) : (
+          <Chip
+            label={
+              values.city ? `${values.city}, ${values.state}` : "City, State"
+            }
+            color="secondary"
+          />
+        )}
       </Grid>
       <Grid item container sx={sx.slotContainer}>
         <Slots slot={slot} setSlot={setSlot} />
