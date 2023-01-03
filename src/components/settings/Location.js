@@ -1,5 +1,6 @@
 import { Chip, Grid } from "@mui/material"
-import React, { useEffect, useMemo } from "react"
+import axios from "axios"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import locationIcon from "../../images/location.svg"
 import streetAdornment from "../../images/street-adornment.svg"
 import zipAdornment from "../../images/zip-adornment.svg"
@@ -17,6 +18,8 @@ const Location = ({
   errors,
   setErrors,
 }) => {
+  const [loading, setLoading] = useState(false)
+
   // sx prop
   const sx = {
     locationContainer: { position: "relative" },
@@ -48,6 +51,23 @@ const Location = ({
     }),
     []
   )
+
+  // functions
+  const getLocation = useCallback(() => {
+    setLoading(true)
+
+    axios
+      .get(
+        `https://public.opendatasoft.com/api/records/1.0/search/?dataset=geonames-postal-code&q=&facet=country_code&facet=admin_name1&facet=place_name&facet=postal_code&refine.country_code=US&refine.postal_code=${values.zip}`
+      )
+      .then(response => {})
+      .catch(error => {
+        console.error(error)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }, [values.zip])
 
   useEffect(() => {
     setValues(user.locations[slot])
