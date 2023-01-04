@@ -12,7 +12,13 @@ import orderHistoryIcon from "../../images/order-history.svg"
 import favoritesIcon from "../../images/favorite.svg"
 import subscriptionIcon from "../../images/subscription.svg"
 import background from "../../images/repeating-smallest.svg"
-import { Button, Grid, Typography, useTheme } from "@mui/material"
+import {
+  Button,
+  Grid,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { UserContext } from "../../contexts"
 import { useSpring, useSprings, animated } from "@react-spring/web"
@@ -56,6 +62,24 @@ const SettingsPortal = () => {
   })
   const AnimatedGrid = useMemo(() => animated(Grid), [])
   const [resizeListener, sizes] = useResizeAware()
+  const matchesXL = useMediaQuery(theme.breakpoints.down("xl"))
+  const matchesVertical = useMediaQuery("(max-width: 1300px)")
+  const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
+  const buttonWidth = useMemo(
+    () =>
+      matchesSM
+        ? `${sizes.width - 64}px`
+        : matchesVertical
+        ? `${sizes.width - 160}px`
+        : matchesXL
+        ? "288px"
+        : "352px",
+    [matchesSM, matchesVertical, sizes.width, matchesXL]
+  )
+  const buttonHeight = useMemo(
+    () => (matchesVertical ? "22rem" : matchesXL ? "18rem" : "22rem"),
+    [matchesVertical, matchesXL]
+  )
 
   // sx prop
   const sx = {
@@ -85,6 +109,16 @@ const SettingsPortal = () => {
         ? `0.5rem solid ${theme.palette.primary.main}`
         : undefined,
       margin: "5rem 0",
+      padding: matchesSM ? "2rem 0" : matchesVertical ? "5rem 0" : undefined,
+      "& > :not(:last-of-type)": {
+        marginBottom: !showComponent
+          ? matchesSM
+            ? "2rem"
+            : matchesVertical
+            ? "5rem"
+            : 0
+          : 0,
+      },
     },
     logout: {
       color: theme.palette.error.main,
@@ -93,8 +127,8 @@ const SettingsPortal = () => {
 
   // styled components
   const Icon = styled("img")(() => ({
-    height: "12rem",
-    width: "12rem",
+    height: matchesXL ? "10rem" : "12rem",
+    width: matchesXL ? "10rem" : "12rem",
   }))
 
   // functions
@@ -126,9 +160,9 @@ const SettingsPortal = () => {
           delay: selectedSetting !== null ? 0 : 600,
         }
         const size = {
-          height: selectedSetting === button.label ? "60rem" : "22rem",
+          height: selectedSetting === button.label ? "60rem" : buttonHeight,
           width:
-            selectedSetting === button.label ? `${sizes.width}px` : "352px",
+            selectedSetting === button.label ? `${sizes.width}px` : buttonWidth,
           borderRadius: selectedSetting === button.label ? "0px" : "25px",
           delay: selectedSetting !== null ? 600 : 0,
         }
@@ -167,7 +201,7 @@ const SettingsPortal = () => {
         <img src={accountIcon} alt="settings page" />
       </Grid>
       <Grid item>
-        <Typography variant="h4" sx={sx.name}>
+        <Typography align="center" variant="h4" sx={sx.name}>
           Welcome back, {user.name}
         </Typography>
       </Grid>
@@ -182,6 +216,7 @@ const SettingsPortal = () => {
         item
         container
         sx={sx.dashboard}
+        direction={matchesVertical ? "column" : "row"}
         alignItems="center"
         justifyContent="space-around"
       >

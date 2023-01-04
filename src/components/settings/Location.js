@@ -90,7 +90,7 @@ const Location = ({
       .finally(() => {
         setLoading(false)
       })
-  }, [values.zip, setValues])
+  }, [values.zip, setValues, dispatchFeedback])
 
   // useEffects
   useEffect(() => {
@@ -109,7 +109,7 @@ const Location = ({
     } else if (values.zip.length < 5 && values.city) {
       setValues(values => ({ ...values, city: "", state: "" }))
     }
-  }, [user, slot, values, setChangesMade, getLocation])
+  }, [user, slot, values, setChangesMade, getLocation, setValues])
 
   return (
     <Grid
