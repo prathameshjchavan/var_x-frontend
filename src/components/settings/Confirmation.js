@@ -10,6 +10,7 @@ import {
   Typography,
   useTheme,
   CircularProgress,
+  useMediaQuery,
 } from "@mui/material"
 import { getEmailPasswordFields } from "../auth/Login"
 import Fields from "../auth/Fields"
@@ -28,6 +29,7 @@ const Confirmation = ({
   const [errors, setErrors] = useState({})
   const [visible, setVisible] = useState(false)
   const [loading, setLoading] = useState(false)
+  const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
   const fields = useMemo(() => {
     const { password } = getEmailPasswordFields(
       true,
@@ -51,6 +53,9 @@ const Confirmation = ({
   const sx = {
     title: {
       color: theme.palette.error.main,
+    },
+    contentText: {
+      marginBottom: matchesSM ? "1rem" : undefined,
     },
     button: {
       fontFamily: "Montserrat",
@@ -140,12 +145,19 @@ const Confirmation = ({
   return (
     <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
       <DialogTitle disableTypography>
-        <Typography variant="h3" sx={sx.title}>
+        <Typography
+          align={matchesSM ? "center" : "undefined"}
+          variant="h3"
+          sx={sx.title}
+        >
           Change Password
         </Typography>
       </DialogTitle>
       <DialogContent>
-        <DialogContentText>
+        <DialogContentText
+          sx={sx.contentText}
+          align={matchesSM ? "center" : undefined}
+        >
           You are changing your account password. Please confirm old password
           and new password.
         </DialogContentText>

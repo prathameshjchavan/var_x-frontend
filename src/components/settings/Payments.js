@@ -13,6 +13,7 @@ const Payments = ({ user }) => {
   const theme = useTheme()
   const [slot, setSlot] = useState(0)
   const matchesVertical = useMediaQuery("(max-width: 1300px)")
+  const matchesXS = useMediaQuery("(max-width: 700px)")
   const card = useMemo(() => user.paymentMethods[slot], [user, slot])
 
   // sx prop
@@ -27,7 +28,7 @@ const Payments = ({ user }) => {
       marginBottom: "5rem",
     },
     icon: {
-      marginBottom: "3rem",
+      marginBottom: matchesXS ? "1rem" : "3rem",
     },
     removeCard: {
       backgroundColor: "#fff",
@@ -66,7 +67,7 @@ const Payments = ({ user }) => {
       </Grid>
       <Grid item container justifyContent="center">
         <Grid item>
-          <Typography variant="h3" sx={sx.number}>
+          <Typography align="center" variant="h3" sx={sx.number}>
             {card.last4
               ? `${card.brand.toUpperCase()} **** **** **** ${card.last4}`
               : "Add A New Card During Checkout"}

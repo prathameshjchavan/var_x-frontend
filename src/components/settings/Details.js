@@ -21,6 +21,7 @@ const Details = ({
 }) => {
   const [visible, setVisible] = useState(false)
   const matchesVertical = useMediaQuery("(max-width: 1300px)")
+  const matchesXS = useMediaQuery("(max-width: 700px)")
   const emailPasswordFields = getEmailPasswordFields(
     false,
     false,
@@ -66,9 +67,10 @@ const Details = ({
       marginBottom: 10,
     },
     fieldContainer: {
-      marginBottom: "2rem",
+      marginBottom: matchesXS ? "1rem" : "2rem",
       "& > :not(:first-of-type)": {
-        marginLeft: "5rem",
+        marginLeft: !matchesXS ? "5rem" : undefined,
+        marginTop: "1rem",
       },
     },
     slotContainer: {
@@ -79,7 +81,7 @@ const Details = ({
 
   // styled components
   const Icon = styled("img")(() => ({
-    marginBottom: "3rem",
+    marginBottom: matchesXS ? "1rem" : "3rem",
   }))
 
   // useEffect
@@ -113,7 +115,9 @@ const Details = ({
         <Grid
           container
           sx={sx.fieldContainer}
+          direction={matchesXS ? "column" : "row"}
           justifyContent="center"
+          alignItems={matchesXS ? "center" : undefined}
           key={index}
         >
           <Fields
