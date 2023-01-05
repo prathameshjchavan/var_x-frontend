@@ -64,6 +64,7 @@ const SettingsPortal = () => {
   const [resizeListener, sizes] = useResizeAware()
   const matchesXL = useMediaQuery(theme.breakpoints.down("xl"))
   const matchesVertical = useMediaQuery("(max-width: 1300px)")
+  const matchesLG = useMediaQuery(theme.breakpoints.down("lg"))
   const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
   const buttonWidth = useMemo(
     () =>
@@ -109,7 +110,13 @@ const SettingsPortal = () => {
         ? `0.5rem solid ${theme.palette.primary.main}`
         : undefined,
       margin: "5rem 0",
-      padding: matchesSM ? "2rem 0" : matchesVertical ? "5rem 0" : undefined,
+      padding: !showComponent
+        ? matchesSM
+          ? "2rem 0"
+          : matchesVertical
+          ? "5rem 0"
+          : undefined
+        : undefined,
       "& > :not(:last-of-type)": {
         marginBottom: !showComponent
           ? matchesSM
@@ -160,7 +167,12 @@ const SettingsPortal = () => {
           delay: selectedSetting !== null ? 0 : 600,
         }
         const size = {
-          height: selectedSetting === button.label ? "60rem" : buttonHeight,
+          height:
+            selectedSetting === button.label
+              ? matchesLG
+                ? "120rem"
+                : "60rem"
+              : buttonHeight,
           width:
             selectedSetting === button.label ? `${sizes.width}px` : buttonWidth,
           borderRadius: selectedSetting === button.label ? "0px" : "25px",

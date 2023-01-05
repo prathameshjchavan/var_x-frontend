@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material"
+import { Grid, useMediaQuery } from "@mui/material"
 import React, { useEffect, useState } from "react"
 import fingerprint from "../../images/fingerprint.svg"
 import NameAdornment from "../../images/NameAdornment"
@@ -16,9 +16,11 @@ const Details = ({
   setValues,
   slot,
   setSlot,
-  errors, setErrors
+  errors,
+  setErrors,
 }) => {
   const [visible, setVisible] = useState(false)
+  const matchesVertical = useMediaQuery("(max-width: 1300px)")
   const emailPasswordFields = getEmailPasswordFields(
     false,
     false,
@@ -52,6 +54,8 @@ const Details = ({
   const sx = {
     detailsContainer: {
       position: "relative",
+      borderBottom: matchesVertical ? "4px solid #fff" : undefined,
+      height: matchesVertical ? "30rem" : undefined,
     },
     visibleIcon: {
       padding: 0,
@@ -96,7 +100,8 @@ const Details = ({
       item
       container
       direction="column"
-      xs={6}
+      lg={6}
+      xs={12}
       alignItems="center"
       justifyContent="center"
       sx={sx.detailsContainer}
@@ -119,6 +124,7 @@ const Details = ({
             setErrors={setErrors}
             isWhite
             disabled={!edit}
+            settings
           />
         </Grid>
       ))}

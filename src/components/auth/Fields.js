@@ -12,13 +12,14 @@ const Fields = ({
   isWhite,
   disabled,
   fullWidth,
+  settings,
 }) => {
   const theme = useTheme()
 
   // sx prop
   const sx = {
     textfield: {
-      width: fullWidth ? undefined : "20rem",
+      width: fullWidth ? undefined : settings ? "15rem" : "20rem",
       "& .MuiInput-input": !isWhite
         ? {
             color: theme.palette.secondary.main,

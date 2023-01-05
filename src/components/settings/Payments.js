@@ -1,4 +1,10 @@
-import { Button, Grid, Typography, useTheme } from "@mui/material"
+import {
+  Button,
+  Grid,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material"
 import React, { useMemo, useState } from "react"
 import cardIcon from "../../images/card.svg"
 import Slots from "./Slots"
@@ -6,11 +12,16 @@ import Slots from "./Slots"
 const Payments = ({ user }) => {
   const theme = useTheme()
   const [slot, setSlot] = useState(0)
+  const matchesVertical = useMediaQuery("(max-width: 1300px)")
   const card = useMemo(() => user.paymentMethods[slot], [user, slot])
 
   // sx prop
   const sx = {
-    paymentContainer: { borderLeft: "4px solid #fff", position: "relative" },
+    paymentContainer: {
+      borderLeft: !matchesVertical ? "4px solid #fff" : undefined,
+      position: "relative",
+      height: matchesVertical ? "30rem" : undefined,
+    },
     number: {
       color: "#fff",
       marginBottom: "5rem",
@@ -45,7 +56,8 @@ const Payments = ({ user }) => {
       container
       sx={sx.paymentContainer}
       direction="column"
-      xs={6}
+      lg={6}
+      xs={12}
       alignItems="center"
       justifyContent="center"
     >

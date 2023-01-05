@@ -1,4 +1,4 @@
-import { Grid, IconButton } from "@mui/material"
+import { Grid, IconButton, useMediaQuery } from "@mui/material"
 import React, { useCallback, useContext, useState } from "react"
 import { styled } from "@mui/material/styles"
 import axios from "axios"
@@ -28,11 +28,13 @@ const Edit = ({
   const { dispatchFeedback } = useContext(FeedbackContext)
   const [loading, setLoading] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
+  const matchesVertical = useMediaQuery("(max-width: 1300px)")
 
   // sx prop
   const sx = {
     editContainer: {
-      borderLeft: "4px solid #fff",
+      borderLeft: !matchesVertical ? "4px solid #fff" : undefined,
+      height: matchesVertical ? "30rem" : undefined,
     },
     icon: {
       height: "8rem",
@@ -124,7 +126,8 @@ const Edit = ({
       sx={sx.editContainer}
       justifyContent="space-evenly"
       alignItems="center"
-      xs={6}
+      lg={6}
+      xs={12}
     >
       <Grid item>
         <IconButton onClick={() => setSelectedSetting(null)}>

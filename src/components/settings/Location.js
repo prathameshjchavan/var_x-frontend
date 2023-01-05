@@ -1,4 +1,4 @@
-import { Chip, CircularProgress, Grid } from "@mui/material"
+import { Chip, CircularProgress, Grid, useMediaQuery } from "@mui/material"
 import axios from "axios"
 import React, {
   useCallback,
@@ -27,11 +27,16 @@ const Location = ({
   setErrors,
 }) => {
   const [loading, setLoading] = useState(false)
+  const matchesVertical = useMediaQuery("(max-width: 1300px)")
   const { dispatchFeedback } = useContext(FeedbackContext)
 
   // sx prop
   const sx = {
-    locationContainer: { position: "relative" },
+    locationContainer: {
+      position: "relative",
+      borderBottom: matchesVertical ? "4px solid #fff" : undefined,
+      height: matchesVertical ? "30rem" : undefined,
+    },
     icon: { marginBottom: "3rem" },
     fieldContainer: {
       "& > :not(:first-of-type)": {
@@ -116,7 +121,8 @@ const Location = ({
       item
       container
       direction="column"
-      xs={6}
+      lg={6}
+      xs={12}
       alignItems="center"
       justifyContent="center"
       sx={sx.locationContainer}
