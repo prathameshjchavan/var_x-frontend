@@ -18,7 +18,7 @@ export default function cartReducer(state, action) {
   }
 
   switch (action.type) {
-    case "ADD_TO_CART":
+    case ADD_TO_CART:
       if (existingIndex !== -1) {
         let newQty = newCart[existingIndex].qty + qty
 
@@ -34,7 +34,7 @@ export default function cartReducer(state, action) {
       saveData(newCart)
 
       return newCart
-    case "REMOVE_FROM_CART":
+    case REMOVE_FROM_CART:
       const newQty = newCart[existingIndex].qty - qty
 
       if (newQty <= 0) {
@@ -46,7 +46,7 @@ export default function cartReducer(state, action) {
       saveData(newCart)
 
       return newCart
-    case "CLEAR_CART":
+    case CLEAR_CART:
       localStorage.removeItem("cart")
 
       return []

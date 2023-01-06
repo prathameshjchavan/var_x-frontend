@@ -1,23 +1,27 @@
-import React, { useState } from "react"
-import AppBar from "@mui/material/AppBar"
-import Toolbar from "@mui/material/Toolbar"
-import Typography from "@mui/material/Typography"
-import Button from "@mui/material/Button"
-import IconButton from "@mui/material/IconButton"
-import Tabs from "@mui/material/Tabs"
-import Tab from "@mui/material/Tab"
+import React, { useState, useContext } from "react"
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  IconButton,
+  Tabs,
+  Tab,
+  SwipeableDrawer,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemButton,
+  Badge,
+  useMediaQuery,
+} from "@mui/material"
 import { styled, useTheme } from "@mui/material/styles"
-import useMediaQuery from "@mui/material/useMediaQuery"
-import SwipeableDrawer from "@mui/material/SwipeableDrawer"
-import List from "@mui/material/List"
-import ListItem from "@mui/material/ListItem"
-import ListItemText from "@mui/material/ListItemText"
-import ListItemButton from "@mui/material/ListItemButton"
 import { Link } from "gatsby"
-import search from "../../images/search.svg"
-import cart from "../../images/cart.svg"
-import account from "../../images/account-header.svg"
-import menu from "../../images/menu.svg"
+import searchIcon from "../../images/search.svg"
+import cartIcon from "../../images/cart.svg"
+import accountIcon from "../../images/account-header.svg"
+import menuIcon from "../../images/menu.svg"
+import { CartContext } from "../../contexts/index"
 
 const Header = ({ categories }) => {
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -31,16 +35,22 @@ const Header = ({ categories }) => {
     { name: "Contact Us", strapi_id: "contact", link: "/contact" },
   ]
   const actions = [
-    { icon: search, alt: "search", visible: true },
-    { icon: cart, alt: "cart", visible: true, link: "/cart" },
-    { icon: account, alt: "account", visible: !matchesSmall, link: "/account" },
+    { icon: searchIcon, alt: "search", visible: true },
+    { icon: cartIcon, alt: "cart", visible: true, link: "/cart" },
     {
-      icon: menu,
+      icon: accountIcon,
+      alt: "account",
+      visible: !matchesSmall,
+      link: "/account",
+    },
+    {
+      icon: menuIcon,
       alt: "menu",
       visible: matchesSmall,
       onClick: () => setDrawerOpen(true),
     },
   ]
+  const { cart } = useContext(CartContext)
 
   const activeIndex = () => {
     const found = routes.indexOf(
@@ -97,6 +107,18 @@ const Header = ({ categories }) => {
     tab: {
       ...theme.typography.body1,
       fontWeight: 500,
+    },
+    badge: {
+      "& .MuiBadge-badge": {
+        fontSize: "1rem",
+        color: "#fff",
+        minWidth: 0,
+        [theme.breakpoints.down("sm")]: {
+          fontSize: "0.75rem",
+          height: "1.1rem",
+          width: "1.1rem",
+        },
+      },
     },
   }
 
@@ -165,16 +187,31 @@ const Header = ({ categories }) => {
           )}
           {actions
             .filter(action => action.visible)
-            .map(({ icon, alt, link, onClick }, i) => (
-              <IconButton
-                component={link ? Link : undefined}
-                to={link}
-                key={i}
-                onClick={onClick}
-              >
-                <Icon src={icon} alt={alt} />
-              </IconButton>
-            ))}
+            .map(({ icon, alt, link, onClick }, i) => {
+              const image = <Icon src={icon} alt={alt} />
+
+              return (
+                <IconButton
+                  component={link ? Link : undefined}
+                  to={link}
+                  key={i}
+                  onClick={onClick}
+                >
+                  {alt === "cart" ? (
+                    <Badge
+                      overlap="circular"
+                      color="secondary"
+                      sx={sx.badge}
+                      badgeContent={cart.length}
+                    >
+                      {image}
+                    </Badge>
+                  ) : (
+                    image
+                  )}
+                </IconButton>
+              )
+            })}
         </Toolbar>
       </AppBar>
     </header>
