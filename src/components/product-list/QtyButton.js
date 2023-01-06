@@ -7,28 +7,8 @@ import { addToCart } from "../../contexts/actions"
 const QtyButton = ({ variant, stock, name }) => {
   const theme = useTheme()
   const [qty, setQty] = useState(1)
-  const { cart, dispatchCart } = useContext(CartContext)
-
-  // functions
-  const handleChange = useCallback(
-    direction => {
-      if (qty === stock.attributes.quantity && direction === "up") return null
-      if (qty === 1 && direction === "down") return null
-      const newQty = direction === "up" ? qty + 1 : qty - 1
-      setQty(newQty)
-    },
-    [qty, stock.attributes.quantity]
-  )
-
-  const handleCart = useCallback(() => {
-    dispatchCart(addToCart(variant, qty, name, stock.attributes.quantity))
-  }, [dispatchCart, variant, qty, name, stock.attributes.quantity])
-
-  // useEffects
-  useEffect(() => {
-    if (stock === -1) return undefined
-    if (qty > stock.attributes.quantity) setQty(stock.attributes.quantity)
-  }, [stock, qty])
+  const [success, setSuccess] = useState(false)
+  const { dispatchCart } = useContext(CartContext)
 
   // sx prop
   const sx = {
@@ -78,10 +58,10 @@ const QtyButton = ({ variant, stock, name }) => {
       borderRadius: "0 50px 50px 0",
       overflow: "hidden",
       height: "3rem",
+      transition: "background-color 1s ease",
       "&:hover .MuiBadge-badge": {
         backgroundColor: theme.palette.primary.main,
       },
-      transition: "none",
     },
     qtyText: {
       color: "#fff",
@@ -92,7 +72,45 @@ const QtyButton = ({ variant, stock, name }) => {
         padding: 0,
       },
     },
+    success: {
+      backgroundColor: success ? theme.palette.success.main : undefined,
+      "&:hover": {
+        backgroundColor: success ? theme.palette.success.main : undefined,
+      },
+    },
   }
+
+  // functions
+  const handleChange = useCallback(
+    direction => {
+      if (qty === stock.attributes.quantity && direction === "up") return null
+      if (qty === 1 && direction === "down") return null
+      const newQty = direction === "up" ? qty + 1 : qty - 1
+      setQty(newQty)
+    },
+    [qty, stock.attributes.quantity]
+  )
+
+  const handleCart = useCallback(() => {
+    setSuccess(true)
+    dispatchCart(addToCart(variant, qty, name, stock.attributes.quantity))
+  }, [dispatchCart, variant, qty, name, stock.attributes.quantity])
+
+  // useEffects
+  useEffect(() => {
+    if (stock === -1) return undefined
+    if (qty > stock.attributes.quantity) setQty(stock.attributes.quantity)
+  }, [stock, qty])
+
+  useEffect(() => {
+    let timer
+
+    if (success) {
+      timer = setTimeout(() => setSuccess(false), 1500)
+    }
+
+    return () => clearTimeout(timer)
+  }, [success])
 
   return (
     <Grid item sx={sx.mainContainer}>
@@ -134,16 +152,22 @@ const QtyButton = ({ variant, stock, name }) => {
           <Button
             onClick={handleCart}
             disableRipple
-            sx={{ ...sx.button, ...sx.cartButton }}
+            sx={{ ...sx.button, ...sx.cartButton, ...sx.success }}
           >
-            <Badge
-              color="secondary"
-              sx={sx.badge}
-              overlap="circular"
-              badgeContent="+"
-            >
-              <Cart color="#fff" />
-            </Badge>
+            {success ? (
+              <Typography variant="h3" sx={sx.qtyText}>
+                ✓
+              </Typography>
+            ) : (
+              <Badge
+                color="secondary"
+                sx={sx.badge}
+                overlap="circular"
+                badgeContent="+"
+              >
+                <Cart color="#fff" />
+              </Badge>
+            )}
           </Button>
         </Grid>
       </Grid>
