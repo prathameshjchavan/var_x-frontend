@@ -275,7 +275,15 @@ const ProductInfo = ({
               </Grid>
             </Grid>
           </Grid>
-          <Grid item>{stock && <QtyButton stock={stock[stockIndex]} />}</Grid>
+          <Grid item>
+            {stock && (
+              <QtyButton
+                variant={variants[selectedVariant]}
+                stock={stock[stockIndex]}
+                name={name}
+              />
+            )}
+          </Grid>
         </Grid>
       </Grid>
     </Grid>

@@ -172,7 +172,13 @@ const QuickView = ({
                   setSelectedColor={setSelectedColor}
                 />
                 <Spacer />
-                {stock && <QtyButton stock={stock[stockIndex]} />}
+                {stock && (
+                  <QtyButton
+                    variant={variant}
+                    stock={stock[stockIndex]}
+                    name={name}
+                  />
+                )}
               </Grid>
             </Grid>
           </Grid>

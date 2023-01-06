@@ -1,19 +1,30 @@
 import { Badge, Button, Grid, Typography, useTheme } from "@mui/material"
 import Cart from "../../images/Cart"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useContext, useCallback } from "react"
+import { CartContext } from "../../contexts"
+import { addToCart } from "../../contexts/actions"
 
-const QtyButton = ({ stock }) => {
+const QtyButton = ({ variant, stock, name }) => {
   const theme = useTheme()
   const [qty, setQty] = useState(1)
+  const { cart, dispatchCart } = useContext(CartContext)
 
   // functions
-  const handleChange = direction => {
-    if (qty === stock.attributes.quantity && direction === "up") return null
-    if (qty === 1 && direction === "down") return null
-    const newQty = direction === "up" ? qty + 1 : qty - 1
-    setQty(newQty)
-  }
+  const handleChange = useCallback(
+    direction => {
+      if (qty === stock.attributes.quantity && direction === "up") return null
+      if (qty === 1 && direction === "down") return null
+      const newQty = direction === "up" ? qty + 1 : qty - 1
+      setQty(newQty)
+    },
+    [qty, stock.attributes.quantity]
+  )
 
+  const handleCart = useCallback(() => {
+    dispatchCart(addToCart(variant, qty, name, stock.attributes.quantity))
+  }, [dispatchCart, variant, qty, name, stock.attributes.quantity])
+
+  // useEffects
   useEffect(() => {
     if (stock === -1) return undefined
     if (qty > stock.attributes.quantity) setQty(stock.attributes.quantity)
@@ -120,7 +131,11 @@ const QtyButton = ({ stock }) => {
           </Grid>
         </Grid>
         <Grid item>
-          <Button disableRipple sx={{ ...sx.button, ...sx.cartButton }}>
+          <Button
+            onClick={handleCart}
+            disableRipple
+            sx={{ ...sx.button, ...sx.cartButton }}
+          >
             <Badge
               color="secondary"
               sx={sx.badge}

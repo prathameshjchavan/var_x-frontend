@@ -146,7 +146,13 @@ function ProductFrameList({
             setSelectedColor={setSelectedColor}
           />
         </Grid>
-        {stock && <QtyButton stock={stock[stockIndex]} />}
+        {stock && (
+          <QtyButton
+            variant={variant}
+            stock={stock[stockIndex]}
+            name={product.node.name.split(" ")[0]}
+          />
+        )}
       </Grid>
     </Grid>
   )
