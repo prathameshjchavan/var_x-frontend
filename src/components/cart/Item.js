@@ -32,6 +32,19 @@ const Item = ({ item }) => {
 
   // sx prop
   const sx = {
+    itemContainer: {
+      margin: "2rem 0 2rem 2rem",
+    },
+    infoContainer: {
+      width: "35rem",
+      position: "relative",
+      height: "8rem",
+      marginLeft: "1rem",
+    },
+    chipWrapper: {
+      position: "absolute",
+      top: "3.5rem",
+    },
     name: {
       color: theme.palette.secondary.main,
     },
@@ -50,18 +63,25 @@ const Item = ({ item }) => {
   const ActionWrapper = styled("span")(({ style }) => ({
     height: "3rem",
     width: "3rem",
+    marginBottom: "-8px",
     ...style,
   }))
 
   return (
-    <Grid item container>
+    <Grid item container sx={sx.itemContainer}>
       <Grid item>
         <ProductImage
           src={`${process.env.STRAPI_API_URL}${item.variant.images[0].url}`}
           alt={item.variant.id}
         />
       </Grid>
-      <Grid item container direction="column">
+      <Grid
+        item
+        container
+        direction="column"
+        justifyContent="space-between"
+        sx={sx.infoContainer}
+      >
         <Grid item container justifyContent="space-between">
           <Grid item>
             <Typography variant="h5" sx={sx.name}>
@@ -76,16 +96,21 @@ const Item = ({ item }) => {
             />
           </Grid>
         </Grid>
-        <Grid item>
+        <Grid item sx={sx.chipWrapper}>
           <Chip label={`$${item.variant.price}`} color="secondary" />
         </Grid>
-        <Grid item container justifyContent="space-between">
-          <Grid item>
+        <Grid
+          item
+          container
+          justifyContent="space-between"
+          alignItems="flex-end"
+        >
+          <Grid item flexGrow>
             <Typography variant="body1" sx={sx.id}>
               ID: {item.variant.id}
             </Typography>
           </Grid>
-          <Grid item container>
+          <Grid item container justifyContent="flex-end" xs>
             {actions.map((action, index) => (
               <Grid item key={index}>
                 <IconButton>
