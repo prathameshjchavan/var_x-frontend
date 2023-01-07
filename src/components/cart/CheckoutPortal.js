@@ -1,9 +1,21 @@
 import { Grid, useTheme } from "@mui/material"
-import React from "react"
+import React, { useMemo, useState } from "react"
 import CheckoutNavigation from "./CheckoutNavigation"
 
-const CheckoutPortal = () => {
+const CheckoutPortal = ({ user }) => {
   const theme = useTheme()
+  const steps = useMemo(
+    () => [
+      { title: "Contact Info" },
+      { title: "Address" },
+      { title: "Shipping" },
+      { title: "Payment" },
+      { title: "Confirmation" },
+      { title: `Thanks ${user.name}!` },
+    ],
+    [user]
+  )
+  const [selectedStep, setSelectedStep] = useState(0)
 
   // sx prop
   const sx = {
@@ -15,7 +27,11 @@ const CheckoutPortal = () => {
   }
   return (
     <Grid item container direction="column" alignItems="flex-end" xs={6}>
-      <CheckoutNavigation />
+      <CheckoutNavigation
+        steps={steps}
+        selectedStep={selectedStep}
+        setSelectedStep={setSelectedStep}
+      />
       <Grid
         item
         container
