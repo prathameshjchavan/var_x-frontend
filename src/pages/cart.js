@@ -8,9 +8,21 @@ import CartItems from "../components/cart/CartItems"
 const Account = () => {
   const { user } = useContext(UserContext)
 
+  // sx prop
+  const sx = {
+    cartContainer: {
+      minHeight: "70vh",
+    },
+  }
+
   return (
     <Layout>
-      <Grid container direction="column" alignItems="center">
+      <Grid
+        container
+        direction="column"
+        alignItems="center"
+        sx={sx.cartContainer}
+      >
         <Grid item>
           <Typography variant="h1">{user.name}'s Cart</Typography>
         </Grid>
