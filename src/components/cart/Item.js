@@ -93,6 +93,7 @@ const Item = ({ item }) => {
               variant={item.variant}
               name={item.name}
               stock={{ attributes: { quantity: item.stock } }}
+              isCart
             />
           </Grid>
         </Grid>

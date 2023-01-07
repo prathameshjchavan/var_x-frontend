@@ -1,14 +1,24 @@
 import { Badge, Button, Grid, Typography, useTheme } from "@mui/material"
 import Cart from "../../images/Cart"
-import React, { useEffect, useState, useContext, useCallback } from "react"
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useCallback,
+  useMemo,
+} from "react"
 import { CartContext } from "../../contexts"
-import { addToCart } from "../../contexts/actions"
+import { addToCart, removeFromCart } from "../../contexts/actions"
 
-const QtyButton = ({ variant, stock, name }) => {
+const QtyButton = ({ variant, stock, name, isCart }) => {
   const theme = useTheme()
-  const [qty, setQty] = useState(1)
   const [success, setSuccess] = useState(false)
-  const { dispatchCart } = useContext(CartContext)
+  const { cart, dispatchCart } = useContext(CartContext)
+  const existingItem = useMemo(
+    () => cart.find(item => item.variant.id === variant.id),
+    [cart, variant]
+  )
+  const [qty, setQty] = useState(isCart ? existingItem.qty : 1)
 
   // sx prop
   const sx = {
@@ -17,25 +27,30 @@ const QtyButton = ({ variant, stock, name }) => {
     },
     buttonContainer: {
       width: "fit-content",
-      border: `3px solid ${theme.palette.secondary.light}`,
+      border: !isCart
+        ? `3px solid ${theme.palette.secondary.light}`
+        : undefined,
       borderRadius: 50,
     },
     button: {
-      background: theme.palette.secondary.main,
+      background: isCart ? "#fff" : theme.palette.secondary.main,
       border: "none !important",
       borderRadius: 0,
     },
     editButtonContainer: {
       "& :first-of-type .MuiButton-root": {
         height: "25.5px",
-        borderBottom: "3px solid #fff !important",
+        borderBottom: `3px solid ${
+          isCart ? theme.palette.secondary.main : "#fff"
+        } !important`,
       },
       "& :last-of-type .MuiButton-root > .MuiTypography-root": {
         marginTop: "-0.3rem",
       },
       borderWidth: "0 3px 0 3px",
       borderStyle: "solid",
-      borderColor: "#fff",
+      borderColor: isCart ? theme.palette.secondary.main : "#fff",
+      borderRight: isCart ? "none" : undefined,
       width: "3.5rem",
     },
     editButton: {
@@ -52,7 +67,9 @@ const QtyButton = ({ variant, stock, name }) => {
       "& .MuiTypography-root": {
         marginRight: "-0.3rem",
       },
-      "&:hover": { backgroundColor: theme.palette.secondary.main },
+      "&:hover": {
+        backgroundColor: isCart ? "#fff" : theme.palette.secondary.main,
+      },
     },
     cartButton: {
       borderRadius: "0 50px 50px 0",
@@ -64,7 +81,7 @@ const QtyButton = ({ variant, stock, name }) => {
       },
     },
     qtyText: {
-      color: "#fff",
+      color: isCart ? theme.palette.secondary.main : "#fff",
     },
     badge: {
       "& .MuiBadge-badge": {
@@ -87,8 +104,16 @@ const QtyButton = ({ variant, stock, name }) => {
       if (qty === 1 && direction === "down") return null
       const newQty = direction === "up" ? qty + 1 : qty - 1
       setQty(newQty)
+
+      if (isCart) {
+        if (direction === "up") {
+          dispatchCart(addToCart(variant, 1, name, stock.attributes.quantity))
+        } else if (direction === "down") {
+          dispatchCart(removeFromCart(variant, 1))
+        }
+      }
     },
-    [qty, stock.attributes.quantity]
+    [qty, stock.attributes.quantity, isCart, dispatchCart, name, variant]
   )
 
   const handleCart = useCallback(() => {
@@ -149,26 +174,28 @@ const QtyButton = ({ variant, stock, name }) => {
           </Grid>
         </Grid>
         <Grid item>
-          <Button
-            onClick={handleCart}
-            disableRipple
-            sx={{ ...sx.button, ...sx.cartButton, ...sx.success }}
-          >
-            {success ? (
-              <Typography variant="h3" sx={sx.qtyText}>
-                ✓
-              </Typography>
-            ) : (
-              <Badge
-                color="secondary"
-                sx={sx.badge}
-                overlap="circular"
-                badgeContent="+"
-              >
-                <Cart color="#fff" />
-              </Badge>
-            )}
-          </Button>
+          {isCart ? null : (
+            <Button
+              onClick={handleCart}
+              disableRipple
+              sx={{ ...sx.button, ...sx.cartButton, ...sx.success }}
+            >
+              {success ? (
+                <Typography variant="h3" sx={sx.qtyText}>
+                  ✓
+                </Typography>
+              ) : (
+                <Badge
+                  color="secondary"
+                  sx={sx.badge}
+                  overlap="circular"
+                  badgeContent="+"
+                >
+                  <Cart color="#fff" />
+                </Badge>
+              )}
+            </Button>
+          )}
         </Grid>
       </Grid>
     </Grid>
