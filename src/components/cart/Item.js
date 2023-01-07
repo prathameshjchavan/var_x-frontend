@@ -1,13 +1,52 @@
-import React, { useMemo } from "react"
+import React, { useCallback, useContext, useMemo } from "react"
 import { Grid, Typography, Chip, IconButton, useTheme } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import QtyButton from "../product-list/QtyButton"
 import FavoriteIcon from "../../images/Favorite"
 import SubscriptionIcon from "../../images/Subscription"
 import DeleteIcon from "../../images/Delete"
+import { CartContext } from "../../contexts"
+import { removeFromCart } from "../../contexts/actions"
 
 const Item = ({ item }) => {
   const theme = useTheme()
+  const { dispatchCart } = useContext(CartContext)
+
+  // sx prop
+  const sx = {
+    itemContainer: {
+      margin: "2rem 0 2rem 2rem",
+    },
+    infoContainer: {
+      width: "35rem",
+      position: "relative",
+      height: "8rem",
+      marginLeft: "1rem",
+    },
+    chipWrapper: {
+      position: "absolute",
+      top: "3.5rem",
+    },
+    actionButton: {
+      "&:hover": {
+        backgroundColor: "transparent",
+      },
+    },
+    name: {
+      color: theme.palette.secondary.main,
+    },
+    id: {
+      color: theme.palette.secondary.main,
+      fontSize: "1rem",
+    },
+  }
+
+  // functions
+  const handleDelete = useCallback(() => {
+    dispatchCart(removeFromCart(item.variant, item.qty))
+  }, [dispatchCart, item])
+
+  // actions
   const actions = useMemo(
     () => [
       {
@@ -25,34 +64,11 @@ const Item = ({ item }) => {
         alt: "delete",
         color: theme.palette.error.main,
         size: "2.5rem",
+        onClick: handleDelete,
       },
     ],
-    [theme]
+    [theme, handleDelete]
   )
-
-  // sx prop
-  const sx = {
-    itemContainer: {
-      margin: "2rem 0 2rem 2rem",
-    },
-    infoContainer: {
-      width: "35rem",
-      position: "relative",
-      height: "8rem",
-      marginLeft: "1rem",
-    },
-    chipWrapper: {
-      position: "absolute",
-      top: "3.5rem",
-    },
-    name: {
-      color: theme.palette.secondary.main,
-    },
-    id: {
-      color: theme.palette.secondary.main,
-      fontSize: "1rem",
-    },
-  }
 
   // styled components
   const ProductImage = styled("img")(() => ({
@@ -114,7 +130,11 @@ const Item = ({ item }) => {
           <Grid item container justifyContent="flex-end" xs>
             {actions.map((action, index) => (
               <Grid item key={index}>
-                <IconButton>
+                <IconButton
+                  onClick={() => action.onClick && action.onClick()}
+                  disableRipple
+                  sx={sx.actionButton}
+                >
                   <ActionWrapper
                     style={
                       action.size
