@@ -2,19 +2,32 @@ import React, { useMemo } from "react"
 import { Grid, Typography, Chip, IconButton, useTheme } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import QtyButton from "../product-list/QtyButton"
-import favoriteIcon from "../../images/favorite.svg"
-import subscriptionIcon from "../../images/subscription.svg"
-import deleteIcon from "../../images/delete.svg"
+import FavoriteIcon from "../../images/Favorite"
+import SubscriptionIcon from "../../images/Subscription"
+import DeleteIcon from "../../images/Delete"
 
 const Item = ({ item }) => {
   const theme = useTheme()
   const actions = useMemo(
     () => [
-      { icon: favoriteIcon },
-      { icon: subscriptionIcon },
-      { icon: deleteIcon },
+      {
+        icon: FavoriteIcon,
+        alt: "favorite",
+        color: theme.palette.secondary.main,
+      },
+      {
+        icon: SubscriptionIcon,
+        alt: "subscription",
+        color: theme.palette.secondary.main,
+      },
+      {
+        icon: DeleteIcon,
+        alt: "delete",
+        color: theme.palette.error.main,
+        size: "2.5rem",
+      },
     ],
-    []
+    [theme]
   )
 
   // sx prop
@@ -32,6 +45,12 @@ const Item = ({ item }) => {
   const ProductImage = styled("img")(() => ({
     height: "10rem",
     width: "10rem",
+  }))
+
+  const ActionWrapper = styled("span")(({ style }) => ({
+    height: "3rem",
+    width: "3rem",
+    ...style,
   }))
 
   return (
@@ -70,7 +89,15 @@ const Item = ({ item }) => {
             {actions.map((action, index) => (
               <Grid item key={index}>
                 <IconButton>
-                  <img src={action.icon} />
+                  <ActionWrapper
+                    style={
+                      action.size
+                        ? { height: action.size, width: action.size }
+                        : undefined
+                    }
+                  >
+                    <action.icon color={action.color} />
+                  </ActionWrapper>
                 </IconButton>
               </Grid>
             ))}
