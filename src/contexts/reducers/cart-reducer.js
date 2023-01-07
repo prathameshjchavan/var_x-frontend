@@ -10,7 +10,7 @@ export default function cartReducer(state, action) {
   let existingIndex
 
   if (action.payload) {
-    existingIndex = state.findIndex(item => item.variant === variant)
+    existingIndex = state.findIndex(item => item.variant.id === variant.id)
   }
 
   const saveData = cart => {
@@ -38,7 +38,7 @@ export default function cartReducer(state, action) {
       const newQty = newCart[existingIndex].qty - qty
 
       if (newQty <= 0) {
-        newCart = newCart.filter(item => item.variant !== variant)
+        newCart = newCart.filter(item => item.variant.id !== variant.id)
       } else {
         newCart[existingIndex] = { ...newCart[existingIndex], qty: newQty }
       }
