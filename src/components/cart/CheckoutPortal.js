@@ -3,6 +3,7 @@ import React, { useMemo, useState } from "react"
 import CheckoutNavigation from "./CheckoutNavigation"
 import Details from "../settings/Details"
 import Location from "../settings/Location"
+import Shipping from "./Shipping"
 
 const CheckoutPortal = ({ user }) => {
   const theme = useTheme()
@@ -22,6 +23,24 @@ const CheckoutPortal = ({ user }) => {
   const [locationSlot, setLocationSlot] = useState(0)
   const [locationBilling, setLocationBilling] = useState(false)
   const [errors, setErrors] = useState({})
+  const [selectedShipping, setSelectedShipping] = useState(null)
+  const shippingOptions = useMemo(
+    () => [
+      {
+        label: "FREE SHIPPING",
+        price: 0,
+      },
+      {
+        label: "2-DAY SHIPPING",
+        price: 9.99,
+      },
+      {
+        label: "OVERNIGHT SHIPPING",
+        price: 29.99,
+      },
+    ],
+    []
+  )
   const steps = useMemo(
     () => [
       {
@@ -58,7 +77,16 @@ const CheckoutPortal = ({ user }) => {
           />
         ),
       },
-      { title: "Shipping", component: null },
+      {
+        title: "Shipping",
+        component: (
+          <Shipping
+            shippingOptions={shippingOptions}
+            selectedShipping={selectedShipping}
+            setSelectedShipping={setSelectedShipping}
+          />
+        ),
+      },
       { title: "Payment", component: null },
       { title: "Confirmation", component: null },
       { title: `Thanks ${user.name}!`, component: null },
