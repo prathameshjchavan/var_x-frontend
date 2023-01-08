@@ -11,12 +11,27 @@ const CheckoutNavigation = ({ steps, selectedStep, setSelectedStep }) => {
       width: "40rem",
       height: "5rem",
     },
+    back: {
+      visibility:
+        selectedStep === 0 || selectedStep === steps.length - 1
+          ? "hidden"
+          : "visible",
+    },
+    forward: {
+      visibility: selectedStep >= steps.length - 2 ? "hidden" : "visible",
+    },
   }
 
   return (
-    <Grid item container sx={sx.navbar}>
-      <Grid item>
-        <Button>
+    <Grid
+      item
+      container
+      justifyContent="center"
+      alignItems="center"
+      sx={sx.navbar}
+    >
+      <Grid item sx={sx.back}>
+        <Button onClick={() => setSelectedStep(selectedStep - 1)}>
           <Typography variant="h5">&lt;</Typography>
         </Button>
       </Grid>
@@ -25,8 +40,8 @@ const CheckoutNavigation = ({ steps, selectedStep, setSelectedStep }) => {
           {steps[selectedStep].title.toUpperCase()}
         </Typography>
       </Grid>
-      <Grid item>
-        <Button>
+      <Grid item sx={sx.forward}>
+        <Button onClick={() => setSelectedStep(selectedStep + 1)}>
           <Typography variant="h5">&gt;</Typography>
         </Button>
       </Grid>
