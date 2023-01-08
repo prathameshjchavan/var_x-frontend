@@ -12,6 +12,7 @@ const CheckoutPortal = ({ user }) => {
   })
   const [detailSlot, setDetailSlot] = useState(0)
   const [errors, setErrors] = useState({})
+  const [detailBilling, setDetailBilling] = useState(false)
   const steps = useMemo(
     () => [
       {
@@ -25,6 +26,8 @@ const CheckoutPortal = ({ user }) => {
             setSlot={setDetailSlot}
             errors={errors}
             setErrors={setErrors}
+            billing={detailBilling}
+            setBilling={setDetailBilling}
             checkout
           />
         ),
@@ -35,7 +38,7 @@ const CheckoutPortal = ({ user }) => {
       { title: "Confirmation", component: null },
       { title: `Thanks ${user.name}!`, component: null },
     ],
-    [user, detailSlot, detailValues, errors]
+    [user, detailSlot, detailValues, errors, detailBilling]
   )
   const [selectedStep, setSelectedStep] = useState(0)
 

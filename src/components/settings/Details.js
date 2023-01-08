@@ -1,4 +1,4 @@
-import { Grid, useMediaQuery } from "@mui/material"
+import { Grid, FormControlLabel, Switch, useMediaQuery } from "@mui/material"
 import React, { useEffect, useState } from "react"
 import fingerprint from "../../images/fingerprint.svg"
 import NameAdornment from "../../images/NameAdornment"
@@ -19,6 +19,8 @@ const Details = ({
   errors,
   setErrors,
   checkout,
+  billing,
+  setBilling,
 }) => {
   const [visible, setVisible] = useState(false)
   const matchesVertical = useMediaQuery("(max-width: 1300px)")
@@ -83,6 +85,11 @@ const Details = ({
         marginTop: "1rem",
       },
     },
+    fieldContainerCart: {
+      "& > *": {
+        marginBottom: "1rem",
+      },
+    },
     slotContainer: {
       position: "absolute",
       bottom: "0px",
@@ -91,7 +98,7 @@ const Details = ({
 
   // styled components
   const Icon = styled("img")(() => ({
-    marginBottom: matchesXS ? "1rem" : "3rem",
+    marginBottom: matchesXS || checkout ? "1rem" : "3rem",
   }))
 
   // useEffect
@@ -118,7 +125,7 @@ const Details = ({
       item
       container
       direction="column"
-      lg={6}
+      lg={checkout ? 12 : 6}
       xs={12}
       alignItems="center"
       justifyContent="center"
@@ -130,10 +137,10 @@ const Details = ({
       {fields.map((pair, index) => (
         <Grid
           container
-          sx={sx.fieldContainer}
-          direction={matchesXS ? "column" : "row"}
+          sx={checkout ? sx.fieldContainerCart : sx.fieldContainer}
+          direction={matchesXS || checkout ? "column" : "row"}
           justifyContent="center"
-          alignItems={matchesXS ? "center" : undefined}
+          alignItems={matchesXS || checkout ? "center" : undefined}
           key={index}
         >
           <Fields
@@ -144,12 +151,17 @@ const Details = ({
             setErrors={setErrors}
             isWhite
             disabled={checkout ? false : !edit}
-            settings
+            settings={!checkout}
           />
         </Grid>
       ))}
       <Grid item container sx={sx.slotContainer}>
         <Slots slot={slot} setSlot={setSlot} />
+        {checkout && (
+          <Grid item>
+            <FormControlLabel control={<Switch />} />
+          </Grid>
+        )}
       </Grid>
     </Grid>
   )
