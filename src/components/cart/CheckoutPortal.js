@@ -2,6 +2,7 @@ import { Grid, useTheme } from "@mui/material"
 import React, { useMemo, useState } from "react"
 import CheckoutNavigation from "./CheckoutNavigation"
 import Details from "../settings/Details"
+import Location from "../settings/Location"
 
 const CheckoutPortal = ({ user }) => {
   const theme = useTheme()
@@ -11,8 +12,16 @@ const CheckoutPortal = ({ user }) => {
     phone: "",
   })
   const [detailSlot, setDetailSlot] = useState(0)
-  const [errors, setErrors] = useState({})
   const [detailBilling, setDetailBilling] = useState(false)
+  const [locationValues, setLocationValues] = useState({
+    street: "",
+    zip: "",
+    city: "",
+    state: "",
+  })
+  const [locationSlot, setLocationSlot] = useState(0)
+  const [locationBilling, setLocationBilling] = useState(false)
+  const [errors, setErrors] = useState({})
   const steps = useMemo(
     () => [
       {
@@ -32,13 +41,38 @@ const CheckoutPortal = ({ user }) => {
           />
         ),
       },
-      { title: "Address", component: null },
+      {
+        title: "Address",
+        component: (
+          <Location
+            user={user}
+            values={locationValues}
+            setValues={setLocationValues}
+            slot={locationSlot}
+            setSlot={setLocationSlot}
+            errors={errors}
+            setErrors={setErrors}
+            billing={locationBilling}
+            setBilling={setLocationBilling}
+            checkout
+          />
+        ),
+      },
       { title: "Shipping", component: null },
       { title: "Payment", component: null },
       { title: "Confirmation", component: null },
       { title: `Thanks ${user.name}!`, component: null },
     ],
-    [user, detailSlot, detailValues, errors, detailBilling]
+    [
+      user,
+      detailSlot,
+      detailValues,
+      errors,
+      detailBilling,
+      locationSlot,
+      locationValues,
+      locationBilling,
+    ]
   )
   const [selectedStep, setSelectedStep] = useState(0)
 

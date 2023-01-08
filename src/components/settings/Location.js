@@ -1,4 +1,11 @@
-import { Chip, CircularProgress, Grid, useMediaQuery } from "@mui/material"
+import {
+  Chip,
+  CircularProgress,
+  FormControlLabel,
+  Grid,
+  Switch,
+  useMediaQuery,
+} from "@mui/material"
 import axios from "axios"
 import React, {
   useCallback,
@@ -25,6 +32,9 @@ const Location = ({
   setSlot,
   errors,
   setErrors,
+  checkout,
+  billing,
+  setBilling,
 }) => {
   const [loading, setLoading] = useState(false)
   const matchesVertical = useMediaQuery("(max-width: 1300px)")
@@ -37,7 +47,7 @@ const Location = ({
       borderBottom: matchesVertical ? "4px solid #fff" : undefined,
       height: matchesVertical ? "30rem" : undefined,
     },
-    icon: { marginBottom: "3rem" },
+    icon: { marginBottom: checkout ? "1rem" : "3rem" },
     fieldContainer: {
       "& > :not(:first-of-type)": {
         marginTop: "2rem",
@@ -47,6 +57,13 @@ const Location = ({
     slotContainer: {
       position: "absolute",
       bottom: "0px",
+    },
+    switchWrapper: {
+      marginRight: "4px",
+      "& .MuiTypography-root": {
+        color: "#fff",
+        fontWeight: "bold",
+      },
     },
   }
 
@@ -103,25 +120,27 @@ const Location = ({
   }, [user, slot, setValues])
 
   useEffect(() => {
-    const changed = Object.keys(user.locations[slot]).some(
-      field => values[field] !== user.locations[slot][field]
-    )
+    if (!checkout) {
+      const changed = Object.keys(user.locations[slot]).some(
+        field => values[field] !== user.locations[slot][field]
+      )
 
-    setChangesMade(changed)
+      setChangesMade(changed)
+    }
 
     if (values.zip.length === 5 && !values.city) {
       getLocation()
     } else if (values.zip.length < 5 && values.city) {
       setValues(values => ({ ...values, city: "", state: "" }))
     }
-  }, [user, slot, values, setChangesMade, getLocation, setValues])
+  }, [user, slot, values, setChangesMade, getLocation, setValues, checkout])
 
   return (
     <Grid
       item
       container
       direction="column"
-      lg={6}
+      lg={checkout ? 12 : 6}
       xs={12}
       alignItems="center"
       justifyContent="center"
@@ -144,7 +163,7 @@ const Location = ({
           errors={errors}
           setErrors={setErrors}
           isWhite
-          disabled={!edit}
+          disabled={checkout ? false : !edit}
         />
       </Grid>
       <Grid item sx={sx.chipWrapper}>
@@ -159,8 +178,29 @@ const Location = ({
           />
         )}
       </Grid>
-      <Grid item container sx={sx.slotContainer}>
-        <Slots slot={slot} setSlot={setSlot} />
+      <Grid
+        item
+        container
+        justifyContent={checkout ? "space-between" : undefined}
+        sx={sx.slotContainer}
+      >
+        <Slots slot={slot} setSlot={setSlot} checkout />
+        {checkout && (
+          <Grid item>
+            <FormControlLabel
+              sx={sx.switchWrapper}
+              label="Billing"
+              labelPlacement="start"
+              control={
+                <Switch
+                  checked={billing}
+                  onChange={() => setBilling(!billing)}
+                  color="secondary"
+                />
+              }
+            />
+          </Grid>
+        )}
       </Grid>
     </Grid>
   )
