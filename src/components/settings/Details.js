@@ -94,11 +94,19 @@ const Details = ({
       position: "absolute",
       bottom: "0px",
     },
+    switchWrapper: {
+      marginRight: "4px",
+      "& .MuiTypography-root": {
+        color: "#fff",
+        fontWeight: "bold",
+      },
+    },
   }
 
   // styled components
   const Icon = styled("img")(() => ({
     marginBottom: matchesXS || checkout ? "1rem" : "3rem",
+    marginTop: checkout ? "-2rem" : undefined,
   }))
 
   // useEffect
@@ -155,11 +163,27 @@ const Details = ({
           />
         </Grid>
       ))}
-      <Grid item container sx={sx.slotContainer}>
-        <Slots slot={slot} setSlot={setSlot} />
+      <Grid
+        item
+        container
+        justifyContent={checkout ? "space-between" : undefined}
+        sx={sx.slotContainer}
+      >
+        <Slots slot={slot} setSlot={setSlot} checkout={checkout} />
         {checkout && (
           <Grid item>
-            <FormControlLabel control={<Switch />} />
+            <FormControlLabel
+              sx={sx.switchWrapper}
+              label="Billing"
+              labelPlacement="start"
+              control={
+                <Switch
+                  checked={billing}
+                  onChange={() => setBilling(!billing)}
+                  color="secondary"
+                />
+              }
+            />
           </Grid>
         )}
       </Grid>

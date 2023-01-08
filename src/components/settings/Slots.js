@@ -1,7 +1,7 @@
 import { Button, Grid, Typography, useTheme } from "@mui/material"
 import React, { useCallback } from "react"
 
-const Slots = ({ slot, setSlot }) => {
+const Slots = ({ slot, setSlot, checkout }) => {
   const theme = useTheme()
 
   // sx prop
@@ -38,6 +38,11 @@ const Slots = ({ slot, setSlot }) => {
     selectedSlotText: {
       color: "#fff",
     },
+    shipping: {
+      color: "#fff",
+      fontWeight: 600,
+      marginLeft: "0.5rem",
+    },
   }
 
   // functions
@@ -56,18 +61,27 @@ const Slots = ({ slot, setSlot }) => {
   )
 
   return (
-    <Grid item sx={sx.slotWrapper}>
-      {[1, 2, 3].map(number => (
-        <Button
-          onClick={() => setSlot(number - 1)}
-          sx={getSlotSx(number)}
-          key={number}
-        >
-          <Typography variant="h5" sx={getSlotTextSx(number)}>
-            {number}
+    <Grid item container xs={checkout ? 5 : undefined}>
+      <Grid item sx={sx.slotWrapper}>
+        {[1, 2, 3].map(number => (
+          <Button
+            onClick={() => setSlot(number - 1)}
+            sx={getSlotSx(number)}
+            key={number}
+          >
+            <Typography variant="h5" sx={getSlotTextSx(number)}>
+              {number}
+            </Typography>
+          </Button>
+        ))}
+      </Grid>
+      {checkout && (
+        <Grid item>
+          <Typography variant="body1" sx={sx.shipping}>
+            Shipping
           </Typography>
-        </Button>
-      ))}
+        </Grid>
+      )}
     </Grid>
   )
 }
