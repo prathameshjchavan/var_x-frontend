@@ -100,6 +100,8 @@ const CheckoutPortal = ({ user }) => {
       locationSlot,
       locationValues,
       locationBilling,
+      selectedShipping,
+      shippingOptions,
     ]
   )
   const [selectedStep, setSelectedStep] = useState(0)
