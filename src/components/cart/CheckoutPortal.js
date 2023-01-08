@@ -1,19 +1,41 @@
 import { Grid, useTheme } from "@mui/material"
 import React, { useMemo, useState } from "react"
 import CheckoutNavigation from "./CheckoutNavigation"
+import Details from "../settings/Details"
 
 const CheckoutPortal = ({ user }) => {
   const theme = useTheme()
+  const [detailValues, setDetailValues] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  })
+  const [detailSlot, setDetailSlot] = useState(0)
+  const [errors, setErrors] = useState({})
   const steps = useMemo(
     () => [
-      { title: "Contact Info" },
-      { title: "Address" },
-      { title: "Shipping" },
-      { title: "Payment" },
-      { title: "Confirmation" },
-      { title: `Thanks ${user.name}!` },
+      {
+        title: "Contact Info",
+        component: (
+          <Details
+            user={user}
+            values={detailValues}
+            setValues={setDetailValues}
+            slot={detailSlot}
+            setSlot={setDetailSlot}
+            errors={errors}
+            setErrors={setErrors}
+            checkout
+          />
+        ),
+      },
+      { title: "Address", component: null },
+      { title: "Shipping", component: null },
+      { title: "Payment", component: null },
+      { title: "Confirmation", component: null },
+      { title: `Thanks ${user.name}!`, component: null },
     ],
-    [user]
+    [user, detailSlot, detailValues, errors]
   )
   const [selectedStep, setSelectedStep] = useState(0)
 
@@ -38,7 +60,9 @@ const CheckoutPortal = ({ user }) => {
         direction="column"
         alignItems="center"
         sx={sx.stepContainer}
-      ></Grid>
+      >
+        {steps[selectedStep].component}
+      </Grid>
     </Grid>
   )
 }

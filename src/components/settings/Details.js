@@ -18,6 +18,7 @@ const Details = ({
   setSlot,
   errors,
   setErrors,
+  checkout,
 }) => {
   const [visible, setVisible] = useState(false)
   const matchesVertical = useMediaQuery("(max-width: 1300px)")
@@ -49,7 +50,16 @@ const Details = ({
       ),
     },
   }
-  const fields = [namePhoneFields, emailPasswordFields]
+  let fields = [namePhoneFields, emailPasswordFields]
+  if (checkout) {
+    fields = [
+      {
+        name: namePhoneFields.name,
+        email: emailPasswordFields.email,
+        phone: namePhoneFields.phone,
+      },
+    ]
+  }
 
   // sx prop
   const sx = {
@@ -86,16 +96,22 @@ const Details = ({
 
   // useEffect
   useEffect(() => {
-    setValues({ ...user.contactInfo[slot], password: "********" })
-  }, [slot, user.contactInfo, setValues])
+    if (checkout) {
+      setValues(user.contactInfo[slot])
+    } else {
+      setValues({ ...user.contactInfo[slot], password: "********" })
+    }
+  }, [slot, user.contactInfo, setValues, checkout])
 
   useEffect(() => {
+    if (checkout) return
+
     const changed = Object.keys(user.contactInfo[slot]).some(
       field => values[field] !== user.contactInfo[slot][field]
     )
 
     setChangesMade(changed)
-  }, [user, slot, values, setChangesMade])
+  }, [user, slot, values, setChangesMade, checkout])
 
   return (
     <Grid
@@ -127,7 +143,7 @@ const Details = ({
             errors={errors}
             setErrors={setErrors}
             isWhite
-            disabled={!edit}
+            disabled={checkout ? false : !edit}
             settings
           />
         </Grid>
