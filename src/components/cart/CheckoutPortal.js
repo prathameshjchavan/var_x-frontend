@@ -5,6 +5,7 @@ import Details from "../settings/Details"
 import Location from "../settings/Location"
 import Shipping from "./Shipping"
 import Payments from "../settings/Payments"
+import Confirmation from "./Confirmation"
 
 const CheckoutPortal = ({ user }) => {
   const theme = useTheme()
@@ -103,7 +104,7 @@ const CheckoutPortal = ({ user }) => {
           />
         ),
       },
-      { title: "Confirmation", component: null },
+      { title: "Confirmation", component: <Confirmation /> },
       { title: `Thanks ${user.name}!`, component: null },
     ],
     [
