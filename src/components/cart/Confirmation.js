@@ -19,6 +19,11 @@ const Confirmation = () => {
   // sx prop
   const sx = useMemo(
     () => ({
+      iconWrapper: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      },
       text: {
         fontSize: "1rem",
         color: "#fff",
@@ -44,6 +49,15 @@ const Confirmation = () => {
       fieldRow: {
         height: "2.5rem",
       },
+      centerText: {
+        display: "flex",
+        alignItems: "center",
+      },
+      adornmentWrapper: {
+        display: "flex",
+        justifyContent: "center",
+      },
+      priceValue: { marginRight: "1rem" },
     }),
     [theme]
   )
@@ -54,6 +68,10 @@ const Confirmation = () => {
   const Card = styled("img")(() => ({
     height: "18px",
     width: "25px",
+  }))
+
+  const FieldWrapper = styled("span")(() => ({
+    marginLeft: "1.25rem",
   }))
 
   // fields
@@ -134,10 +152,10 @@ const Confirmation = () => {
   const adornmentValue = useCallback(
     (adornment, value) => (
       <Fragment>
-        <Grid item xs={1}>
+        <Grid item sx={sx.adornmentWrapper} xs={2}>
           {adornment}
         </Grid>
-        <Grid item xs={11}>
+        <Grid item sx={sx.centerText} xs={10}>
           <Typography variant="body1" sx={sx.text}>
             {value}
           </Typography>
@@ -172,7 +190,7 @@ const Confirmation = () => {
             </Grid>
           ))}
         </Grid>
-        <Grid item xs={5}>
+        <Grid item xs={5} sx={sx.iconWrapper}>
           <img src={ConfirmationIcon} alt="confirmation" />
         </Grid>
       </Grid>
@@ -184,16 +202,18 @@ const Confirmation = () => {
           sx={getFieldSx(index)}
           key={index}
         >
-          <Grid item xs={7}>
+          <Grid item container xs={7}>
             {field.promo ? (
-              <Fields
-                fields={field}
-                values={promo}
-                setValues={setPromo}
-                errors={promoErrors}
-                setErrors={setPromoErrors}
-                isWhite
-              />
+              <FieldWrapper>
+                <Fields
+                  fields={field}
+                  values={promo}
+                  setValues={setPromo}
+                  errors={promoErrors}
+                  setErrors={setPromoErrors}
+                  isWhite
+                />
+              </FieldWrapper>
             ) : (
               adornmentValue(field.adornment, field.value)
             )}
@@ -205,7 +225,7 @@ const Confirmation = () => {
               </Typography>
             </Grid>
             <Grid item xs={6}>
-              <Typography align="right" variant="body2">
+              <Typography align="right" sx={sx.priceValue} variant="body2">
                 ${prices[index].value}
               </Typography>
             </Grid>
