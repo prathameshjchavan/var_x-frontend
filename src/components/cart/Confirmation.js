@@ -181,7 +181,7 @@ const Confirmation = () => {
         </Grid>
       </Fragment>
     ),
-    [sx.text]
+    [sx]
   )
 
   // functions
