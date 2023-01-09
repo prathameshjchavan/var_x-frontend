@@ -7,11 +7,12 @@ import StreetAdornment from "../../images/street-adornment.svg"
 import zipAdornment from "../../images/zip-adornment.svg"
 import cardAdornment from "../../images/card.svg"
 import promoAdornment from "../../images/promo-code.svg"
-import { Grid, Typography } from "@mui/material"
+import { Grid, Typography, useTheme } from "@mui/material"
 import Fields from "../auth/Fields"
 import { styled } from "@mui/material/styles"
 
 const Confirmation = () => {
+  const theme = useTheme()
   const [promo, setPromo] = useState({ promo: "" })
   const [promoErrors, setPromoErrors] = useState({})
 
@@ -37,8 +38,14 @@ const Confirmation = () => {
       priceLabel: {
         fontSize: "1.5rem",
       },
+      darkBackground: {
+        backgroundColor: theme.palette.secondary.main,
+      },
+      fieldRow: {
+        height: "2.5rem",
+      },
     }),
-    []
+    [theme]
   )
 
   // styled components
@@ -140,23 +147,44 @@ const Confirmation = () => {
     [sx.text]
   )
 
+  // functions
+  const getFieldSx = useCallback(
+    index => {
+      let fieldSx = sx.fieldRow
+      return index % 2 ? { ...fieldSx, ...sx.darkBackground } : fieldSx
+    },
+    [sx]
+  )
+
   return (
     <Grid item container direction="column">
       <Grid item container>
-        <Grid item container direction="column" xs={8}>
+        <Grid item container direction="column" xs={7}>
           {firstFields.map(({ adornment, value }, index) => (
-            <Grid item container key={index}>
+            <Grid
+              item
+              container
+              alignItems="center"
+              sx={getFieldSx(index)}
+              key={index}
+            >
               {adornmentValue(adornment, value)}
             </Grid>
           ))}
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={5}>
           <img src={ConfirmationIcon} alt="confirmation" />
         </Grid>
       </Grid>
       {secondFields.map((field, index) => (
-        <Grid item container key={index}>
-          <Grid item xs={6}>
+        <Grid
+          item
+          container
+          alignItems="center"
+          sx={getFieldSx(index)}
+          key={index}
+        >
+          <Grid item xs={7}>
             {field.promo ? (
               <Fields
                 fields={field}
@@ -170,14 +198,16 @@ const Confirmation = () => {
               adornmentValue(field.adornment, field.value)
             )}
           </Grid>
-          <Grid item container xs={6}>
+          <Grid item container xs={5}>
             <Grid item xs={6}>
               <Typography variant="h5" sx={sx.priceLabel}>
                 {prices[index].label}
               </Typography>
             </Grid>
             <Grid item xs={6}>
-              <Typography variant="body2">{prices[index].value}</Typography>
+              <Typography align="right" variant="body2">
+                ${prices[index].value}
+              </Typography>
             </Grid>
           </Grid>
         </Grid>
