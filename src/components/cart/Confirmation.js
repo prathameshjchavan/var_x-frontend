@@ -7,7 +7,7 @@ import StreetAdornment from "../../images/street-adornment.svg"
 import zipAdornment from "../../images/zip-adornment.svg"
 import cardAdornment from "../../images/card.svg"
 import promoAdornment from "../../images/promo-code.svg"
-import { Grid, Typography, useTheme } from "@mui/material"
+import { Grid, Typography, Button, Chip, useTheme } from "@mui/material"
 import Fields from "../auth/Fields"
 import { styled } from "@mui/material/styles"
 
@@ -19,6 +19,7 @@ const Confirmation = () => {
   // sx prop
   const sx = useMemo(
     () => ({
+      mainContainer: { height: "100%" },
       iconWrapper: {
         display: "flex",
         justifyContent: "center",
@@ -58,6 +59,24 @@ const Confirmation = () => {
         justifyContent: "center",
       },
       priceValue: { marginRight: "1rem" },
+      button: {
+        width: "100%",
+        height: "7rem",
+        borderRadius: 0,
+        backgroundColor: theme.palette.secondary.main,
+        "&:hover": {
+          backgroundColor: theme.palette.secondary.light,
+        },
+      },
+      buttonWrapper: {
+        marginTop: "auto",
+      },
+      chip: {
+        backgroundColor: "#fff",
+        "& .MuiChip-label": {
+          color: theme.palette.secondary.main,
+        },
+      },
     }),
     [theme]
   )
@@ -175,7 +194,7 @@ const Confirmation = () => {
   )
 
   return (
-    <Grid item container direction="column">
+    <Grid item container sx={sx.mainContainer} direction="column">
       <Grid item container>
         <Grid item container direction="column" xs={7}>
           {firstFields.map(({ adornment, value }, index) => (
@@ -232,6 +251,18 @@ const Confirmation = () => {
           </Grid>
         </Grid>
       ))}
+      <Grid sx={sx.buttonWrapper} item>
+        <Button sx={sx.button}>
+          <Grid container alignItems="center" justifyContent="space-around">
+            <Grid item>
+              <Typography variant="h5">PLACE ORDER</Typography>
+            </Grid>
+            <Grid item>
+              <Chip label="$149.99" sx={sx.chip} />
+            </Grid>
+          </Grid>
+        </Button>
+      </Grid>
     </Grid>
   )
 }
