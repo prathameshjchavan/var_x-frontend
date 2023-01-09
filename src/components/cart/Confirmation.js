@@ -1,4 +1,4 @@
-import React, { useMemo } from "react"
+import React, { Fragment, useCallback, useMemo, useState } from "react"
 import ConfirmationIcon from "../../images/tag.svg"
 import NameAdornment from "../../images/NameAdornment"
 import EmailAdornment from "../../images/EmailAdornment"
@@ -8,9 +8,13 @@ import zipAdornment from "../../images/zip-adornment.svg"
 import cardAdornment from "../../images/card.svg"
 import promoAdornment from "../../images/promo-code.svg"
 import { Grid, Typography } from "@mui/material"
+import Fields from "../auth/Fields"
 import { styled } from "@mui/material/styles"
 
 const Confirmation = () => {
+  const [promo, setPromo] = useState({ promo: "" })
+  const [promoErrors, setPromoErrors] = useState({})
+
   // sx prop
   const sx = useMemo(
     () => ({
@@ -30,12 +34,20 @@ const Confirmation = () => {
         height: "25.122px",
         width: "25.173px",
       },
+      priceLabel: {
+        fontSize: "1.5rem",
+      },
     }),
     []
   )
 
   // styled components
   const Wrapper = styled("div")(() => {})
+
+  const Card = styled("img")(() => ({
+    height: "18px",
+    width: "25px",
+  }))
 
   // fields
   const firstFields = useMemo(
@@ -80,7 +92,7 @@ const Confirmation = () => {
       },
       {
         value: "**** **** **** 1234",
-        adornment: <img src={cardAdornment} alt="credit card" />,
+        adornment: <Card src={cardAdornment} alt="credit card" />,
       },
       {
         promo: {
@@ -93,20 +105,48 @@ const Confirmation = () => {
     []
   )
 
+  // prices
+  const prices = useMemo(
+    () => [
+      {
+        label: "SUBTOTAL",
+        value: 99.99,
+      },
+      {
+        label: "SHIPPING",
+        value: 9.99,
+      },
+      {
+        label: "TAX",
+        value: 9.67,
+      },
+    ],
+    []
+  )
+
+  const adornmentValue = useCallback(
+    (adornment, value) => (
+      <Fragment>
+        <Grid item xs={1}>
+          {adornment}
+        </Grid>
+        <Grid item xs={11}>
+          <Typography variant="body1" sx={sx.text}>
+            {value}
+          </Typography>
+        </Grid>
+      </Fragment>
+    ),
+    [sx.text]
+  )
+
   return (
     <Grid item container direction="column">
       <Grid item container>
         <Grid item container direction="column" xs={8}>
-          {firstFields.map((field, index) => (
+          {firstFields.map(({ adornment, value }, index) => (
             <Grid item container key={index}>
-              <Grid item xs={1}>
-                {field.adornment}
-              </Grid>
-              <Grid item xs={11}>
-                <Typography variant="body1" sx={sx.text}>
-                  {field.value}
-                </Typography>
-              </Grid>
+              {adornmentValue(adornment, value)}
             </Grid>
           ))}
         </Grid>
@@ -114,6 +154,34 @@ const Confirmation = () => {
           <img src={ConfirmationIcon} alt="confirmation" />
         </Grid>
       </Grid>
+      {secondFields.map((field, index) => (
+        <Grid item container key={index}>
+          <Grid item xs={6}>
+            {field.promo ? (
+              <Fields
+                fields={field}
+                values={promo}
+                setValues={setPromo}
+                errors={promoErrors}
+                setErrors={setPromoErrors}
+                isWhite
+              />
+            ) : (
+              adornmentValue(field.adornment, field.value)
+            )}
+          </Grid>
+          <Grid item container xs={6}>
+            <Grid item xs={6}>
+              <Typography variant="h5" sx={sx.priceLabel}>
+                {prices[index].label}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant="body2">{prices[index].value}</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      ))}
     </Grid>
   )
 }
