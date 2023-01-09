@@ -30,6 +30,7 @@ const Settings = ({ setSelectedSetting }) => {
   })
   const [locationSlot, setLocationSlot] = useState(0)
   const [detailSlot, setDetailSlot] = useState(0)
+  const [billingSlot, setBillingSlot] = useState(0)
   const [detailErrors, setDetailErrors] = useState({})
   const [locationErrors, setLocationErrors] = useState({})
   const isError = useMemo(() => {
@@ -69,7 +70,7 @@ const Settings = ({ setSelectedSetting }) => {
           errors={detailErrors}
           setErrors={setDetailErrors}
         />
-        <Payments user={user} edit={edit} />
+        <Payments user={user} slot={billingSlot} setSlot={setBillingSlot} />
       </Grid>
       <Grid container sx={{ ...sx.bottomRow, ...sx.sectionContainer }}>
         <Location

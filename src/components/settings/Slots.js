@@ -1,7 +1,7 @@
 import { Button, Grid, Typography, useTheme } from "@mui/material"
 import React, { useCallback } from "react"
 
-const Slots = ({ slot, setSlot, checkout }) => {
+const Slots = ({ slot, setSlot, checkout, noLabel }) => {
   const theme = useTheme()
 
   // sx prop
@@ -61,7 +61,7 @@ const Slots = ({ slot, setSlot, checkout }) => {
   )
 
   return (
-    <Grid item container xs={checkout ? 5 : undefined}>
+    <Grid item container xs={noLabel ? 3 : checkout ? 5 : undefined}>
       <Grid item sx={sx.slotWrapper}>
         {[1, 2, 3].map(number => (
           <Button
@@ -75,7 +75,7 @@ const Slots = ({ slot, setSlot, checkout }) => {
           </Button>
         ))}
       </Grid>
-      {checkout && (
+      {checkout && !noLabel && (
         <Grid item>
           <Typography variant="body1" sx={sx.shipping}>
             Shipping

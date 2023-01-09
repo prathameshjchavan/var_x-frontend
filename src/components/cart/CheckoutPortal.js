@@ -4,6 +4,7 @@ import CheckoutNavigation from "./CheckoutNavigation"
 import Details from "../settings/Details"
 import Location from "../settings/Location"
 import Shipping from "./Shipping"
+import Payments from "../settings/Payments"
 
 const CheckoutPortal = ({ user }) => {
   const theme = useTheme()
@@ -22,6 +23,8 @@ const CheckoutPortal = ({ user }) => {
   })
   const [locationSlot, setLocationSlot] = useState(0)
   const [locationBilling, setLocationBilling] = useState(false)
+  const [billingSlot, setBillingSlot] = useState(0)
+  const [saveCard, setSaveCard] = useState(false)
   const [errors, setErrors] = useState({})
   const [selectedShipping, setSelectedShipping] = useState(null)
   const shippingOptions = useMemo(
@@ -87,7 +90,19 @@ const CheckoutPortal = ({ user }) => {
           />
         ),
       },
-      { title: "Payment", component: null },
+      {
+        title: "Payment",
+        component: (
+          <Payments
+            slot={billingSlot}
+            setSlot={setBillingSlot}
+            user={user}
+            saveCard={saveCard}
+            setSaveCard={setSaveCard}
+            checkout
+          />
+        ),
+      },
       { title: "Confirmation", component: null },
       { title: `Thanks ${user.name}!`, component: null },
     ],
@@ -102,6 +117,8 @@ const CheckoutPortal = ({ user }) => {
       locationBilling,
       selectedShipping,
       shippingOptions,
+      billingSlot,
+      saveCard,
     ]
   )
   const [selectedStep, setSelectedStep] = useState(0)

@@ -1,17 +1,18 @@
 import {
   Button,
+  FormControlLabel,
   Grid,
+  Switch,
   Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material"
-import React, { useMemo, useState } from "react"
+import React, { useMemo } from "react"
 import cardIcon from "../../images/card.svg"
 import Slots from "./Slots"
 
-const Payments = ({ user }) => {
+const Payments = ({ user, slot, setSlot, saveCard, setSaveCard, checkout }) => {
   const theme = useTheme()
-  const [slot, setSlot] = useState(0)
   const matchesVertical = useMediaQuery("(max-width: 1300px)")
   const matchesXS = useMediaQuery("(max-width: 700px)")
   const card = useMemo(() => user.paymentMethods[slot], [user, slot])
@@ -19,7 +20,7 @@ const Payments = ({ user }) => {
   // sx prop
   const sx = {
     paymentContainer: {
-      borderLeft: !matchesVertical ? "4px solid #fff" : undefined,
+      borderLeft: !matchesVertical && !checkout ? "4px solid #fff" : undefined,
       position: "relative",
       height: matchesVertical ? "30rem" : undefined,
     },
@@ -49,6 +50,13 @@ const Payments = ({ user }) => {
       position: "absolute",
       bottom: "0px",
     },
+    switchWrapper: {
+      marginRight: "4px",
+      "& .MuiTypography-root": {
+        color: "#fff",
+        fontWeight: "bold",
+      },
+    },
   }
 
   return (
@@ -57,7 +65,7 @@ const Payments = ({ user }) => {
       container
       sx={sx.paymentContainer}
       direction="column"
-      lg={6}
+      lg={checkout ? 12 : 6}
       xs={12}
       alignItems="center"
       justifyContent="center"
@@ -83,8 +91,24 @@ const Payments = ({ user }) => {
           </Grid>
         )}
       </Grid>
-      <Grid item container sx={sx.slotContainer}>
-        <Slots slot={slot} setSlot={setSlot} />
+      <Grid item container justifyContent="space-between" sx={sx.slotContainer}>
+        <Slots slot={slot} setSlot={setSlot} noLabel />
+        {checkout && (
+          <Grid item>
+            <FormControlLabel
+              sx={sx.switchWrapper}
+              label="Save Card For Future Use"
+              labelPlacement="start"
+              control={
+                <Switch
+                  checked={saveCard}
+                  onChange={() => setSaveCard(!saveCard)}
+                  color="secondary"
+                />
+              }
+            />
+          </Grid>
+        )}
       </Grid>
     </Grid>
   )
