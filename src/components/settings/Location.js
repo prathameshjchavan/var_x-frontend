@@ -35,6 +35,7 @@ const Location = ({
   checkout,
   billing,
   setBilling,
+  noSlots,
 }) => {
   const [loading, setLoading] = useState(false)
   const matchesVertical = useMediaQuery("(max-width: 1300px)")
@@ -116,8 +117,10 @@ const Location = ({
 
   // useEffects
   useEffect(() => {
+    if (noSlots) return
+
     setValues(user.locations[slot])
-  }, [user, slot, setValues])
+  }, [user, slot, setValues, noSlots])
 
   useEffect(() => {
     if (!checkout) {
@@ -178,30 +181,32 @@ const Location = ({
           />
         )}
       </Grid>
-      <Grid
-        item
-        container
-        justifyContent={checkout ? "space-between" : undefined}
-        sx={sx.slotContainer}
-      >
-        <Slots slot={slot} setSlot={setSlot} checkout />
-        {checkout && (
-          <Grid item>
-            <FormControlLabel
-              sx={sx.switchWrapper}
-              label="Billing"
-              labelPlacement="start"
-              control={
-                <Switch
-                  checked={billing}
-                  onChange={() => setBilling(!billing)}
-                  color="secondary"
-                />
-              }
-            />
-          </Grid>
-        )}
-      </Grid>
+      {!noSlots && (
+        <Grid
+          item
+          container
+          justifyContent={checkout ? "space-between" : undefined}
+          sx={sx.slotContainer}
+        >
+          <Slots slot={slot} setSlot={setSlot} checkout />
+          {checkout && (
+            <Grid item>
+              <FormControlLabel
+                sx={sx.switchWrapper}
+                label="Billing"
+                labelPlacement="start"
+                control={
+                  <Switch
+                    checked={billing}
+                    onChange={() => setBilling(!billing)}
+                    color="secondary"
+                  />
+                }
+              />
+            </Grid>
+          )}
+        </Grid>
+      )}
     </Grid>
   )
 }

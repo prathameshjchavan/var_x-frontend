@@ -21,6 +21,7 @@ const Details = ({
   checkout,
   billing,
   setBilling,
+  noSlots,
 }) => {
   const [visible, setVisible] = useState(false)
   const matchesVertical = useMediaQuery("(max-width: 1300px)")
@@ -111,12 +112,14 @@ const Details = ({
 
   // useEffect
   useEffect(() => {
+    if (noSlots) return
+
     if (checkout) {
       setValues(user.contactInfo[slot])
     } else {
       setValues({ ...user.contactInfo[slot], password: "********" })
     }
-  }, [slot, user.contactInfo, setValues, checkout])
+  }, [slot, user.contactInfo, setValues, checkout, noSlots])
 
   useEffect(() => {
     if (checkout) return
@@ -163,30 +166,32 @@ const Details = ({
           />
         </Grid>
       ))}
-      <Grid
-        item
-        container
-        justifyContent={checkout ? "space-between" : undefined}
-        sx={sx.slotContainer}
-      >
-        <Slots slot={slot} setSlot={setSlot} checkout={checkout} />
-        {checkout && (
-          <Grid item>
-            <FormControlLabel
-              sx={sx.switchWrapper}
-              label="Billing"
-              labelPlacement="start"
-              control={
-                <Switch
-                  checked={billing}
-                  onChange={() => setBilling(!billing)}
-                  color="secondary"
-                />
-              }
-            />
-          </Grid>
-        )}
-      </Grid>
+      {!noSlots && (
+        <Grid
+          item
+          container
+          justifyContent={checkout ? "space-between" : undefined}
+          sx={sx.slotContainer}
+        >
+          <Slots slot={slot} setSlot={setSlot} checkout={checkout} />
+          {checkout && (
+            <Grid item>
+              <FormControlLabel
+                sx={sx.switchWrapper}
+                label="Billing"
+                labelPlacement="start"
+                control={
+                  <Switch
+                    checked={billing}
+                    onChange={() => setBilling(!billing)}
+                    color="secondary"
+                  />
+                }
+              />
+            </Grid>
+          )}
+        </Grid>
+      )}
     </Grid>
   )
 }
