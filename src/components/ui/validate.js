@@ -19,6 +19,8 @@ export default function validate(values) {
       ),
     zip: value => /^\d{5}(-\d{4})?$/.test(value),
     promo: value => true,
+    city: value => value.length !== 0,
+    state: value => value.length !== 0,
   }
 
   const valid = {}

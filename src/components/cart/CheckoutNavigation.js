@@ -20,6 +20,11 @@ const CheckoutNavigation = ({ steps, selectedStep, setSelectedStep }) => {
     forward: {
       visibility: selectedStep >= steps.length - 2 ? "hidden" : "visible",
     },
+    forwardButton: {
+      "&:disabled": {
+        opacity: 0.5,
+      },
+    },
   }
 
   return (
@@ -41,7 +46,11 @@ const CheckoutNavigation = ({ steps, selectedStep, setSelectedStep }) => {
         </Typography>
       </Grid>
       <Grid item sx={sx.forward}>
-        <Button onClick={() => setSelectedStep(selectedStep + 1)}>
+        <Button
+          disabled={steps[selectedStep].error}
+          sx={sx.forwardButton}
+          onClick={() => setSelectedStep(selectedStep + 1)}
+        >
           <Typography variant="h5">&gt;</Typography>
         </Button>
       </Grid>

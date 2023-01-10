@@ -1,11 +1,12 @@
 import { Grid, useTheme } from "@mui/material"
-import React, { useMemo, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import CheckoutNavigation from "./CheckoutNavigation"
 import Details from "../settings/Details"
 import Location from "../settings/Location"
 import Shipping from "./Shipping"
 import Payments from "../settings/Payments"
 import Confirmation from "./Confirmation"
+import validate from "../ui/validate"
 
 const CheckoutPortal = ({ user }) => {
   const theme = useTheme()
@@ -28,6 +29,16 @@ const CheckoutPortal = ({ user }) => {
   const [saveCard, setSaveCard] = useState(false)
   const [errors, setErrors] = useState({})
   const [selectedShipping, setSelectedShipping] = useState(null)
+  const [selectedStep, setSelectedStep] = useState(0)
+
+  // funtions
+  const errorHelper = useCallback(values => {
+    const valid = validate(values)
+
+    return Object.keys(valid).some(value => !valid[value])
+  }, [])
+
+  // Shipping Options
   const shippingOptions = useMemo(
     () => [
       {
@@ -45,6 +56,8 @@ const CheckoutPortal = ({ user }) => {
     ],
     []
   )
+
+  // Steps
   const steps = useMemo(
     () => [
       {
@@ -63,6 +76,7 @@ const CheckoutPortal = ({ user }) => {
             checkout
           />
         ),
+        error: errorHelper(detailValues),
       },
       {
         title: "Address",
@@ -80,6 +94,7 @@ const CheckoutPortal = ({ user }) => {
             checkout
           />
         ),
+        error: errorHelper(locationValues),
       },
       {
         title: "Shipping",
@@ -90,6 +105,7 @@ const CheckoutPortal = ({ user }) => {
             setSelectedShipping={setSelectedShipping}
           />
         ),
+        error: selectedShipping === null,
       },
       {
         title: "Payment",
@@ -103,6 +119,7 @@ const CheckoutPortal = ({ user }) => {
             checkout
           />
         ),
+        error: false,
       },
       { title: "Confirmation", component: <Confirmation /> },
       { title: `Thanks ${user.name}!`, component: null },
@@ -120,9 +137,9 @@ const CheckoutPortal = ({ user }) => {
       shippingOptions,
       billingSlot,
       saveCard,
+      errorHelper,
     ]
   )
-  const [selectedStep, setSelectedStep] = useState(0)
 
   // sx prop
   const sx = {
@@ -132,6 +149,12 @@ const CheckoutPortal = ({ user }) => {
       backgroundColor: theme.palette.primary.main,
     },
   }
+
+  // useEffects
+  useEffect(() => {
+    setErrors({})
+  }, [detailSlot, locationSlot])
+
   return (
     <Grid item container direction="column" alignItems="flex-end" xs={6}>
       <CheckoutNavigation
