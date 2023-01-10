@@ -1,4 +1,10 @@
-import React, { Fragment, useCallback, useMemo, useState } from "react"
+import React, {
+  Fragment,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react"
 import ConfirmationIcon from "../../images/tag.svg"
 import NameAdornment from "../../images/NameAdornment"
 import EmailAdornment from "../../images/EmailAdornment"
@@ -10,11 +16,32 @@ import promoAdornment from "../../images/promo-code.svg"
 import { Grid, Typography, Button, Chip, useTheme } from "@mui/material"
 import Fields from "../auth/Fields"
 import { styled } from "@mui/material/styles"
+import { CartContext } from "../../contexts"
 
-const Confirmation = () => {
+const Confirmation = ({
+  detailValues,
+  billingDetails,
+  detailForBilling,
+  locationValues,
+  billingLocation,
+  locationForBilling,
+  shippingOptions,
+  selectedShipping,
+}) => {
   const theme = useTheme()
   const [promo, setPromo] = useState({ promo: "" })
   const [promoErrors, setPromoErrors] = useState({})
+  const { cart } = useContext(CartContext)
+  const shipping = useMemo(
+    () => shippingOptions.find(option => option.label === selectedShipping),
+    [shippingOptions, selectedShipping]
+  )
+  const subtotal = useMemo(
+    () =>
+      cart.reduce((total, item) => total + item.variant.price * item.qty, 0),
+    [cart]
+  )
+  const tax = useMemo(() => subtotal * 0.075, [subtotal])
 
   // sx prop
   const sx = useMemo(
@@ -97,7 +124,7 @@ const Confirmation = () => {
   const firstFields = useMemo(
     () => [
       {
-        value: "Prathamesh Chavan",
+        value: detailValues.name,
         adornment: (
           <Wrapper sx={sx.nameWrapper}>
             <NameAdornment color="#fff" />
@@ -105,7 +132,7 @@ const Confirmation = () => {
         ),
       },
       {
-        value: "prathamesh.chavan216@gmail.com",
+        value: detailValues.email,
         adornment: (
           <Wrapper sx={sx.emailWrapper}>
             <EmailAdornment color="#fff" />
@@ -113,7 +140,7 @@ const Confirmation = () => {
         ),
       },
       {
-        value: "(555) 555-5555",
+        value: detailValues.phone,
         adornment: (
           <Wrapper sx={sx.phoneWrapper}>
             <PhoneAdornment />
@@ -121,17 +148,17 @@ const Confirmation = () => {
         ),
       },
       {
-        value: "1234 Example Street",
+        value: locationValues.street,
         adornment: <img src={StreetAdornment} alt="street address" />,
       },
     ],
-    [sx]
+    [sx, detailValues, locationValues]
   )
 
   const secondFields = useMemo(
     () => [
       {
-        value: "Wichita, KS 67211",
+        value: `${locationValues.city}, ${locationValues.state} ${locationValues.zip}`,
         adornment: <img src={zipAdornment} alt="city, state, zip code" />,
       },
       {
@@ -146,7 +173,7 @@ const Confirmation = () => {
         },
       },
     ],
-    []
+    [locationValues]
   )
 
   // prices
@@ -154,18 +181,22 @@ const Confirmation = () => {
     () => [
       {
         label: "SUBTOTAL",
-        value: 99.99,
+        value: subtotal.toFixed(2),
       },
       {
         label: "SHIPPING",
-        value: 9.99,
+        value: shipping.price.toFixed(2),
       },
       {
         label: "TAX",
-        value: 9.67,
+        value: tax.toFixed(2),
       },
     ],
-    []
+    [subtotal, shipping, tax]
+  )
+  const total = useMemo(
+    () => prices.reduce((total, item) => total + parseFloat(item.value), 0),
+    [prices]
   )
 
   const adornmentValue = useCallback(
@@ -258,7 +289,7 @@ const Confirmation = () => {
               <Typography variant="h5">PLACE ORDER</Typography>
             </Grid>
             <Grid item>
-              <Chip label="$149.99" sx={sx.chip} />
+              <Chip label={`$${total.toFixed(2)}`} sx={sx.chip} />
             </Grid>
           </Grid>
         </Button>

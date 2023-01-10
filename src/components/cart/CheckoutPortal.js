@@ -161,7 +161,21 @@ const CheckoutPortal = ({ user }) => {
         ),
         error: false,
       },
-      { title: "Confirmation", component: <Confirmation /> },
+      {
+        title: "Confirmation",
+        component: (
+          <Confirmation
+            detailValues={detailValues}
+            billingDetails={billingDetails}
+            detailForBilling={detailForBilling}
+            locationValues={locationValues}
+            billingLocation={billingLocation}
+            locationForBilling={locationForBilling}
+            shippingOptions={shippingOptions}
+            selectedShipping={selectedShipping}
+          />
+        ),
+      },
       { title: `Thanks ${user.name}!`, component: null },
     ],
     [
