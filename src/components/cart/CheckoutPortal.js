@@ -197,11 +197,11 @@ const CheckoutPortal = ({ user }) => {
     ]
   )
 
-  if (detailForBilling) {
+  if (detailForBilling !== false) {
     steps = steps.filter(step => step.title !== "Billing Info")
   }
 
-  if (locationForBilling) {
+  if (locationForBilling !== false) {
     steps = steps.filter(step => step.title !== "Billing Address")
   }
 
