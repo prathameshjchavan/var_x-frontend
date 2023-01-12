@@ -136,7 +136,7 @@ const Details = ({
 
   useEffect(() => {
     if (!billing || !slot) return
-    if (!isMounted.current === false) {
+    if (!isMounted.current) {
       isMounted.current = true
       return
     }
