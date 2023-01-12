@@ -1,5 +1,5 @@
 import { Grid, FormControlLabel, Switch, useMediaQuery } from "@mui/material"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import fingerprint from "../../images/fingerprint.svg"
 import NameAdornment from "../../images/NameAdornment"
 import PhoneAdornment from "../../images/PhoneAdornment"
@@ -25,6 +25,7 @@ const Details = ({
   setBillingValues,
   noSlots,
 }) => {
+  const isMounted = useRef(false)
   const [visible, setVisible] = useState(false)
   const matchesVertical = useMediaQuery("(max-width: 1300px)")
   const matchesXS = useMediaQuery("(max-width: 700px)")
@@ -121,7 +122,7 @@ const Details = ({
     } else {
       setValues({ ...user.contactInfo[slot], password: "********" })
     }
-  }, [slot, user.contactInfo, setValues, checkout, noSlots])
+  }, [slot, noSlots, user.contactInfo, setValues, checkout])
 
   useEffect(() => {
     if (checkout) return
@@ -134,7 +135,12 @@ const Details = ({
   }, [user, slot, values, setChangesMade, checkout])
 
   useEffect(() => {
-    if (billing === false) {
+    if (!billing || !slot) return
+    if (!isMounted.current === false) {
+      isMounted.current = true
+      return
+    }
+    if (billing === false && isMounted.current) {
       setValues(billingValues)
     } else {
       setBillingValues(values)
@@ -166,8 +172,20 @@ const Details = ({
         >
           <Fields
             fields={pair}
-            values={billing === slot ? billingValues : values}
-            setValues={billing === slot ? setBillingValues : setValues}
+            values={
+              billing && slot
+                ? billing === slot
+                  ? billingValues
+                  : values
+                : values
+            }
+            setValues={
+              billing && slot
+                ? billing === slot
+                  ? setBillingValues
+                  : setValues
+                : setValues
+            }
             errors={errors}
             setErrors={setErrors}
             isWhite

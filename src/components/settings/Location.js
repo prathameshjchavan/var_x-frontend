@@ -12,6 +12,7 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react"
 import locationIcon from "../../images/location.svg"
@@ -35,8 +36,11 @@ const Location = ({
   checkout,
   billing,
   setBilling,
+  billingValues,
+  setBillingValues,
   noSlots,
 }) => {
+  const isMounted = useRef(false)
   const [loading, setLoading] = useState(false)
   const matchesVertical = useMediaQuery("(max-width: 1300px)")
   const { dispatchFeedback } = useContext(FeedbackContext)
@@ -138,6 +142,19 @@ const Location = ({
     }
   }, [user, slot, values, setChangesMade, getLocation, setValues, checkout])
 
+  useEffect(() => {
+    if (!billing || !slot) return
+    if (!isMounted.current === false) {
+      isMounted.current = true
+      return
+    }
+    if (billing === false && isMounted.current) {
+      setValues(billingValues)
+    } else {
+      setBillingValues(values)
+    }
+  }, [billing])
+
   return (
     <Grid
       item
@@ -161,8 +178,20 @@ const Location = ({
       >
         <Fields
           fields={fields}
-          values={values}
-          setValues={setValues}
+          values={
+            billing && slot
+              ? billing === slot
+                ? billingValues
+                : values
+              : values
+          }
+          setValues={
+            billing && slot
+              ? billing === slot
+                ? setBillingValues
+                : setValues
+              : setValues
+          }
           errors={errors}
           setErrors={setErrors}
           isWhite
