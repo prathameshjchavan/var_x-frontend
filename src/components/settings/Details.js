@@ -21,6 +21,8 @@ const Details = ({
   checkout,
   billing,
   setBilling,
+  billingValues,
+  setBillingValues,
   noSlots,
 }) => {
   const [visible, setVisible] = useState(false)
@@ -131,6 +133,14 @@ const Details = ({
     setChangesMade(changed)
   }, [user, slot, values, setChangesMade, checkout])
 
+  useEffect(() => {
+    if (billing === false) {
+      setValues(billingValues)
+    } else {
+      setBillingValues(values)
+    }
+  }, [billing])
+
   return (
     <Grid
       item
@@ -156,8 +166,8 @@ const Details = ({
         >
           <Fields
             fields={pair}
-            values={values}
-            setValues={setValues}
+            values={billing === slot ? billingValues : values}
+            setValues={billing === slot ? setBillingValues : setValues}
             errors={errors}
             setErrors={setErrors}
             isWhite

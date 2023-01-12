@@ -84,6 +84,8 @@ const CheckoutPortal = ({ user }) => {
             setErrors={setErrors}
             billing={detailForBilling}
             setBilling={setDetailForBilling}
+            billingValues={billingDetails}
+            setBillingValues={setBillingDetails}
             checkout
           />
         ),
@@ -117,6 +119,8 @@ const CheckoutPortal = ({ user }) => {
             setErrors={setErrors}
             billing={locationForBilling}
             setBilling={setLocationForBilling}
+            billingValues={billingLocation}
+            setBillingValues={setBillingLocation}
             checkout
           />
         ),
