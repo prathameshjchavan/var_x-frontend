@@ -219,8 +219,8 @@ const Location = ({
                 labelPlacement="start"
                 control={
                   <Switch
-                    checked={billing}
-                    onChange={() => setBilling(!billing)}
+                    checked={billing === slot}
+                    onChange={() => setBilling(billing === slot ? false : slot)}
                     color="secondary"
                   />
                 }
