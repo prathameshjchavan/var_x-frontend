@@ -109,6 +109,7 @@ const CheckoutPortal = ({ user }) => {
             checkout
           />
         ),
+        hasActions: true,
         error: errorHelper(
           detailValues,
           detailForBilling,
@@ -149,6 +150,7 @@ const CheckoutPortal = ({ user }) => {
             checkout
           />
         ),
+        hasActions: true,
         error: errorHelper(
           locationValues,
           locationForBilling,
