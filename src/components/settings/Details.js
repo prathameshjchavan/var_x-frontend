@@ -135,7 +135,7 @@ const Details = ({
   }, [user, slot, values, setChangesMade, checkout])
 
   useEffect(() => {
-    if (!billing || !slot) return
+    if (noSlots) return
     if (!isMounted.current) {
       isMounted.current = true
       return
@@ -172,19 +172,9 @@ const Details = ({
         >
           <Fields
             fields={pair}
-            values={
-              billing && slot
-                ? billing === slot
-                  ? billingValues
-                  : values
-                : values
-            }
+            values={billing === slot && !noSlots ? billingValues : values}
             setValues={
-              billing && slot
-                ? billing === slot
-                  ? setBillingValues
-                  : setValues
-                : setValues
+              billing === slot && !noSlots ? setBillingValues : setValues
             }
             errors={errors}
             setErrors={setErrors}
