@@ -1,11 +1,32 @@
-import { Grid, Button, useTheme, Typography, IconButton } from "@mui/material"
+import {
+  Grid,
+  Button,
+  useTheme,
+  Typography,
+  IconButton,
+  CircularProgress,
+} from "@mui/material"
 import { styled } from "@mui/material/styles"
 import saveIcon from "../../images/save.svg"
 import DeleteIcon from "../../images/Delete"
-import React from "react"
+import React, { useState, useContext, useCallback } from "react"
+import axios from "axios"
+import { FeedbackContext, UserContext } from "../../contexts"
+import { setSnackbar, setUser } from "../../contexts/actions"
 
-const CheckoutNavigation = ({ steps, selectedStep, setSelectedStep }) => {
+const CheckoutNavigation = ({
+  steps,
+  selectedStep,
+  setSelectedStep,
+  details,
+  detailSlot,
+  location,
+  locationSlot,
+}) => {
   const theme = useTheme()
+  const [loading, setLoading] = useState(false)
+  const { dispatchFeedback } = useContext(FeedbackContext)
+  const { user, dispatchUser } = useContext(UserContext)
 
   // sx prop
   const sx = {
@@ -34,6 +55,74 @@ const CheckoutNavigation = ({ steps, selectedStep, setSelectedStep }) => {
       right: 0,
     },
   }
+
+  const handleAction = useCallback(
+    action => {
+      if (steps[selectedStep].error) {
+        dispatchFeedback(
+          setSnackbar({
+            status: "error",
+            message: "All fields must be valid before saving",
+          })
+        )
+        return
+      }
+
+      setLoading(action)
+
+      const isDetails = steps[selectedStep].title === "Contact Info"
+      const isLocation = steps[selectedStep].title === "Address"
+
+      axios
+        .put(
+          `${process.env.STRAPI_API_URL}/api/user/settings`,
+          {
+            details: isDetails ? details : undefined,
+            detailSlot: isDetails ? detailSlot : undefined,
+            location: isLocation ? location : undefined,
+            locationSlot: isLocation ? locationSlot : undefined,
+          },
+          {
+            headers: { Authorization: `Bearer ${user.jwt}` },
+          }
+        )
+        .then(response => {
+          dispatchFeedback(
+            setSnackbar({
+              status: "success",
+              message: "Information Saved Successfully",
+            })
+          )
+          dispatchUser(
+            setUser({ ...response.data, jwt: user.jwt, onboarding: true })
+          )
+        })
+        .catch(error => {
+          console.error(error)
+          dispatchFeedback(
+            setSnackbar({
+              status: "error",
+              message:
+                "There was a problem saving your information, please try again.",
+            })
+          )
+        })
+        .finally(() => {
+          setLoading(null)
+        })
+    },
+    [
+      detailSlot,
+      details,
+      dispatchFeedback,
+      dispatchUser,
+      location,
+      locationSlot,
+      selectedStep,
+      steps,
+      user.jwt,
+    ]
+  )
 
   // styled components
   const Icon = styled("img")(() => ({
@@ -77,9 +166,13 @@ const CheckoutNavigation = ({ steps, selectedStep, setSelectedStep }) => {
         <Grid item sx={sx.actions}>
           <Grid container>
             <Grid item>
-              <IconButton>
-                <Icon src={saveIcon} alt="save" />
-              </IconButton>
+              {loading === "save" ? (
+                <CircularProgress />
+              ) : (
+                <IconButton onClick={() => handleAction("save")}>
+                  <Icon src={saveIcon} alt="save" />
+                </IconButton>
+              )}
             </Grid>
             <Grid item>
               <IconButton>

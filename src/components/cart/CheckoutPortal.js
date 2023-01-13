@@ -261,6 +261,10 @@ const CheckoutPortal = ({ user }) => {
         steps={steps}
         selectedStep={selectedStep}
         setSelectedStep={setSelectedStep}
+        details={detailValues}
+        detailSlot={detailSlot}
+        location={locationValues}
+        locationSlot={locationSlot}
       />
       <Grid
         item
