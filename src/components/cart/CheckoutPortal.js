@@ -43,10 +43,29 @@ const CheckoutPortal = ({ user }) => {
   const [selectedStep, setSelectedStep] = useState(0)
 
   // funtions
-  const errorHelper = useCallback(values => {
+  const errorHelper = useCallback((values, forBilling, billingValues, slot) => {
     const valid = validate(values)
 
-    return Object.keys(valid).some(value => !valid[value])
+    // If we have one slot marked as billing...
+    if (forBilling !== false && forBilling !== undefined) {
+      // Validate billing values
+      const billingValid = validate(billingValues)
+
+      // If we are currently on the same slot as marked for billing i.e. billing and shipping are the same...
+      if (forBilling === slot) {
+        // ...then we just need to validate the one set of values because they are the same
+        return Object.keys(billingValid).some(value => !billingValid[value])
+      } else {
+        // Otherwise, if we are currently on a different slot then, the slot marked for billing, i.e. billing and shipping are different, then we need to validate both the billing values, and the shipping values
+        return (
+          Object.keys(billingValid).some(value => !billingValid[value]) ||
+          Object.keys(valid).some(value => !valid[value])
+        )
+      }
+    } else {
+      // If no slots were marked for billing, just validate current slot
+      return Object.keys(valid).some(value => !valid[value])
+    }
   }, [])
 
   // Shipping Options
@@ -89,7 +108,12 @@ const CheckoutPortal = ({ user }) => {
             checkout
           />
         ),
-        error: errorHelper(detailValues),
+        error: errorHelper(
+          detailValues,
+          detailForBilling,
+          billingDetails,
+          detailSlot
+        ),
       },
       {
         title: "Billing Info",
@@ -124,7 +148,12 @@ const CheckoutPortal = ({ user }) => {
             checkout
           />
         ),
-        error: errorHelper(locationValues),
+        error: errorHelper(
+          locationValues,
+          locationForBilling,
+          billingLocation,
+          locationSlot
+        ),
       },
       {
         title: "Billing Address",
