@@ -7,6 +7,7 @@ import Shipping from "./Shipping"
 import Payments from "../settings/Payments"
 import Confirmation from "./Confirmation"
 import validate from "../ui/validate"
+import BillingConfirmation from "./BillingConfirmation"
 
 const CheckoutPortal = ({ user }) => {
   const theme = useTheme()
@@ -268,6 +269,16 @@ const CheckoutPortal = ({ user }) => {
       >
         {steps[selectedStep].component}
       </Grid>
+      {steps[selectedStep].title === "Confirmation" && (
+        <BillingConfirmation
+          detailForBilling={detailForBilling}
+          billingDetails={billingDetails}
+          detailSlot={detailSlot}
+          locationForBilling={locationForBilling}
+          billingLocation={billingLocation}
+          locationSlot={locationSlot}
+        />
+      )}
     </Grid>
   )
 }
