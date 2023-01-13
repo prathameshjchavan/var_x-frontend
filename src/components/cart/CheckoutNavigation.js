@@ -77,9 +77,9 @@ const CheckoutNavigation = ({
         .put(
           `${process.env.STRAPI_API_URL}/api/user/settings`,
           {
-            details: isDetails ? details : undefined,
+            details: isDetails && action !== "delete" ? details : undefined,
             detailSlot: isDetails ? detailSlot : undefined,
-            location: isLocation ? location : undefined,
+            location: isLocation && action !== "delete" ? location : undefined,
             locationSlot: isLocation ? locationSlot : undefined,
           },
           {
@@ -90,7 +90,9 @@ const CheckoutNavigation = ({
           dispatchFeedback(
             setSnackbar({
               status: "success",
-              message: "Information Saved Successfully",
+              message: `Information ${
+                action === "delete" ? "Deleted" : "Saved"
+              } Successfully`,
             })
           )
           dispatchUser(
@@ -102,8 +104,9 @@ const CheckoutNavigation = ({
           dispatchFeedback(
             setSnackbar({
               status: "error",
-              message:
-                "There was a problem saving your information, please try again.",
+              message: `There was a problem ${
+                action === "delete" ? "deleting" : "saving"
+              } your information, please try again.`,
             })
           )
         })
@@ -175,11 +178,15 @@ const CheckoutNavigation = ({
               )}
             </Grid>
             <Grid item>
-              <IconButton>
-                <DeleteIconWrapper>
-                  <DeleteIcon color="#fff" />
-                </DeleteIconWrapper>
-              </IconButton>
+              {loading === "delete" ? (
+                <CircularProgress />
+              ) : (
+                <IconButton onClick={() => handleAction("delete")}>
+                  <DeleteIconWrapper>
+                    <DeleteIcon color="#fff" />
+                  </DeleteIconWrapper>
+                </IconButton>
+              )}
             </Grid>
           </Grid>
         </Grid>
