@@ -135,7 +135,10 @@ const Details = ({
   }, [user, slot, values, setChangesMade, checkout])
 
   useEffect(() => {
-    if (noSlots) return
+    if (noSlots) {
+      isMounted.current = false
+      return
+    }
     if (!isMounted.current) {
       isMounted.current = true
       return

@@ -143,7 +143,10 @@ const Location = ({
   }, [user, slot, values, setChangesMade, getLocation, setValues, checkout])
 
   useEffect(() => {
-    if (noSlots) return
+    if (noSlots) {
+      isMounted.current = false
+      return
+    }
     if (!isMounted.current) {
       isMounted.current = true
       return
