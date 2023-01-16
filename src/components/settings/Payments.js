@@ -15,7 +15,13 @@ const Payments = ({ user, slot, setSlot, saveCard, setSaveCard, checkout }) => {
   const theme = useTheme()
   const matchesVertical = useMediaQuery("(max-width: 1300px)")
   const matchesXS = useMediaQuery("(max-width: 700px)")
-  const card = useMemo(() => user.paymentMethods[slot], [user, slot])
+  const card = useMemo(
+    () =>
+      user.name === "Guest"
+        ? { last4: "", brand: "" }
+        : user.paymentMethods[slot],
+    [user, slot]
+  )
 
   // sx prop
   const sx = {

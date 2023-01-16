@@ -115,7 +115,7 @@ const Details = ({
 
   // useEffect
   useEffect(() => {
-    if (noSlots) return
+    if (noSlots || user.name === "Guest") return
 
     if (checkout) {
       setValues(user.contactInfo[slot])

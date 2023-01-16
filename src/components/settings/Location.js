@@ -121,7 +121,7 @@ const Location = ({
 
   // useEffects
   useEffect(() => {
-    if (noSlots) return
+    if (noSlots || user.name === "Guest") return
 
     setValues(user.locations[slot])
   }, [user, slot, setValues, noSlots])

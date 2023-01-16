@@ -165,7 +165,7 @@ const CheckoutNavigation = ({
           <Typography variant="h5">&gt;</Typography>
         </Button>
       </Grid>
-      {steps[selectedStep].hasActions && (
+      {steps[selectedStep].hasActions && user.name !== "Guest" && (
         <Grid item sx={sx.actions}>
           <Grid container>
             <Grid item>
