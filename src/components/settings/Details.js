@@ -122,7 +122,7 @@ const Details = ({
     } else {
       setValues({ ...user.contactInfo[slot], password: "********" })
     }
-  }, [slot, noSlots, user.contactInfo, setValues, checkout])
+  }, [slot, noSlots, user.name, user.contactInfo, setValues, checkout])
 
   useEffect(() => {
     if (checkout) return

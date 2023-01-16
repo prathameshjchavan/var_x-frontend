@@ -13,10 +13,18 @@ import StreetAdornment from "../../images/street-adornment.svg"
 import zipAdornment from "../../images/zip-adornment.svg"
 import cardAdornment from "../../images/card.svg"
 import promoAdornment from "../../images/promo-code.svg"
-import { Grid, Typography, Button, Chip, useTheme } from "@mui/material"
+import {
+  Grid,
+  Typography,
+  Button,
+  Chip,
+  CircularProgress,
+  useTheme,
+} from "@mui/material"
 import Fields from "../auth/Fields"
 import { styled } from "@mui/material/styles"
 import { CartContext } from "../../contexts"
+import axios from "axios"
 
 const Confirmation = ({
   detailValues,
@@ -31,6 +39,7 @@ const Confirmation = ({
   const theme = useTheme()
   const [promo, setPromo] = useState({ promo: "" })
   const [promoErrors, setPromoErrors] = useState({})
+  const [loading, setLoading] = useState(false)
   const { cart } = useContext(CartContext)
   const shipping = useMemo(
     () => shippingOptions.find(option => option.label === selectedShipping),
@@ -223,6 +232,26 @@ const Confirmation = ({
     },
     [sx]
   )
+
+  const handleOrder = () => {
+    setLoading(true)
+
+    axios.post(
+      `${process.env.STRAPI_API_URL}/api/orders/place`,
+      {
+        shippingAddress: locationValues,
+        billingAddres: billingLocation,
+        shippingInfo: detailValues,
+        billingInfo: billingDetails,
+        shippingOption: shipping,
+        subtotal: subtotal.toFixed(2),
+        tax: tax.toFixed(2),
+        total: total.toFixed(2),
+        items: cart,
+      },
+      {}
+    )
+  }
 
   return (
     <Grid item container sx={sx.mainContainer} direction="column">
