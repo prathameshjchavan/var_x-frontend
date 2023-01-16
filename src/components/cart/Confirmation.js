@@ -27,6 +27,7 @@ import { CartContext } from "../../contexts"
 import axios from "axios"
 
 const Confirmation = ({
+  user,
   detailValues,
   billingDetails,
   detailForBilling,
@@ -236,21 +237,36 @@ const Confirmation = ({
   const handleOrder = () => {
     setLoading(true)
 
-    axios.post(
-      `${process.env.STRAPI_API_URL}/api/orders/place`,
-      {
-        shippingAddress: locationValues,
-        billingAddres: billingLocation,
-        shippingInfo: detailValues,
-        billingInfo: billingDetails,
-        shippingOption: shipping,
-        subtotal: subtotal.toFixed(2),
-        tax: tax.toFixed(2),
-        total: total.toFixed(2),
-        items: cart,
-      },
-      {}
-    )
+    axios
+      .post(
+        `${process.env.STRAPI_API_URL}/api/orders/place`,
+        {
+          shippingAddress: locationValues,
+          billingAddress: billingLocation,
+          shippingInfo: detailValues,
+          billingInfo: billingDetails,
+          shippingOption: shipping,
+          subtotal: subtotal.toFixed(2),
+          tax: tax.toFixed(2),
+          total: total.toFixed(2),
+          items: cart,
+        },
+        {
+          headers:
+            user.name !== "Guest"
+              ? { Authorization: `Bearer ${user.jwt}` }
+              : undefined,
+        }
+      )
+      .then(response => {
+        console.log(response)
+      })
+      .catch(error => {
+        console.error(error)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   return (
@@ -312,13 +328,17 @@ const Confirmation = ({
         </Grid>
       ))}
       <Grid sx={sx.buttonWrapper} item>
-        <Button sx={sx.button}>
+        <Button sx={sx.button} onClick={handleOrder}>
           <Grid container alignItems="center" justifyContent="space-around">
             <Grid item>
               <Typography variant="h5">PLACE ORDER</Typography>
             </Grid>
             <Grid item>
-              <Chip label={`$${total.toFixed(2)}`} sx={sx.chip} />
+              {loading ? (
+                <CircularProgress />
+              ) : (
+                <Chip label={`$${total.toFixed(2)}`} sx={sx.chip} />
+              )}
             </Grid>
           </Grid>
         </Button>
