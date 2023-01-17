@@ -1,8 +1,36 @@
 import { Button, Grid, Typography } from "@mui/material"
 import completeIcon from "../../images/order-placed.svg"
+import { Link } from "gatsby"
 import React, { useCallback } from "react"
 
 const Thankyou = ({ selectedShipping, order }) => {
+  // sx prop
+  const sx = {
+    container: {
+      height: "100%",
+      position: "relative",
+    },
+    icon: { marginTop: "-3rem" },
+    order: {
+      fontWeight: 600,
+    },
+    detailsButton: {
+      padding: "0.25rem 0",
+      textTransform: "none",
+    },
+    shopWrapper: {
+      position: "absolute",
+      right: "1rem",
+      bottom: "1rem",
+    },
+    shopText: {
+      fontSize: "2rem",
+      fontWeight: 600,
+      textTransform: "none",
+    },
+  }
+
+  // funtions
   const addToDate = useCallback(days => {
     let date = new Date()
 
@@ -30,29 +58,34 @@ const Thankyou = ({ selectedShipping, order }) => {
     <Grid
       item
       container
+      sx={sx.container}
       direction="column"
       alignItems="center"
       justifyContent="center"
     >
-      <Grid item>
+      <Grid item sx={sx.icon}>
         <img src={completeIcon} alt="order placed" />
       </Grid>
       <Grid item>
         <Typography variant="h4">Expected by {getExpected()}</Typography>
-      </Grid>
-      <Grid item container>
-        <Grid item>
-          <Typography variant="body2">Order #{order.id}</Typography>
+        <Grid container justifyContent="space-between" alignItems="center">
+          <Grid item>
+            <Typography sx={sx.order} variant="body2">
+              Order #{order.id}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Button sx={sx.detailsButton}>
+              <Typography variant="body2">Details &gt;</Typography>
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item>
-          <Button>
-            <Typography variant="body2">Details &gt;</Typography>
-          </Button>
-        </Grid>
       </Grid>
-      <Grid item>
-        <Button>
-          <Typography variant="body2">Shop &gt;</Typography>
+      <Grid item sx={sx.shopWrapper}>
+        <Button component={Link} to="/hats">
+          <Typography sx={sx.shopText} variant="body2">
+            Shop &gt;
+          </Typography>
         </Button>
       </Grid>
     </Grid>
