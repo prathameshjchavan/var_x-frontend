@@ -5,7 +5,7 @@ import {
 } from "../actions/action-types"
 
 export default function cartReducer(state, action) {
-  const { variant, qty, stock } = action.payload
+  const { variant, qty, stock } = action.payload || {}
   let newCart = [...state]
   let existingIndex
 

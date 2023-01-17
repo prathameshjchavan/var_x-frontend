@@ -43,6 +43,7 @@ const CheckoutPortal = ({ user }) => {
   const [errors, setErrors] = useState({})
   const [selectedShipping, setSelectedShipping] = useState(null)
   const [selectedStep, setSelectedStep] = useState(0)
+  const [order, setOrder] = useState(null)
 
   // funtions
   const errorHelper = useCallback((values, forBilling, billingValues, slot) => {
@@ -213,10 +214,16 @@ const CheckoutPortal = ({ user }) => {
             selectedShipping={selectedShipping}
             selectedStep={selectedStep}
             setSelectedStep={setSelectedStep}
+            setOrder={setOrder}
           />
         ),
       },
-      { title: `Thanks ${user.name}!`, component: <Thankyou /> },
+      {
+        title: `Thanks ${user.name.split(" ")[0]}!`,
+        component: (
+          <Thankyou selectedShipping={selectedShipping} order={order} />
+        ),
+      },
     ],
     [
       user,
@@ -235,6 +242,7 @@ const CheckoutPortal = ({ user }) => {
       billingDetails,
       billingLocation,
       selectedStep,
+      order,
     ]
   )
 

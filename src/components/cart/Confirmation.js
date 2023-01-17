@@ -37,6 +37,7 @@ const Confirmation = ({
   selectedShipping,
   selectedStep,
   setSelectedStep,
+  setOrder,
 }) => {
   const theme = useTheme()
   const [promo, setPromo] = useState({ promo: "" })
@@ -266,6 +267,10 @@ const Confirmation = ({
       .then(response => {
         dispatchCart(clearCart())
 
+        setOrder({
+          id: response.data.data.id,
+          ...response.data.data.attributes,
+        })
         setSelectedStep(selectedStep + 1)
       })
       .catch(error => {
