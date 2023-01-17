@@ -32,6 +32,7 @@ export function FeedbackWrapper({ children }) {
           style: {
             backgroundColor: feedback.backgroundColor,
             fontSize: "1.25rem",
+            whiteSpace: "pre-wrap",
           },
         }}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}

@@ -104,6 +104,9 @@ const Confirmation = ({
         "&:hover": {
           backgroundColor: theme.palette.secondary.light,
         },
+        "&:disabled": {
+          backgroundColor: theme.palette.grey[500],
+        },
       },
       buttonWrapper: {
         marginTop: "auto",
@@ -275,8 +278,8 @@ const Confirmation = ({
                 status: "error",
                 message:
                   "The following items are not available at the requested quantity. Please update your cart and try again.\n" +
-                  `${error.response.data.unavailable.map(
-                    item => `\n Item: ${item.id}, Available: ${item.quantity}`
+                  `${error.response.data.error.details.unavailable.map(
+                    item => `\n Item: ${item.id}, Available: ${item.qty}`
                   )}`,
               })
             )
@@ -355,7 +358,11 @@ const Confirmation = ({
         </Grid>
       ))}
       <Grid sx={sx.buttonWrapper} item>
-        <Button sx={sx.button} onClick={handleOrder}>
+        <Button
+          sx={sx.button}
+          onClick={handleOrder}
+          disabled={cart.length === 0 || loading}
+        >
           <Grid container alignItems="center" justifyContent="space-around">
             <Grid item>
               <Typography variant="h5">PLACE ORDER</Typography>
