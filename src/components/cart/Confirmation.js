@@ -23,17 +23,16 @@ import {
 } from "@mui/material"
 import Fields from "../auth/Fields"
 import { styled } from "@mui/material/styles"
-import { CartContext } from "../../contexts"
+import { CartContext, FeedbackContext } from "../../contexts"
+import { setSnackbar } from "../../contexts/actions"
 import axios from "axios"
 
 const Confirmation = ({
   user,
   detailValues,
   billingDetails,
-  detailForBilling,
   locationValues,
   billingLocation,
-  locationForBilling,
   shippingOptions,
   selectedShipping,
 }) => {
@@ -42,6 +41,7 @@ const Confirmation = ({
   const [promoErrors, setPromoErrors] = useState({})
   const [loading, setLoading] = useState(false)
   const { cart } = useContext(CartContext)
+  const { dispatchFeedback } = useContext(FeedbackContext)
   const shipping = useMemo(
     () => shippingOptions.find(option => option.label === selectedShipping),
     [shippingOptions, selectedShipping]
@@ -263,6 +263,33 @@ const Confirmation = ({
       })
       .catch(error => {
         console.error(error)
+        switch (error.response.status) {
+          case 400:
+            dispatchFeedback(
+              setSnackbar({ status: "error", message: "Invalid Cart" })
+            )
+            break
+          case 409:
+            dispatchFeedback(
+              setSnackbar({
+                status: "error",
+                message:
+                  "The following items are not available at the requested quantity. Please update your cart and try again.\n" +
+                  `${error.response.data.unavailable.map(
+                    item => `\n Item: ${item.id}, Available: ${item.quantity}`
+                  )}`,
+              })
+            )
+            break
+          default:
+            dispatchFeedback(
+              setSnackbar({
+                status: "error",
+                message:
+                  "Something went wrong, please refresh the page and try again. You have NOT been charged.",
+              })
+            )
+        }
       })
       .finally(() => {
         setLoading(false)
