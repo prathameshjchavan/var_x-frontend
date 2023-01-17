@@ -24,7 +24,7 @@ import {
 import Fields from "../auth/Fields"
 import { styled } from "@mui/material/styles"
 import { CartContext, FeedbackContext } from "../../contexts"
-import { setSnackbar } from "../../contexts/actions"
+import { setSnackbar, clearCart } from "../../contexts/actions"
 import axios from "axios"
 
 const Confirmation = ({
@@ -35,12 +35,14 @@ const Confirmation = ({
   billingLocation,
   shippingOptions,
   selectedShipping,
+  selectedStep,
+  setSelectedStep,
 }) => {
   const theme = useTheme()
   const [promo, setPromo] = useState({ promo: "" })
   const [promoErrors, setPromoErrors] = useState({})
   const [loading, setLoading] = useState(false)
-  const { cart } = useContext(CartContext)
+  const { cart, dispatchCart } = useContext(CartContext)
   const { dispatchFeedback } = useContext(FeedbackContext)
   const shipping = useMemo(
     () => shippingOptions.find(option => option.label === selectedShipping),
@@ -262,7 +264,9 @@ const Confirmation = ({
         }
       )
       .then(response => {
-        console.log(response)
+        dispatchCart(clearCart())
+
+        setSelectedStep(selectedStep + 1)
       })
       .catch(error => {
         console.error(error)

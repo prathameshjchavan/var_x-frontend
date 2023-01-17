@@ -8,6 +8,7 @@ import Payments from "../settings/Payments"
 import Confirmation from "./Confirmation"
 import validate from "../ui/validate"
 import BillingConfirmation from "./BillingConfirmation"
+import Thankyou from "./Thankyou"
 
 const CheckoutPortal = ({ user }) => {
   const theme = useTheme()
@@ -210,10 +211,12 @@ const CheckoutPortal = ({ user }) => {
             locationForBilling={locationForBilling}
             shippingOptions={shippingOptions}
             selectedShipping={selectedShipping}
+            selectedStep={selectedStep}
+            setSelectedStep={setSelectedStep}
           />
         ),
       },
-      { title: `Thanks ${user.name}!`, component: null },
+      { title: `Thanks ${user.name}!`, component: <Thankyou /> },
     ],
     [
       user,
@@ -231,6 +234,7 @@ const CheckoutPortal = ({ user }) => {
       errorHelper,
       billingDetails,
       billingLocation,
+      selectedStep,
     ]
   )
 
