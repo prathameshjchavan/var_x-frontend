@@ -266,6 +266,7 @@ const CheckoutPortal = ({ user }) => {
         detailSlot={detailSlot}
         location={locationValues}
         locationSlot={locationSlot}
+        setErrors={setErrors}
       />
       <Grid
         item

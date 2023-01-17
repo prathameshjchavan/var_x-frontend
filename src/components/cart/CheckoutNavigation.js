@@ -22,6 +22,7 @@ const CheckoutNavigation = ({
   detailSlot,
   location,
   locationSlot,
+  setErrors,
 }) => {
   const theme = useTheme()
   const [loading, setLoading] = useState(false)
@@ -58,7 +59,7 @@ const CheckoutNavigation = ({
 
   const handleAction = useCallback(
     action => {
-      if (steps[selectedStep].error) {
+      if (steps[selectedStep].error && action !== "delete") {
         dispatchFeedback(
           setSnackbar({
             status: "error",
@@ -98,6 +99,9 @@ const CheckoutNavigation = ({
           dispatchUser(
             setUser({ ...response.data, jwt: user.jwt, onboarding: true })
           )
+          if (action === "delete") {
+            setErrors({})
+          }
         })
         .catch(error => {
           console.error(error)
@@ -124,6 +128,7 @@ const CheckoutNavigation = ({
       selectedStep,
       steps,
       user.jwt,
+      setErrors,
     ]
   )
 
