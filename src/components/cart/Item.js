@@ -1,5 +1,12 @@
 import React, { useCallback, useContext, useMemo } from "react"
-import { Grid, Typography, Chip, IconButton, useTheme } from "@mui/material"
+import {
+  Grid,
+  Typography,
+  Chip,
+  IconButton,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material"
 import { styled } from "@mui/material/styles"
 import QtyButton from "../product-list/QtyButton"
 import FavoriteIcon from "../../images/Favorite"
@@ -10,12 +17,16 @@ import { removeFromCart } from "../../contexts/actions"
 
 const Item = ({ item }) => {
   const theme = useTheme()
+  const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
   const { dispatchCart } = useContext(CartContext)
 
   // sx prop
   const sx = {
     itemContainer: {
       margin: "2rem 0 2rem 2rem",
+      [theme.breakpoints.down("xl")]: {
+        margin: "2rem 0",
+      },
     },
     infoContainer: {
       width: "35rem",
@@ -31,6 +42,9 @@ const Item = ({ item }) => {
       "&:hover": {
         backgroundColor: "transparent",
       },
+      [theme.breakpoints.down("sm")]: {
+        padding: "8px 6px",
+      },
     },
     name: {
       color: theme.palette.secondary.main,
@@ -38,6 +52,12 @@ const Item = ({ item }) => {
     id: {
       color: theme.palette.secondary.main,
       fontSize: "1rem",
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "0.75rem",
+      },
     },
   }
 
@@ -63,11 +83,11 @@ const Item = ({ item }) => {
         icon: DeleteIcon,
         alt: "delete",
         color: theme.palette.error.main,
-        size: "2.5rem",
+        size: matchesSM ? "1.75rem" : "2.5rem",
         onClick: handleDelete,
       },
     ],
-    [theme, handleDelete]
+    [theme, handleDelete, matchesSM]
   )
 
   // styled components
@@ -81,6 +101,10 @@ const Item = ({ item }) => {
     width: "3rem",
     marginBottom: "-8px",
     ...style,
+    [theme.breakpoints.down("sm")]: {
+      height: "2rem",
+      width: "2rem",
+    },
   }))
 
   return (
@@ -94,7 +118,7 @@ const Item = ({ item }) => {
       <Grid
         item
         container
-        direction="column"
+        direction={matchesSM ? "row" : "column"}
         justifyContent="space-between"
         sx={sx.infoContainer}
       >
@@ -122,12 +146,12 @@ const Item = ({ item }) => {
           justifyContent="space-between"
           alignItems="flex-end"
         >
-          <Grid item flexGrow>
+          <Grid item xs={7} sm={8}>
             <Typography variant="body1" sx={sx.id}>
               ID: {item.variant.id}
             </Typography>
           </Grid>
-          <Grid item container justifyContent="flex-end" xs>
+          <Grid item container justifyContent="flex-end" xs={5} sm={4}>
             {actions.map((action, index) => (
               <Grid item key={index}>
                 <IconButton

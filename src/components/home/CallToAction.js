@@ -20,6 +20,9 @@ const CallToAction = () => {
         padding: "0 1rem",
       },
     },
+    heading: {
+      fontSize: "4rem",
+    },
     body: {
       maxWidth: "45rem !important",
       marginBottom: "3rem",
@@ -59,7 +62,9 @@ const CallToAction = () => {
           align={matchesVertical ? "center" : undefined}
         >
           <Grid item sx={sx.headingContainer}>
-            <Typography variant="h1">Committed To Quality</Typography>
+            <Typography variant="h1" sx={sx.heading}>
+              Committed To Quality
+            </Typography>
           </Grid>
           <Grid item sx={sx.body}>
             <Typography variant="body1">

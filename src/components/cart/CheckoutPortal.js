@@ -269,7 +269,7 @@ const CheckoutPortal = ({ user }) => {
   }, [detailSlot, locationSlot, selectedStep])
 
   return (
-    <Grid item container direction="column" alignItems="flex-end" xs={6}>
+    <Grid item container direction="column" alignItems="flex-end" xl={6}>
       <CheckoutNavigation
         steps={steps}
         selectedStep={selectedStep}

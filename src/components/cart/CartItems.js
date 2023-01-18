@@ -7,7 +7,7 @@ const CartItems = () => {
   const { cart } = useContext(CartContext)
 
   return (
-    <Grid item container direction="column" xs={6}>
+    <Grid item container direction="column" xl={6}>
       {cart.map(item => (
         <Item key={item.variant.id} item={item} />
       ))}
