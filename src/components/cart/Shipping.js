@@ -23,12 +23,22 @@ const Shipping = ({
       "&:hover": {
         backgroundColor: theme.palette.secondary.light,
       },
+      [theme.breakpoints.down("sm")]: {
+        height: "6rem",
+        width: "6rem",
+      },
     },
     label: {
       fontSize: "1.5rem",
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "0.9rem",
+      },
     },
     price: {
       color: "#fff",
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "1.25rem",
+      },
     },
     selectedButton: {
       backgroundColor: "#fff",

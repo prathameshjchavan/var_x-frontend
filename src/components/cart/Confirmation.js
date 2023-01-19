@@ -20,6 +20,7 @@ import {
   Chip,
   CircularProgress,
   useTheme,
+  useMediaQuery,
 } from "@mui/material"
 import Fields from "../auth/Fields"
 import { styled } from "@mui/material/styles"
@@ -40,6 +41,7 @@ const Confirmation = ({
   setOrder,
 }) => {
   const theme = useTheme()
+  const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
   const [promo, setPromo] = useState({ promo: "" })
   const [promoErrors, setPromoErrors] = useState({})
   const [loading, setLoading] = useState(false)
@@ -68,6 +70,9 @@ const Confirmation = ({
       text: {
         fontSize: "1rem",
         color: "#fff",
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
       },
       nameWrapper: {
         height: "22px",
@@ -83,6 +88,9 @@ const Confirmation = ({
       },
       priceLabel: {
         fontSize: "1.5rem",
+        [theme.breakpoints.down("sm")]: {
+          fontSize: "0.85rem",
+        },
       },
       darkBackground: {
         backgroundColor: theme.palette.secondary.main,
@@ -98,7 +106,13 @@ const Confirmation = ({
         display: "flex",
         justifyContent: "center",
       },
-      priceValue: { marginRight: "1rem" },
+      priceValue: {
+        marginRight: "1rem",
+        [theme.breakpoints.down("sm")]: {
+          fontSize: "0.85rem",
+          marginRight: "0.5rem",
+        },
+      },
       button: {
         width: "100%",
         height: "7rem",
@@ -134,6 +148,9 @@ const Confirmation = ({
 
   const FieldWrapper = styled("span")(() => ({
     marginLeft: "1.25rem",
+    [theme.breakpoints.down("sm")]: {
+      marginLeft: "0.25rem",
+    },
   }))
 
   // fields
@@ -346,6 +363,7 @@ const Confirmation = ({
                   errors={promoErrors}
                   setErrors={setPromoErrors}
                   isWhite
+                  sm={matchesSM}
                 />
               </FieldWrapper>
             ) : (

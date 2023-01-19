@@ -13,6 +13,7 @@ const Fields = ({
   disabled,
   fullWidth,
   settings,
+  sm,
 }) => {
   const theme = useTheme()
 
@@ -20,11 +21,10 @@ const Fields = ({
   const sx = {
     textfield: {
       width: fullWidth ? undefined : settings ? "15rem" : "20rem",
-      "& .MuiInput-input": !isWhite
-        ? {
-            color: theme.palette.secondary.main,
-          }
-        : undefined,
+      "& .MuiInput-input": {
+        color: !isWhite ? theme.palette.secondary.main : undefined,
+        fontSize: sm ? "1.25rem" : undefined,
+      },
       "& .MuiInput-underline": !isWhite
         ? {
             "&:before, &:hover:not(.Mui-disabled):before": {
@@ -35,6 +35,7 @@ const Fields = ({
       [theme.breakpoints.down("sm")]: {
         width: fullWidth ? undefined : "15rem",
       },
+      width: sm ? "10rem !important" : undefined,
     },
   }
 

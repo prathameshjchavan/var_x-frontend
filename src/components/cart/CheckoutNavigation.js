@@ -61,6 +61,16 @@ const CheckoutNavigation = ({
     iconButton: {
       padding: "6px",
     },
+    text: {
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "1.5rem",
+      },
+    },
+    navButton: {
+      width: "1.5rem",
+      height: "1.5rem",
+      minWidth: 0,
+    },
   }
 
   const handleAction = useCallback(
@@ -166,22 +176,29 @@ const CheckoutNavigation = ({
       sx={sx.navbar}
     >
       <Grid item sx={sx.back}>
-        <Button onClick={() => setSelectedStep(selectedStep - 1)}>
-          <Typography variant="h5">&lt;</Typography>
+        <Button
+          sx={sx.navButton}
+          onClick={() => setSelectedStep(selectedStep - 1)}
+        >
+          <Typography variant="h5" sx={sx.text}>
+            &lt;
+          </Typography>
         </Button>
       </Grid>
       <Grid item>
-        <Typography variant="h5">
+        <Typography variant="h5" sx={sx.text}>
           {steps[selectedStep].title.toUpperCase()}
         </Typography>
       </Grid>
       <Grid item sx={sx.forward}>
         <Button
           disabled={steps[selectedStep].error}
-          sx={sx.forwardButton}
+          sx={{ ...sx.forwardButton, ...sx.navButton }}
           onClick={() => setSelectedStep(selectedStep + 1)}
         >
-          <Typography variant="h5">&gt;</Typography>
+          <Typography variant="h5" sx={sx.text}>
+            &gt;
+          </Typography>
         </Button>
       </Grid>
       {steps[selectedStep].hasActions && user.name !== "Guest" && (
