@@ -70,9 +70,9 @@ const Confirmation = ({
       text: {
         fontSize: "1rem",
         color: "#fff",
-        whiteSpace: "nowrap",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
+        [theme.breakpoints.down("sm")]: {
+          fontSize: "0.85rem",
+        },
       },
       nameWrapper: {
         height: "22px",
@@ -238,8 +238,8 @@ const Confirmation = ({
         <Grid item sx={sx.adornmentWrapper} xs={2}>
           {adornment}
         </Grid>
-        <Grid item sx={sx.centerText} xs={10}>
-          <Typography variant="body1" sx={sx.text}>
+        <Grid item sx={sx.centerText} xs={10} zeroMinWidth>
+          <Typography variant="body1" noWrap sx={sx.text}>
             {value}
           </Typography>
         </Grid>

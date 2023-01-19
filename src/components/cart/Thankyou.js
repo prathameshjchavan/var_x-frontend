@@ -1,9 +1,18 @@
-import { Button, Grid, Typography } from "@mui/material"
+import {
+  Button,
+  Grid,
+  Typography,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material"
 import completeIcon from "../../images/order-placed.svg"
 import { Link } from "gatsby"
 import React, { useCallback } from "react"
 
 const Thankyou = ({ selectedShipping, order }) => {
+  const theme = useTheme()
+  const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
+
   // sx prop
   const sx = {
     container: {
@@ -13,10 +22,18 @@ const Thankyou = ({ selectedShipping, order }) => {
     icon: { marginTop: "-3rem" },
     order: {
       fontWeight: 600,
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "1rem",
+      },
     },
     detailsButton: {
       padding: "0.25rem 0",
       textTransform: "none",
+    },
+    detailsText: {
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "1rem",
+      },
     },
     shopWrapper: {
       position: "absolute",
@@ -27,6 +44,9 @@ const Thankyou = ({ selectedShipping, order }) => {
       fontSize: "2rem",
       fontWeight: 600,
       textTransform: "none",
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "1.5rem",
+      },
     },
   }
 
@@ -67,8 +87,14 @@ const Thankyou = ({ selectedShipping, order }) => {
         <img src={completeIcon} alt="order placed" />
       </Grid>
       <Grid item>
-        <Typography variant="h4">Expected by {getExpected()}</Typography>
-        <Grid container justifyContent="space-between" alignItems="center">
+        <Typography variant="h4" align="center">
+          Expected by {getExpected()}
+        </Typography>
+        <Grid
+          container
+          justifyContent={matchesSM ? "space-around" : "space-between"}
+          alignItems="center"
+        >
           <Grid item>
             <Typography sx={sx.order} variant="body2">
               Order #{order.id}
@@ -76,7 +102,9 @@ const Thankyou = ({ selectedShipping, order }) => {
           </Grid>
           <Grid item>
             <Button sx={sx.detailsButton}>
-              <Typography variant="body2">Details &gt;</Typography>
+              <Typography variant="body2" sx={sx.detailsText}>
+                Details &gt;
+              </Typography>
             </Button>
           </Grid>
         </Grid>

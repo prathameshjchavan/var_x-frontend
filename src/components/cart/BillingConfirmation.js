@@ -58,10 +58,10 @@ const BillingConfirmation = ({
       {fields.map(field =>
         !field.hidden ? (
           <Grid item key={field.title} sx={sx.wrapper}>
-            <Typography variant="h4" sx={sx.heading}>
+            <Typography variant="h4" align="right" sx={sx.heading}>
               {field.title}
             </Typography>
-            <Typography variant="h3" sx={sx.values}>
+            <Typography variant="h3" align="right" sx={sx.values}>
               {Object.keys(field.values).map(value => (
                 <span key={value}>
                   {field.values[value]}

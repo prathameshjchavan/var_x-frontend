@@ -63,7 +63,7 @@ const CheckoutNavigation = ({
     },
     text: {
       [theme.breakpoints.down("sm")]: {
-        fontSize: "1.5rem",
+        fontSize: "1.25rem",
       },
     },
     navButton: {
