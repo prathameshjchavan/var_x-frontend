@@ -5,6 +5,7 @@ import {
   Grid,
   Switch,
   useMediaQuery,
+  useTheme,
 } from "@mui/material"
 import axios from "axios"
 import React, {
@@ -40,6 +41,7 @@ const Location = ({
   setBillingValues,
   noSlots,
 }) => {
+  const theme = useTheme()
   const isMounted = useRef(false)
   const [loading, setLoading] = useState(false)
   const matchesVertical = useMediaQuery("(max-width: 1300px)")
@@ -68,6 +70,9 @@ const Location = ({
       "& .MuiTypography-root": {
         color: "#fff",
         fontWeight: "bold",
+        [theme.breakpoints.down("sm")]: {
+          fontSize: "1rem",
+        },
       },
     },
   }

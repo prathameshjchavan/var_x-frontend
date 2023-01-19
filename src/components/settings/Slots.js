@@ -17,6 +17,10 @@ const Slots = ({ slot, setSlot, checkout, noLabel }) => {
       "&:hover": {
         backgroundColor: "#fff",
       },
+      [theme.breakpoints.down("sm")]: {
+        width: checkout ? "2rem" : "2.5rem",
+        height: checkout ? "2rem" : "2.5rem",
+      },
     },
     selectedSlot: {
       backgroundColor: theme.palette.secondary.main,
@@ -34,6 +38,9 @@ const Slots = ({ slot, setSlot, checkout, noLabel }) => {
     slotText: {
       color: theme.palette.secondary.main,
       marginLeft: "-0.25rem",
+      [theme.breakpoints.down("sm")]: {
+        fontSize: checkout ? "1.5rem" : undefined,
+      },
     },
     selectedSlotText: {
       color: "#fff",
@@ -42,6 +49,10 @@ const Slots = ({ slot, setSlot, checkout, noLabel }) => {
       color: "#fff",
       fontWeight: 600,
       marginLeft: "0.5rem",
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "1rem",
+        marginTop: "0.4rem",
+      },
     },
   }
 
@@ -61,7 +72,7 @@ const Slots = ({ slot, setSlot, checkout, noLabel }) => {
   )
 
   return (
-    <Grid item container xs={noLabel ? 3 : checkout ? 5 : undefined}>
+    <Grid item container xs>
       <Grid item sx={sx.slotWrapper}>
         {[1, 2, 3].map(number => (
           <Button

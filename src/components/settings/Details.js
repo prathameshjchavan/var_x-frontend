@@ -1,4 +1,10 @@
-import { Grid, FormControlLabel, Switch, useMediaQuery } from "@mui/material"
+import {
+  Grid,
+  FormControlLabel,
+  Switch,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material"
 import React, { useEffect, useRef, useState } from "react"
 import fingerprint from "../../images/fingerprint.svg"
 import NameAdornment from "../../images/NameAdornment"
@@ -25,6 +31,7 @@ const Details = ({
   setBillingValues,
   noSlots,
 }) => {
+  const theme = useTheme()
   const isMounted = useRef(false)
   const [visible, setVisible] = useState(false)
   const matchesVertical = useMediaQuery("(max-width: 1300px)")
@@ -103,6 +110,9 @@ const Details = ({
       "& .MuiTypography-root": {
         color: "#fff",
         fontWeight: "bold",
+        [theme.breakpoints.down("sm")]: {
+          fontSize: "1rem",
+        },
       },
     },
   }

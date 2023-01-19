@@ -36,6 +36,9 @@ const CheckoutNavigation = ({
       width: "40rem",
       height: "5rem",
       position: "relative",
+      [theme.breakpoints.down("md")]: {
+        width: "100%",
+      },
     },
     back: {
       visibility:
@@ -54,6 +57,9 @@ const CheckoutNavigation = ({
     actions: {
       position: "absolute",
       right: 0,
+    },
+    iconButton: {
+      padding: "6px",
     },
   }
 
@@ -136,11 +142,19 @@ const CheckoutNavigation = ({
   const Icon = styled("img")(() => ({
     height: "2.25rem",
     width: "2.25rem",
+    [theme.breakpoints.down("sm")]: {
+      height: "1.75rem",
+      width: "1.75rem",
+    },
   }))
 
   const DeleteIconWrapper = styled("span")(() => ({
     height: "2rem",
     width: "2rem",
+    [theme.breakpoints.down("sm")]: {
+      height: "1.5rem",
+      width: "1.5rem",
+    },
   }))
 
   return (
@@ -177,7 +191,10 @@ const CheckoutNavigation = ({
               {loading === "save" ? (
                 <CircularProgress />
               ) : (
-                <IconButton onClick={() => handleAction("save")}>
+                <IconButton
+                  sx={sx.iconButton}
+                  onClick={() => handleAction("save")}
+                >
                   <Icon src={saveIcon} alt="save" />
                 </IconButton>
               )}
@@ -186,7 +203,10 @@ const CheckoutNavigation = ({
               {loading === "delete" ? (
                 <CircularProgress />
               ) : (
-                <IconButton onClick={() => handleAction("delete")}>
+                <IconButton
+                  sx={sx.iconButton}
+                  onClick={() => handleAction("delete")}
+                >
                   <DeleteIconWrapper>
                     <DeleteIcon color="#fff" />
                   </DeleteIconWrapper>

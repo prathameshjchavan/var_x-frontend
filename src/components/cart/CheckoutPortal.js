@@ -1,4 +1,4 @@
-import { Grid, useTheme } from "@mui/material"
+import { Grid, useTheme, useMediaQuery } from "@mui/material"
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 import CheckoutNavigation from "./CheckoutNavigation"
 import Details from "../settings/Details"
@@ -12,6 +12,7 @@ import Thankyou from "./Thankyou"
 
 const CheckoutPortal = ({ user }) => {
   const theme = useTheme()
+  const matchesXL = useMediaQuery(theme.breakpoints.down("xl"))
   const [detailValues, setDetailValues] = useState({
     name: "",
     email: "",
@@ -256,10 +257,18 @@ const CheckoutPortal = ({ user }) => {
 
   // sx prop
   const sx = {
+    container: {
+      [theme.breakpoints.down("xl")]: {
+        marginBottom: "5rem",
+      },
+    },
     stepContainer: {
       width: "40rem",
       height: "25rem",
       backgroundColor: theme.palette.primary.main,
+      [theme.breakpoints.down("md")]: {
+        width: "100%",
+      },
     },
   }
 
@@ -269,7 +278,14 @@ const CheckoutPortal = ({ user }) => {
   }, [detailSlot, locationSlot, selectedStep])
 
   return (
-    <Grid item container direction="column" alignItems="flex-end" xl={6}>
+    <Grid
+      item
+      container
+      direction="column"
+      sx={sx.container}
+      alignItems={matchesXL ? "flex-start" : "flex-end"}
+      xl={6}
+    >
       <CheckoutNavigation
         steps={steps}
         selectedStep={selectedStep}
