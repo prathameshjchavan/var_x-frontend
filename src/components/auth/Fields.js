@@ -20,7 +20,13 @@ const Fields = ({
   // sx prop
   const sx = {
     textfield: {
-      width: fullWidth ? undefined : settings ? "15rem" : "20rem",
+      width: sm
+        ? "10rem !important"
+        : fullWidth
+        ? undefined
+        : settings
+        ? "15rem"
+        : "20rem",
       "& .MuiInput-input": {
         color: !isWhite ? theme.palette.secondary.main : undefined,
         fontSize: sm ? "1.25rem" : undefined,
@@ -35,7 +41,6 @@ const Fields = ({
       [theme.breakpoints.down("sm")]: {
         width: fullWidth ? undefined : "15rem",
       },
-      width: sm ? "10rem !important" : undefined,
     },
   }
 

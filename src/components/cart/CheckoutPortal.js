@@ -9,6 +9,10 @@ import Confirmation from "./Confirmation"
 import validate from "../ui/validate"
 import BillingConfirmation from "./BillingConfirmation"
 import Thankyou from "./Thankyou"
+import { Elements } from "@stripe/react-stripe-js"
+import { loadStripe } from "@stripe/stripe-js"
+
+const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PK)
 
 const CheckoutPortal = ({ user }) => {
   const theme = useTheme()
@@ -303,7 +307,9 @@ const CheckoutPortal = ({ user }) => {
         alignItems="center"
         sx={sx.stepContainer}
       >
-        {steps[selectedStep].component}
+        <Elements stripe={stripePromise}>
+          {steps[selectedStep].component}
+        </Elements>
       </Grid>
       {steps[selectedStep].title === "Confirmation" && (
         <BillingConfirmation

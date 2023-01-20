@@ -7,12 +7,16 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material"
+import { styled } from "@mui/material/styles"
 import React, { useMemo } from "react"
 import cardIcon from "../../images/card.svg"
 import Slots from "./Slots"
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js"
 
 const Payments = ({ user, slot, setSlot, saveCard, setSaveCard, checkout }) => {
   const theme = useTheme()
+  const stripe = useStripe()
+  const elements = useElements()
   const matchesVertical = useMediaQuery("(max-width: 1300px)")
   const matchesXS = useMediaQuery("(max-width: 700px)")
   const card = useMemo(
@@ -21,6 +25,33 @@ const Payments = ({ user, slot, setSlot, saveCard, setSaveCard, checkout }) => {
         ? { last4: "", brand: "" }
         : user.paymentMethods[slot],
     [user, slot]
+  )
+
+  // functions
+  const handleSubmit = async event => {
+    event.preventDefault()
+
+    if (!stripe || !elements) return
+  }
+
+  const handleCardChange = async event => {
+    if (event.complete) {
+      console.log("VALID")
+    } else {
+      console.log("INVALID")
+    }
+  }
+
+  // styled components
+  const Form = styled("form")(() => ({
+    width: "75%",
+  }))
+
+  // wrappers
+  const cardWrapper = (
+    <Form onSubmit={handleSubmit}>
+      <CardElement onChange={handleCardChange} />
+    </Form>
   )
 
   // sx prop
@@ -80,10 +111,13 @@ const Payments = ({ user, slot, setSlot, saveCard, setSaveCard, checkout }) => {
         <img src={cardIcon} alt="payment settings" />
       </Grid>
       <Grid item container justifyContent="center">
+        {checkout && !card.last4 && cardWrapper}
         <Grid item>
           <Typography align="center" variant="h3" sx={sx.number}>
             {card.last4
               ? `${card.brand.toUpperCase()} **** **** **** ${card.last4}`
+              : checkout
+              ? null
               : "Add A New Card During Checkout"}
           </Typography>
         </Grid>
