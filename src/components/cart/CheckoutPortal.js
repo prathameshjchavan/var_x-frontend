@@ -46,6 +46,7 @@ const CheckoutPortal = ({ user }) => {
   const [billingSlot, setBillingSlot] = useState(0)
   const [saveCard, setSaveCard] = useState(false)
   const [errors, setErrors] = useState({})
+  const [cardError, setCardError] = useState(true)
   const [selectedShipping, setSelectedShipping] = useState(null)
   const [selectedStep, setSelectedStep] = useState(0)
   const [order, setOrder] = useState(null)
@@ -96,160 +97,138 @@ const CheckoutPortal = ({ user }) => {
   )
 
   // Steps
-  let steps = useMemo(
-    () => [
-      {
-        title: "Contact Info",
-        component: (
-          <Details
-            user={user}
-            values={detailValues}
-            setValues={setDetailValues}
-            slot={detailSlot}
-            setSlot={setDetailSlot}
-            errors={errors}
-            setErrors={setErrors}
-            billing={detailForBilling}
-            setBilling={setDetailForBilling}
-            billingValues={billingDetails}
-            setBillingValues={setBillingDetails}
-            checkout
-          />
-        ),
-        hasActions: true,
-        error: errorHelper(
-          detailValues,
-          detailForBilling,
-          billingDetails,
-          detailSlot
-        ),
-      },
-      {
-        title: "Billing Info",
-        component: (
-          <Details
-            user={user}
-            values={billingDetails}
-            setValues={setBillingDetails}
-            errors={errors}
-            setErrors={setErrors}
-            checkout
-            noSlots
-          />
-        ),
-        error: errorHelper(billingDetails),
-      },
-      {
-        title: "Address",
-        component: (
-          <Location
-            user={user}
-            values={locationValues}
-            setValues={setLocationValues}
-            slot={locationSlot}
-            setSlot={setLocationSlot}
-            errors={errors}
-            setErrors={setErrors}
-            billing={locationForBilling}
-            setBilling={setLocationForBilling}
-            billingValues={billingLocation}
-            setBillingValues={setBillingLocation}
-            checkout
-          />
-        ),
-        hasActions: true,
-        error: errorHelper(
-          locationValues,
-          locationForBilling,
-          billingLocation,
-          locationSlot
-        ),
-      },
-      {
-        title: "Billing Address",
-        component: (
-          <Location
-            user={user}
-            values={billingLocation}
-            setValues={setBillingLocation}
-            errors={errors}
-            setErrors={setErrors}
-            checkout
-            noSlots
-          />
-        ),
-      },
-      {
-        title: "Shipping",
-        component: (
-          <Shipping
-            shippingOptions={shippingOptions}
-            selectedShipping={selectedShipping}
-            setSelectedShipping={setSelectedShipping}
-          />
-        ),
-        error: selectedShipping === null,
-      },
-      {
-        title: "Payment",
-        component: (
-          <Payments
-            slot={billingSlot}
-            setSlot={setBillingSlot}
-            user={user}
-            saveCard={saveCard}
-            setSaveCard={setSaveCard}
-            checkout
-          />
-        ),
-        error: false,
-      },
-      {
-        title: "Confirmation",
-        component: (
-          <Confirmation
-            user={user}
-            detailValues={detailValues}
-            billingDetails={billingDetails}
-            detailForBilling={detailForBilling}
-            locationValues={locationValues}
-            billingLocation={billingLocation}
-            locationForBilling={locationForBilling}
-            shippingOptions={shippingOptions}
-            selectedShipping={selectedShipping}
-            selectedStep={selectedStep}
-            setSelectedStep={setSelectedStep}
-            setOrder={setOrder}
-          />
-        ),
-      },
-      {
-        title: `Thanks ${user.name.split(" ")[0]}!`,
-        component: (
-          <Thankyou selectedShipping={selectedShipping} order={order} />
-        ),
-      },
-    ],
-    [
-      user,
-      detailSlot,
-      detailValues,
-      errors,
-      detailForBilling,
-      locationSlot,
-      locationValues,
-      locationForBilling,
-      selectedShipping,
-      shippingOptions,
-      billingSlot,
-      saveCard,
-      errorHelper,
-      billingDetails,
-      billingLocation,
-      selectedStep,
-      order,
-    ]
-  )
+  let steps = [
+    {
+      title: "Contact Info",
+      component: (
+        <Details
+          user={user}
+          values={detailValues}
+          setValues={setDetailValues}
+          slot={detailSlot}
+          setSlot={setDetailSlot}
+          errors={errors}
+          setErrors={setErrors}
+          billing={detailForBilling}
+          setBilling={setDetailForBilling}
+          billingValues={billingDetails}
+          setBillingValues={setBillingDetails}
+          checkout
+        />
+      ),
+      hasActions: true,
+      error: errorHelper(
+        detailValues,
+        detailForBilling,
+        billingDetails,
+        detailSlot
+      ),
+    },
+    {
+      title: "Billing Info",
+      component: (
+        <Details
+          user={user}
+          values={billingDetails}
+          setValues={setBillingDetails}
+          errors={errors}
+          setErrors={setErrors}
+          checkout
+          noSlots
+        />
+      ),
+      error: errorHelper(billingDetails),
+    },
+    {
+      title: "Address",
+      component: (
+        <Location
+          user={user}
+          values={locationValues}
+          setValues={setLocationValues}
+          slot={locationSlot}
+          setSlot={setLocationSlot}
+          errors={errors}
+          setErrors={setErrors}
+          billing={locationForBilling}
+          setBilling={setLocationForBilling}
+          billingValues={billingLocation}
+          setBillingValues={setBillingLocation}
+          checkout
+        />
+      ),
+      hasActions: true,
+      error: errorHelper(
+        locationValues,
+        locationForBilling,
+        billingLocation,
+        locationSlot
+      ),
+    },
+    {
+      title: "Billing Address",
+      component: (
+        <Location
+          user={user}
+          values={billingLocation}
+          setValues={setBillingLocation}
+          errors={errors}
+          setErrors={setErrors}
+          checkout
+          noSlots
+        />
+      ),
+    },
+    {
+      title: "Shipping",
+      component: (
+        <Shipping
+          shippingOptions={shippingOptions}
+          selectedShipping={selectedShipping}
+          setSelectedShipping={setSelectedShipping}
+        />
+      ),
+      error: selectedShipping === null,
+    },
+    {
+      title: "Payment",
+      component: (
+        <Payments
+          slot={billingSlot}
+          setSlot={setBillingSlot}
+          user={user}
+          saveCard={saveCard}
+          setSaveCard={setSaveCard}
+          setCardError={setCardError}
+          checkout
+        />
+      ),
+      error: cardError,
+    },
+    {
+      title: "Confirmation",
+      component: (
+        <Confirmation
+          user={user}
+          detailValues={detailValues}
+          billingDetails={billingDetails}
+          detailForBilling={detailForBilling}
+          locationValues={locationValues}
+          billingLocation={billingLocation}
+          locationForBilling={locationForBilling}
+          shippingOptions={shippingOptions}
+          selectedShipping={selectedShipping}
+          selectedStep={selectedStep}
+          setSelectedStep={setSelectedStep}
+          setOrder={setOrder}
+        />
+      ),
+    },
+    {
+      title: `Thanks ${user.name.split(" ")[0]}!`,
+      component: <Thankyou selectedShipping={selectedShipping} order={order} />,
+    },
+  ]
 
   if (detailForBilling !== false) {
     steps = steps.filter(step => step.title !== "Billing Info")

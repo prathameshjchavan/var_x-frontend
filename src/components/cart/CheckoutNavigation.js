@@ -59,7 +59,9 @@ const CheckoutNavigation = ({
       right: 0,
     },
     iconButton: {
-      padding: "6px",
+      [theme.breakpoints.down("sm")]: {
+        padding: "6px",
+      },
     },
     text: {
       [theme.breakpoints.down("sm")]: {
@@ -67,9 +69,11 @@ const CheckoutNavigation = ({
       },
     },
     navButton: {
-      width: "1.5rem",
-      height: "1.5rem",
-      minWidth: 0,
+      [theme.breakpoints.down("sm")]: {
+        width: "1.5rem",
+        height: "1.5rem",
+        minWidth: 0,
+      },
     },
   }
 

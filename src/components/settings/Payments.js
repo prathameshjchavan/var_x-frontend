@@ -13,7 +13,15 @@ import cardIcon from "../../images/card.svg"
 import Slots from "./Slots"
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js"
 
-const Payments = ({ user, slot, setSlot, saveCard, setSaveCard, checkout }) => {
+const Payments = ({
+  user,
+  slot,
+  setSlot,
+  saveCard,
+  setSaveCard,
+  setCardError,
+  checkout,
+}) => {
   const theme = useTheme()
   const stripe = useStripe()
   const elements = useElements()
@@ -36,21 +44,38 @@ const Payments = ({ user, slot, setSlot, saveCard, setSaveCard, checkout }) => {
 
   const handleCardChange = async event => {
     if (event.complete) {
-      console.log("VALID")
+      setCardError(false)
     } else {
-      console.log("INVALID")
+      setCardError(true)
     }
   }
 
   // styled components
   const Form = styled("form")(() => ({
     width: "75%",
+    borderBottom: "2px solid #fff",
+    height: "2rem",
+    marginTop: "-1rem",
   }))
 
   // wrappers
   const cardWrapper = (
     <Form onSubmit={handleSubmit}>
-      <CardElement onChange={handleCardChange} />
+      <CardElement
+        options={{
+          style: {
+            base: {
+              fontSize: "20px",
+              color: "#fff",
+              iconColor: "#fff",
+              "::placeholder": {
+                color: "#fff",
+              },
+            },
+          },
+        }}
+        onChange={handleCardChange}
+      />
     </Form>
   )
 
