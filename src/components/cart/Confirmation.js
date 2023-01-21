@@ -2,6 +2,7 @@ import React, {
   Fragment,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from "react"
@@ -27,6 +28,7 @@ import { styled } from "@mui/material/styles"
 import { CartContext, FeedbackContext } from "../../contexts"
 import { setSnackbar, clearCart } from "../../contexts/actions"
 import axios from "axios"
+import { v4 as uuidv4 } from "uuid"
 
 const Confirmation = ({
   user,
@@ -38,6 +40,7 @@ const Confirmation = ({
   selectedShipping,
   selectedStep,
   setSelectedStep,
+  order,
   setOrder,
 }) => {
   const theme = useTheme()
@@ -45,6 +48,7 @@ const Confirmation = ({
   const [promo, setPromo] = useState({ promo: "" })
   const [promoErrors, setPromoErrors] = useState({})
   const [loading, setLoading] = useState(false)
+  const [clientSecret, setClientSecret] = useState(null)
   const { cart, dispatchCart } = useContext(CartContext)
   const { dispatchFeedback } = useContext(FeedbackContext)
   const shipping = useMemo(
@@ -324,6 +328,35 @@ const Confirmation = ({
         setLoading(false)
       })
   }
+
+  // useEffects
+  useEffect(() => {
+    if (!order && cart.length !== 0) {
+      const storedIntent = localStorage.getItem("intentID")
+      const itempotencyKey = uuidv4()
+
+      setClientSecret(null)
+
+      axios.post(
+        `${process.env.STRAPI_API_URL}/orders/process`,
+        {
+          items: cart,
+          total: total.toFixed(2),
+          shippingOption: shipping,
+          itempotencyKey,
+          storedIntent,
+          email: detailValues.email,
+        },
+        {
+          headers: user.jwt
+            ? {
+                Authorization: `Bearer ${user.jwt}`,
+              }
+            : undefined,
+        }
+      )
+    }
+  }, [cart])
 
   return (
     <Grid item container sx={sx.mainContainer} direction="column">

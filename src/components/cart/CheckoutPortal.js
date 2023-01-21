@@ -220,6 +220,7 @@ const CheckoutPortal = ({ user }) => {
           selectedShipping={selectedShipping}
           selectedStep={selectedStep}
           setSelectedStep={setSelectedStep}
+          order={order}
           setOrder={setOrder}
         />
       ),
