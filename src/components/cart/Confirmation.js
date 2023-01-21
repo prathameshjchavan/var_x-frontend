@@ -296,33 +296,6 @@ const Confirmation = ({
       })
       .catch(error => {
         console.error(error)
-        switch (error.response.status) {
-          case 400:
-            dispatchFeedback(
-              setSnackbar({ status: "error", message: "Invalid Cart" })
-            )
-            break
-          case 409:
-            dispatchFeedback(
-              setSnackbar({
-                status: "error",
-                message:
-                  "The following items are not available at the requested quantity. Please update your cart and try again.\n" +
-                  `${error.response.data.error.details.unavailable.map(
-                    item => `\n Item: ${item.id}, Available: ${item.qty}`
-                  )}`,
-              })
-            )
-            break
-          default:
-            dispatchFeedback(
-              setSnackbar({
-                status: "error",
-                message:
-                  "Something went wrong, please refresh the page and try again. You have NOT been charged.",
-              })
-            )
-        }
       })
       .finally(() => {
         setLoading(false)
@@ -333,30 +306,71 @@ const Confirmation = ({
   useEffect(() => {
     if (!order && cart.length !== 0) {
       const storedIntent = localStorage.getItem("intentID")
-      const itempotencyKey = uuidv4()
+      const idempotencyKey = uuidv4()
 
       setClientSecret(null)
 
-      axios.post(
-        `${process.env.STRAPI_API_URL}/orders/process`,
-        {
-          items: cart,
-          total: total.toFixed(2),
-          shippingOption: shipping,
-          itempotencyKey,
-          storedIntent,
-          email: detailValues.email,
-        },
-        {
-          headers: user.jwt
-            ? {
-                Authorization: `Bearer ${user.jwt}`,
-              }
-            : undefined,
-        }
-      )
+      axios
+        .post(
+          `${process.env.STRAPI_API_URL}/api/orders/process`,
+          {
+            items: cart,
+            total: total.toFixed(2),
+            shippingOption: shipping,
+            idempotencyKey,
+            storedIntent,
+            email: detailValues.email,
+          },
+          {
+            headers: user.jwt
+              ? {
+                  Authorization: `Bearer ${user.jwt}`,
+                }
+              : undefined,
+          }
+        )
+        .then(response => {
+          setClientSecret(response.data.data.attributes.client_secret)
+          localStorage.setItem(
+            "intentID",
+            response.data.data.attributes.intentID
+          )
+        })
+        .catch(error => {
+          console.log(error)
+
+          switch (error.response.status) {
+            case 400:
+              dispatchFeedback(
+                setSnackbar({ status: "error", message: "Invalid Cart" })
+              )
+              break
+            case 409:
+              dispatchFeedback(
+                setSnackbar({
+                  status: "error",
+                  message:
+                    "The following items are not available at the requested quantity. Please update your cart and try again.\n" +
+                    `${error.response.data.error.details.unavailable.map(
+                      item => `\n Item: ${item.id}, Available: ${item.qty}`
+                    )}`,
+                })
+              )
+              break
+            default:
+              dispatchFeedback(
+                setSnackbar({
+                  status: "error",
+                  message:
+                    "Something went wrong, please refresh the page and try again. You have NOT been charged.",
+                })
+              )
+          }
+        })
     }
   }, [cart])
+
+  console.log("CLIENT SECRET", clientSecret)
 
   return (
     <Grid item container sx={sx.mainContainer} direction="column">
@@ -421,7 +435,7 @@ const Confirmation = ({
         <Button
           sx={sx.button}
           onClick={handleOrder}
-          disabled={cart.length === 0 || loading}
+          disabled={cart.length === 0 || loading || !clientSecret}
         >
           <Grid container alignItems="center" justifyContent="space-around">
             <Grid item>
