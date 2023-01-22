@@ -192,17 +192,7 @@ const CheckoutPortal = ({ user }) => {
     },
     {
       title: "Payment",
-      component: (
-        <Payments
-          slot={billingSlot}
-          setSlot={setBillingSlot}
-          user={user}
-          saveCard={saveCard}
-          setSaveCard={setSaveCard}
-          setCardError={setCardError}
-          checkout
-        />
-      ),
+      component: null,
       error: cardError,
     },
     {
@@ -288,7 +278,18 @@ const CheckoutPortal = ({ user }) => {
         sx={sx.stepContainer}
       >
         <Elements stripe={stripePromise}>
-          {steps[selectedStep].component}
+          {steps[selectedStep].title !== "Payment" &&
+            steps[selectedStep].component}
+          <Payments
+            slot={billingSlot}
+            setSlot={setBillingSlot}
+            user={user}
+            saveCard={saveCard}
+            setSaveCard={setSaveCard}
+            setCardError={setCardError}
+            checkout
+            visible={steps[selectedStep].title === "Payment"}
+          />
         </Elements>
       </Grid>
       {steps[selectedStep].title === "Confirmation" && (
