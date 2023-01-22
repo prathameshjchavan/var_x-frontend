@@ -40,9 +40,8 @@ const Confirmation = ({
   shippingOptions,
   selectedShipping,
   selectedStep,
-  setSelectedStep,
   order,
-  setOrder,
+  stepNumber,
 }) => {
   const theme = useTheme()
   const stripe = useStripe()
@@ -66,84 +65,84 @@ const Confirmation = ({
   const tax = useMemo(() => subtotal * 0.075, [subtotal])
 
   // sx prop
-  const sx = useMemo(
-    () => ({
-      mainContainer: { height: "100%" },
-      iconWrapper: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
+  const sx = {
+    mainContainer: {
+      display: selectedStep !== stepNumber ? "none" : "flex",
+      height: "100%",
+    },
+    iconWrapper: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    text: {
+      fontSize: "1rem",
+      color: "#fff",
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "0.85rem",
       },
-      text: {
-        fontSize: "1rem",
-        color: "#fff",
-        [theme.breakpoints.down("sm")]: {
-          fontSize: "0.85rem",
-        },
+    },
+    nameWrapper: {
+      height: "22px",
+      width: "22px",
+    },
+    emailWrapper: {
+      height: "17px",
+      width: "22px",
+    },
+    phoneWrapper: {
+      height: "25.122px",
+      width: "25.173px",
+    },
+    priceLabel: {
+      fontSize: "1.5rem",
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "0.85rem",
       },
-      nameWrapper: {
-        height: "22px",
-        width: "22px",
+    },
+    darkBackground: {
+      backgroundColor: theme.palette.secondary.main,
+    },
+    fieldRow: {
+      height: "2.5rem",
+    },
+    centerText: {
+      display: "flex",
+      alignItems: "center",
+    },
+    adornmentWrapper: {
+      display: "flex",
+      justifyContent: "center",
+    },
+    priceValue: {
+      marginRight: "1rem",
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "0.85rem",
+        marginRight: "0.5rem",
       },
-      emailWrapper: {
-        height: "17px",
-        width: "22px",
+    },
+    button: {
+      width: "100%",
+      height: "7rem",
+      borderRadius: 0,
+      backgroundColor: theme.palette.secondary.main,
+      "&:hover": {
+        backgroundColor: theme.palette.secondary.light,
       },
-      phoneWrapper: {
-        height: "25.122px",
-        width: "25.173px",
+      "&:disabled": {
+        backgroundColor: theme.palette.grey[500],
       },
-      priceLabel: {
-        fontSize: "1.5rem",
-        [theme.breakpoints.down("sm")]: {
-          fontSize: "0.85rem",
-        },
+    },
+    buttonWrapper: {
+      marginTop: "auto",
+    },
+    chip: {
+      backgroundColor: "#fff",
+      "& .MuiChip-label": {
+        color: theme.palette.secondary.main,
       },
-      darkBackground: {
-        backgroundColor: theme.palette.secondary.main,
-      },
-      fieldRow: {
-        height: "2.5rem",
-      },
-      centerText: {
-        display: "flex",
-        alignItems: "center",
-      },
-      adornmentWrapper: {
-        display: "flex",
-        justifyContent: "center",
-      },
-      priceValue: {
-        marginRight: "1rem",
-        [theme.breakpoints.down("sm")]: {
-          fontSize: "0.85rem",
-          marginRight: "0.5rem",
-        },
-      },
-      button: {
-        width: "100%",
-        height: "7rem",
-        borderRadius: 0,
-        backgroundColor: theme.palette.secondary.main,
-        "&:hover": {
-          backgroundColor: theme.palette.secondary.light,
-        },
-        "&:disabled": {
-          backgroundColor: theme.palette.grey[500],
-        },
-      },
-      buttonWrapper: {
-        marginTop: "auto",
-      },
-      chip: {
-        backgroundColor: "#fff",
-        "& .MuiChip-label": {
-          color: theme.palette.secondary.main,
-        },
-      },
-    }),
-    [theme]
-  )
+    },
+  }
 
   // styled components
   const Wrapper = styled("div")(() => {})
@@ -161,60 +160,54 @@ const Confirmation = ({
   }))
 
   // fields
-  const firstFields = useMemo(
-    () => [
-      {
-        value: detailValues.name,
-        adornment: (
-          <Wrapper sx={sx.nameWrapper}>
-            <NameAdornment color="#fff" />
-          </Wrapper>
-        ),
-      },
-      {
-        value: detailValues.email,
-        adornment: (
-          <Wrapper sx={sx.emailWrapper}>
-            <EmailAdornment color="#fff" />
-          </Wrapper>
-        ),
-      },
-      {
-        value: detailValues.phone,
-        adornment: (
-          <Wrapper sx={sx.phoneWrapper}>
-            <PhoneAdornment />
-          </Wrapper>
-        ),
-      },
-      {
-        value: locationValues.street,
-        adornment: <img src={StreetAdornment} alt="street address" />,
-      },
-    ],
-    [sx, detailValues, locationValues]
-  )
+  const firstFields = [
+    {
+      value: detailValues.name,
+      adornment: (
+        <Wrapper sx={sx.nameWrapper}>
+          <NameAdornment color="#fff" />
+        </Wrapper>
+      ),
+    },
+    {
+      value: detailValues.email,
+      adornment: (
+        <Wrapper sx={sx.emailWrapper}>
+          <EmailAdornment color="#fff" />
+        </Wrapper>
+      ),
+    },
+    {
+      value: detailValues.phone,
+      adornment: (
+        <Wrapper sx={sx.phoneWrapper}>
+          <PhoneAdornment />
+        </Wrapper>
+      ),
+    },
+    {
+      value: locationValues.street,
+      adornment: <img src={StreetAdornment} alt="street address" />,
+    },
+  ]
 
-  const secondFields = useMemo(
-    () => [
-      {
-        value: `${locationValues.city}, ${locationValues.state} ${locationValues.zip}`,
-        adornment: <img src={zipAdornment} alt="city, state, zip code" />,
+  const secondFields = [
+    {
+      value: `${locationValues.city}, ${locationValues.state} ${locationValues.zip}`,
+      adornment: <img src={zipAdornment} alt="city, state, zip code" />,
+    },
+    {
+      value: "**** **** **** 1234",
+      adornment: <Card src={cardAdornment} alt="credit card" />,
+    },
+    {
+      promo: {
+        helperText: "",
+        placeholder: "Promo Code",
+        startAdornment: <img src={promoAdornment} alt="promo code" />,
       },
-      {
-        value: "**** **** **** 1234",
-        adornment: <Card src={cardAdornment} alt="credit card" />,
-      },
-      {
-        promo: {
-          helperText: "",
-          placeholder: "Promo Code",
-          startAdornment: <img src={promoAdornment} alt="promo code" />,
-        },
-      },
-    ],
-    [locationValues]
-  )
+    },
+  ]
 
   // prices
   const prices = useMemo(
@@ -239,30 +232,24 @@ const Confirmation = ({
     [prices]
   )
 
-  const adornmentValue = useCallback(
-    (adornment, value) => (
-      <Fragment>
-        <Grid item sx={sx.adornmentWrapper} xs={2}>
-          {adornment}
-        </Grid>
-        <Grid item sx={sx.centerText} xs={10} zeroMinWidth>
-          <Typography variant="body1" noWrap sx={sx.text}>
-            {value}
-          </Typography>
-        </Grid>
-      </Fragment>
-    ),
-    [sx]
+  const adornmentValue = (adornment, value) => (
+    <Fragment>
+      <Grid item sx={sx.adornmentWrapper} xs={2}>
+        {adornment}
+      </Grid>
+      <Grid item sx={sx.centerText} xs={10} zeroMinWidth>
+        <Typography variant="body1" noWrap sx={sx.text}>
+          {value}
+        </Typography>
+      </Grid>
+    </Fragment>
   )
 
   // functions
-  const getFieldSx = useCallback(
-    index => {
-      let fieldSx = sx.fieldRow
-      return index % 2 ? { ...fieldSx, ...sx.darkBackground } : fieldSx
-    },
-    [sx]
-  )
+  const getFieldSx = index => {
+    let fieldSx = sx.fieldRow
+    return index % 2 ? { ...fieldSx, ...sx.darkBackground } : fieldSx
+  }
 
   const handleOrder = async () => {
     setLoading(true)
