@@ -30,6 +30,8 @@ const Details = ({
   billingValues,
   setBillingValues,
   noSlots,
+  selectedStep,
+  stepNumber,
 }) => {
   const theme = useTheme()
   const isMounted = useRef(false)
@@ -77,6 +79,7 @@ const Details = ({
   // sx prop
   const sx = {
     detailsContainer: {
+      display: checkout && selectedStep !== stepNumber ? "none" : "flex",
       position: "relative",
       borderBottom: matchesVertical ? "4px solid #fff" : undefined,
       height: matchesVertical ? "30rem" : undefined,

@@ -40,6 +40,8 @@ const Location = ({
   billingValues,
   setBillingValues,
   noSlots,
+  stepNumber,
+  selectedStep,
 }) => {
   const theme = useTheme()
   const isMounted = useRef(false)
@@ -50,6 +52,7 @@ const Location = ({
   // sx prop
   const sx = {
     locationContainer: {
+      display: checkout && selectedStep !== stepNumber ? "none" : "flex",
       position: "relative",
       borderBottom: matchesVertical ? "4px solid #fff" : undefined,
       height: matchesVertical ? "30rem" : undefined,

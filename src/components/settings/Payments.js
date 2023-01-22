@@ -21,6 +21,8 @@ const Payments = ({
   setSaveCard,
   setCardError,
   checkout,
+  selectedStep,
+  stepNumber,
 }) => {
   const theme = useTheme()
   const stripe = useStripe()
@@ -82,6 +84,7 @@ const Payments = ({
   // sx prop
   const sx = {
     paymentContainer: {
+      display: checkout && selectedStep !== stepNumber ? "none" : "flex",
       borderLeft: !matchesVertical && !checkout ? "4px solid #fff" : undefined,
       position: "relative",
       height: matchesVertical ? "30rem" : undefined,

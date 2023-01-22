@@ -1,5 +1,11 @@
 import { Grid, useTheme, useMediaQuery } from "@mui/material"
-import React, { useCallback, useEffect, useMemo, useState } from "react"
+import React, {
+  cloneElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react"
 import CheckoutNavigation from "./CheckoutNavigation"
 import Details from "../settings/Details"
 import Location from "../settings/Location"
@@ -114,6 +120,7 @@ const CheckoutPortal = ({ user }) => {
           billingValues={billingDetails}
           setBillingValues={setBillingDetails}
           checkout
+          selectedStep={selectedStep}
         />
       ),
       hasActions: true,
@@ -135,6 +142,7 @@ const CheckoutPortal = ({ user }) => {
           setErrors={setErrors}
           checkout
           noSlots
+          selectedStep={selectedStep}
         />
       ),
       error: errorHelper(billingDetails),
@@ -155,6 +163,7 @@ const CheckoutPortal = ({ user }) => {
           billingValues={billingLocation}
           setBillingValues={setBillingLocation}
           checkout
+          selectedStep={selectedStep}
         />
       ),
       hasActions: true,
@@ -176,6 +185,7 @@ const CheckoutPortal = ({ user }) => {
           setErrors={setErrors}
           checkout
           noSlots
+          selectedStep={selectedStep}
         />
       ),
     },
@@ -186,6 +196,7 @@ const CheckoutPortal = ({ user }) => {
           shippingOptions={shippingOptions}
           selectedShipping={selectedShipping}
           setSelectedShipping={setSelectedShipping}
+          selectedStep={selectedStep}
         />
       ),
       error: selectedShipping === null,
@@ -201,6 +212,7 @@ const CheckoutPortal = ({ user }) => {
           setSaveCard={setSaveCard}
           setCardError={setCardError}
           checkout
+          selectedStep={selectedStep}
         />
       ),
       error: cardError,
@@ -227,7 +239,13 @@ const CheckoutPortal = ({ user }) => {
     },
     {
       title: `Thanks ${user.name.split(" ")[0]}!`,
-      component: <Thankyou selectedShipping={selectedShipping} order={order} />,
+      component: (
+        <Thankyou
+          selectedShipping={selectedShipping}
+          order={order}
+          selectedStep={selectedStep}
+        />
+      ),
     },
   ]
 
@@ -288,7 +306,12 @@ const CheckoutPortal = ({ user }) => {
         sx={sx.stepContainer}
       >
         <Elements stripe={stripePromise}>
-          {steps[selectedStep].component}
+          {steps.map((step, index) =>
+            cloneElement(step.component, {
+              stepNumber: index,
+              key: index,
+            })
+          )}
         </Elements>
       </Grid>
       {steps[selectedStep].title === "Confirmation" && (
