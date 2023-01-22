@@ -29,6 +29,7 @@ import { CartContext, FeedbackContext } from "../../contexts"
 import { setSnackbar, clearCart } from "../../contexts/actions"
 import axios from "axios"
 import { v4 as uuidv4 } from "uuid"
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js"
 
 const Confirmation = ({
   user,
@@ -44,6 +45,8 @@ const Confirmation = ({
   setOrder,
 }) => {
   const theme = useTheme()
+  const stripe = useStripe()
+  const elements = useElements()
   const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
   const [promo, setPromo] = useState({ promo: "" })
   const [promoErrors, setPromoErrors] = useState({})
@@ -261,45 +264,77 @@ const Confirmation = ({
     [sx]
   )
 
-  const handleOrder = () => {
+  const handleOrder = async () => {
     setLoading(true)
 
-    axios
-      .post(
-        `${process.env.STRAPI_API_URL}/api/orders/place`,
-        {
-          shippingAddress: locationValues,
-          billingAddress: billingLocation,
-          shippingInfo: detailValues,
-          billingInfo: billingDetails,
-          shippingOption: shipping,
-          subtotal: subtotal.toFixed(2),
-          tax: tax.toFixed(2),
-          total: total.toFixed(2),
-          items: cart,
+    const idempotencyKey = uuidv4()
+    const cardElement = elements.getElement(CardElement)
+    const result = await stripe.confirmCardPayment(
+      clientSecret,
+      {
+        payment_method: {
+          card: cardElement,
+          billing_details: {
+            address: {
+              city: billingLocation.city,
+              state: billingLocation.state,
+              line1: billingLocation.street,
+            },
+            email: billingDetails.email,
+            name: billingDetails.name,
+            phone: billingDetails.phone,
+          },
         },
-        {
-          headers:
-            user.name !== "Guest"
-              ? { Authorization: `Bearer ${user.jwt}` }
-              : undefined,
-        }
-      )
-      .then(response => {
-        dispatchCart(clearCart())
+      },
+      { idempotencyKey }
+    )
 
-        setOrder({
-          id: response.data.data.id,
-          ...response.data.data.attributes,
-        })
-        setSelectedStep(selectedStep + 1)
-      })
-      .catch(error => {
-        console.error(error)
-      })
-      .finally(() => {
-        setLoading(false)
-      })
+    if (result.error) {
+      console.error(result.error.message)
+      dispatchFeedback(
+        setSnackbar({ status: "error", message: result.error.message })
+      )
+      setLoading(false)
+    } else if (result.paymentIntent.status === "succeeded") {
+      console.log("PAYMENT SUCCESSFUL")
+    }
+
+    // axios
+    //   .post(
+    //     `${process.env.STRAPI_API_URL}/api/orders/place`,
+    //     {
+    //       shippingAddress: locationValues,
+    //       billingAddress: billingLocation,
+    //       shippingInfo: detailValues,
+    //       billingInfo: billingDetails,
+    //       shippingOption: shipping,
+    //       subtotal: subtotal.toFixed(2),
+    //       tax: tax.toFixed(2),
+    //       total: total.toFixed(2),
+    //       items: cart,
+    //     },
+    //     {
+    //       headers:
+    //         user.name !== "Guest"
+    //           ? { Authorization: `Bearer ${user.jwt}` }
+    //           : undefined,
+    //     }
+    //   )
+    //   .then(response => {
+    //     dispatchCart(clearCart())
+
+    //     setOrder({
+    //       id: response.data.data.id,
+    //       ...response.data.data.attributes,
+    //     })
+    //     setSelectedStep(selectedStep + 1)
+    //   })
+    //   .catch(error => {
+    //     console.error(error)
+    //   })
+    //   .finally(() => {
+    //     setLoading(false)
+    //   })
   }
 
   // useEffects
