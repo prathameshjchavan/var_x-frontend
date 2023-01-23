@@ -9,14 +9,13 @@ import completeIcon from "../../images/order-placed.svg"
 import { Link } from "gatsby"
 import React, { useCallback } from "react"
 
-const Thankyou = ({ selectedShipping, order, selectedStep, stepNumber }) => {
+const Thankyou = ({ selectedShipping, order }) => {
   const theme = useTheme()
   const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
 
   // sx prop
   const sx = {
     container: {
-      display: selectedStep !== stepNumber ? "none" : "flex",
       height: "100%",
       position: "relative",
     },

@@ -1,11 +1,5 @@
 import { Grid, useTheme, useMediaQuery } from "@mui/material"
-import React, {
-  cloneElement,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import CheckoutNavigation from "./CheckoutNavigation"
 import Details from "../settings/Details"
 import Location from "../settings/Location"
@@ -120,7 +114,6 @@ const CheckoutPortal = ({ user }) => {
           billingValues={billingDetails}
           setBillingValues={setBillingDetails}
           checkout
-          selectedStep={selectedStep}
         />
       ),
       hasActions: true,
@@ -163,7 +156,6 @@ const CheckoutPortal = ({ user }) => {
           billingValues={billingLocation}
           setBillingValues={setBillingLocation}
           checkout
-          selectedStep={selectedStep}
         />
       ),
       hasActions: true,
@@ -196,7 +188,6 @@ const CheckoutPortal = ({ user }) => {
           shippingOptions={shippingOptions}
           selectedShipping={selectedShipping}
           setSelectedShipping={setSelectedShipping}
-          selectedStep={selectedStep}
         />
       ),
       error: selectedShipping === null,
@@ -213,28 +204,17 @@ const CheckoutPortal = ({ user }) => {
           user={user}
           detailValues={detailValues}
           billingDetails={billingDetails}
-          detailForBilling={detailForBilling}
           locationValues={locationValues}
           billingLocation={billingLocation}
-          locationForBilling={locationForBilling}
           shippingOptions={shippingOptions}
           selectedShipping={selectedShipping}
-          selectedStep={selectedStep}
-          setSelectedStep={setSelectedStep}
           order={order}
-          setOrder={setOrder}
         />
       ),
     },
     {
       title: `Thanks ${user.name.split(" ")[0]}!`,
-      component: (
-        <Thankyou
-          selectedShipping={selectedShipping}
-          order={order}
-          selectedStep={selectedStep}
-        />
-      ),
+      component: <Thankyou selectedShipping={selectedShipping} order={order} />,
     },
   ]
 

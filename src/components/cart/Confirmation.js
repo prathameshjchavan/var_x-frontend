@@ -1,6 +1,5 @@
 import React, {
   Fragment,
-  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -39,9 +38,7 @@ const Confirmation = ({
   billingLocation,
   shippingOptions,
   selectedShipping,
-  selectedStep,
   order,
-  stepNumber,
 }) => {
   const theme = useTheme()
   const stripe = useStripe()
@@ -67,7 +64,6 @@ const Confirmation = ({
   // sx prop
   const sx = {
     mainContainer: {
-      display: selectedStep !== stepNumber ? "none" : "flex",
       height: "100%",
     },
     iconWrapper: {

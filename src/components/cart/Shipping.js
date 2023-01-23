@@ -7,15 +7,12 @@ const Shipping = ({
   shippingOptions,
   selectedShipping,
   setSelectedShipping,
-  selectedStep,
-  stepNumber,
 }) => {
   const theme = useTheme()
 
   // sx prop
   const sx = {
     container: {
-      display: selectedStep !== stepNumber ? "none" : "flex",
       height: "100%",
     },
     button: {

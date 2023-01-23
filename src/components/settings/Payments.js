@@ -60,24 +60,27 @@ const Payments = ({
   }))
 
   // wrappers
-  const cardWrapper = (
-    <Form onSubmit={handleSubmit}>
-      <CardElement
-        options={{
-          style: {
-            base: {
-              fontSize: "20px",
-              color: "#fff",
-              iconColor: "#fff",
-              "::placeholder": {
+  const cardWrapper = useMemo(
+    () => (
+      <Form onSubmit={handleSubmit}>
+        <CardElement
+          options={{
+            style: {
+              base: {
+                fontSize: "20px",
                 color: "#fff",
+                iconColor: "#fff",
+                "::placeholder": {
+                  color: "#fff",
+                },
               },
             },
-          },
-        }}
-        onChange={handleCardChange}
-      />
-    </Form>
+          }}
+          onChange={handleCardChange}
+        />
+      </Form>
+    ),
+    []
   )
 
   // sx prop
