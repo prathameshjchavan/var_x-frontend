@@ -208,7 +208,10 @@ const CheckoutPortal = ({ user }) => {
           billingLocation={billingLocation}
           shippingOptions={shippingOptions}
           selectedShipping={selectedShipping}
+          selectedStep={selectedStep}
+          setSelectedStep={setSelectedStep}
           order={order}
+          setOrder={setOrder}
         />
       ),
     },

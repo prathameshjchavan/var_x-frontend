@@ -38,7 +38,10 @@ const Confirmation = ({
   billingLocation,
   shippingOptions,
   selectedShipping,
+  selectedStep,
+  setSelectedStep,
   order,
+  setOrder,
 }) => {
   const theme = useTheme()
   const stripe = useStripe()
@@ -279,45 +282,60 @@ const Confirmation = ({
       )
       setLoading(false)
     } else if (result.paymentIntent.status === "succeeded") {
-      console.log("PAYMENT SUCCESSFUL")
+      axios
+        .post(
+          `${process.env.STRAPI_API_URL}/api/orders/finalize`,
+          {
+            shippingAddress: locationValues,
+            billingAddress: billingLocation,
+            shippingInfo: detailValues,
+            billingInfo: billingDetails,
+            shippingOption: shipping,
+            subtotal: subtotal.toFixed(2),
+            tax: tax.toFixed(2),
+            total: total.toFixed(2),
+            items: cart,
+            transaction: result.paymentIntent.id,
+          },
+          {
+            headers:
+              user.name !== "Guest"
+                ? { Authorization: `Bearer ${user.jwt}` }
+                : undefined,
+          }
+        )
+        .then(response => {
+          dispatchCart(clearCart())
+
+          localStorage.removeItem("intentID")
+          setClientSecret(null)
+
+          setOrder({
+            id: response.data.data.id,
+            ...response.data.data.attributes,
+          })
+          setSelectedStep(selectedStep + 1)
+        })
+        .catch(error => {
+          console.error(error)
+          console.log("FAILED PAYMENT INTENT", result.paymentIntent.id)
+          console.log("FAILED CART", cart)
+
+          localStorage.removeItem("intentID")
+          setClientSecret(null)
+
+          dispatchFeedback(
+            setSnackbar({
+              status: "error",
+              message:
+                "There was a problem saving your order. Please keep this screen open and contact support.",
+            })
+          )
+        })
+        .finally(() => {
+          setLoading(false)
+        })
     }
-
-    // axios
-    //   .post(
-    //     `${process.env.STRAPI_API_URL}/api/orders/place`,
-    //     {
-    //       shippingAddress: locationValues,
-    //       billingAddress: billingLocation,
-    //       shippingInfo: detailValues,
-    //       billingInfo: billingDetails,
-    //       shippingOption: shipping,
-    //       subtotal: subtotal.toFixed(2),
-    //       tax: tax.toFixed(2),
-    //       total: total.toFixed(2),
-    //       items: cart,
-    //     },
-    //     {
-    //       headers:
-    //         user.name !== "Guest"
-    //           ? { Authorization: `Bearer ${user.jwt}` }
-    //           : undefined,
-    //     }
-    //   )
-    //   .then(response => {
-    //     dispatchCart(clearCart())
-
-    //     setOrder({
-    //       id: response.data.data.id,
-    //       ...response.data.data.attributes,
-    //     })
-    //     setSelectedStep(selectedStep + 1)
-    //   })
-    //   .catch(error => {
-    //     console.error(error)
-    //   })
-    //   .finally(() => {
-    //     setLoading(false)
-    //   })
   }
 
   // useEffects
