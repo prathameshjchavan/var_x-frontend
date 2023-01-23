@@ -47,7 +47,7 @@ const Payments = ({
   const handleCardChange = async event => {
     if (event.complete) {
       const cardElement = elements.getElement(CardElement)
-      const { error, paymentMethod } = await stripe.createPaymentMethod({
+      const { paymentMethod } = await stripe.createPaymentMethod({
         type: "card",
         card: cardElement,
       })
@@ -173,7 +173,7 @@ const Payments = ({
       </Grid>
       <Grid item container justifyContent="space-between" sx={sx.slotContainer}>
         <Slots slot={slot} setSlot={setSlot} noLabel />
-        {checkout && (
+        {checkout && user.name !== "Guest" && (
           <Grid item>
             <FormControlLabel
               sx={sx.switchWrapper}

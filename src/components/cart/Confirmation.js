@@ -24,8 +24,8 @@ import {
 } from "@mui/material"
 import Fields from "../auth/Fields"
 import { styled } from "@mui/material/styles"
-import { CartContext, FeedbackContext } from "../../contexts"
-import { setSnackbar, clearCart } from "../../contexts/actions"
+import { CartContext, FeedbackContext, UserContext } from "../../contexts"
+import { setSnackbar, clearCart, setUser } from "../../contexts/actions"
 import axios from "axios"
 import { v4 as uuidv4 } from "uuid"
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js"
@@ -55,6 +55,7 @@ const Confirmation = ({
   const [loading, setLoading] = useState(false)
   const [clientSecret, setClientSecret] = useState(null)
   const { cart, dispatchCart } = useContext(CartContext)
+  const { dispatchUser } = useContext(UserContext)
   const { dispatchFeedback } = useContext(FeedbackContext)
   const shipping = useMemo(
     () => shippingOptions.find(option => option.label === selectedShipping),
@@ -312,6 +313,12 @@ const Confirmation = ({
           }
         )
         .then(response => {
+          if (saveCard) {
+            let newUser = { ...user }
+            newUser.paymentMethods[cardSlot] = card
+            dispatchUser(setUser(newUser))
+          }
+
           dispatchCart(clearCart())
 
           localStorage.removeItem("intentID")
