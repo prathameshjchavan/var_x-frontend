@@ -22,6 +22,7 @@ const Payments = ({
   setCardError,
   checkout,
   visible,
+  setCard,
 }) => {
   const theme = useTheme()
   const stripe = useStripe()
@@ -45,6 +46,15 @@ const Payments = ({
 
   const handleCardChange = async event => {
     if (event.complete) {
+      const cardElement = elements.getElement(CardElement)
+      const { error, paymentMethod } = await stripe.createPaymentMethod({
+        type: "card",
+        card: cardElement,
+      })
+      setCard({
+        brand: paymentMethod.card.brand,
+        last4: paymentMethod.card.last4,
+      })
       setCardError(false)
     } else {
       setCardError(true)

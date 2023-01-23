@@ -43,8 +43,9 @@ const CheckoutPortal = ({ user }) => {
   })
   const [locationSlot, setLocationSlot] = useState(0)
   const [locationForBilling, setLocationForBilling] = useState(false)
-  const [billingSlot, setBillingSlot] = useState(0)
+  const [cardSlot, setCardSlot] = useState(0)
   const [saveCard, setSaveCard] = useState(false)
+  const [card, setCard] = useState({ brand: "", last4: "" })
   const [errors, setErrors] = useState({})
   const [cardError, setCardError] = useState(true)
   const [selectedShipping, setSelectedShipping] = useState(null)
@@ -212,6 +213,9 @@ const CheckoutPortal = ({ user }) => {
           setSelectedStep={setSelectedStep}
           order={order}
           setOrder={setOrder}
+          saveCard={saveCard}
+          card={card}
+          cardSlot={cardSlot}
         />
       ),
     },
@@ -281,14 +285,15 @@ const CheckoutPortal = ({ user }) => {
           {steps[selectedStep].title !== "Payment" &&
             steps[selectedStep].component}
           <Payments
-            slot={billingSlot}
-            setSlot={setBillingSlot}
+            slot={cardSlot}
+            setSlot={setCardSlot}
             user={user}
             saveCard={saveCard}
             setSaveCard={setSaveCard}
             setCardError={setCardError}
             checkout
             visible={steps[selectedStep].title === "Payment"}
+            setCard={setCard}
           />
         </Elements>
       </Grid>

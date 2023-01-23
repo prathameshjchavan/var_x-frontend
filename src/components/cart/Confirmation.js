@@ -42,6 +42,9 @@ const Confirmation = ({
   setSelectedStep,
   order,
   setOrder,
+  saveCard,
+  card,
+  cardSlot,
 }) => {
   const theme = useTheme()
   const stripe = useStripe()
@@ -196,7 +199,7 @@ const Confirmation = ({
       adornment: <img src={zipAdornment} alt="city, state, zip code" />,
     },
     {
-      value: "**** **** **** 1234",
+      value: `${card.brand.toUpperCase()} ${card.last4}`,
       adornment: <Card src={cardAdornment} alt="credit card" />,
     },
     {
@@ -270,6 +273,7 @@ const Confirmation = ({
             name: billingDetails.name,
             phone: billingDetails.phone,
           },
+          setup_future_usage: saveCard ? "off_session" : undefined,
         },
       },
       { idempotencyKey }
@@ -296,6 +300,9 @@ const Confirmation = ({
             total: total.toFixed(2),
             items: cart,
             transaction: result.paymentIntent.id,
+            paymentMethod: card,
+            saveCard,
+            cardSlot,
           },
           {
             headers:
