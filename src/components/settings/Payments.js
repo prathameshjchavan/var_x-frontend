@@ -8,7 +8,7 @@ import {
   useTheme,
 } from "@mui/material"
 import { styled } from "@mui/material/styles"
-import React, { useCallback, useMemo } from "react"
+import React, { useCallback, useEffect, useMemo } from "react"
 import cardIcon from "../../images/card.svg"
 import Slots from "./Slots"
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js"
@@ -138,6 +138,19 @@ const Payments = ({
       },
     },
   }
+
+  // useEffect
+  useEffect(() => {
+    if (!checkout || !user.jwt) return
+
+    if (user.paymentMethods[slot].last4 !== "") {
+      setCard(user.paymentMethods[slot])
+      setCardError(false)
+    } else {
+      setCard({ brand: "", last4: "" })
+      setCardError(true)
+    }
+  }, [slot])
 
   return (
     <Grid
