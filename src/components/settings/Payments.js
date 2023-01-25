@@ -4,14 +4,24 @@ import {
   Grid,
   Switch,
   Typography,
+  CircularProgress,
   useMediaQuery,
   useTheme,
 } from "@mui/material"
 import { styled } from "@mui/material/styles"
-import React, { useCallback, useEffect, useMemo } from "react"
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react"
 import cardIcon from "../../images/card.svg"
 import Slots from "./Slots"
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js"
+import axios from "axios"
+import { FeedbackContext, UserContext } from "../../contexts"
+import { setSnackbar, setUser } from "../../contexts/actions"
 
 const Payments = ({
   user,
@@ -27,6 +37,9 @@ const Payments = ({
   const theme = useTheme()
   const stripe = useStripe()
   const elements = useElements()
+  const [loading, setLoading] = useState(false)
+  const { dispatchFeedback } = useContext(FeedbackContext)
+  const { dispatchUser } = useContext(UserContext)
   const matchesVertical = useMediaQuery("(max-width: 1300px)")
   const matchesXS = useMediaQuery("(max-width: 700px)")
   const card = useMemo(
@@ -42,6 +55,44 @@ const Payments = ({
     event.preventDefault()
 
     if (!stripe || !elements) return
+  }
+
+  const removeCard = () => {
+    setLoading(true)
+
+    axios
+      .post(
+        `${process.env.STRAPI_API_URL}/api/orders/removeCard`,
+        {
+          card: card.last4,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.jwt}`,
+          },
+        }
+      )
+      .then(response => {
+        dispatchUser(
+          setUser({ ...response.data, jwt: user.jwt, onboarding: true })
+        )
+        setCardError(true)
+        setCard({ brand: "", last4: "" })
+      })
+      .catch(error => {
+        console.error(error)
+
+        dispatchFeedback(
+          setSnackbar({
+            status: "error",
+            message:
+              "There was a problem removing your card. Please try again.",
+          })
+        )
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   const handleCardChange = useCallback(
@@ -137,6 +188,9 @@ const Payments = ({
         fontWeight: "bold",
       },
     },
+    spinner: {
+      marginLeft: loading ? "3rem" : undefined,
+    },
   }
 
   // useEffect
@@ -178,12 +232,20 @@ const Payments = ({
           </Typography>
         </Grid>
         {card.last4 && (
-          <Grid item>
-            <Button variant="contained" sx={sx.removeCard}>
-              <Typography variant="h6" sx={sx.removeCardText}>
-                remove card
-              </Typography>
-            </Button>
+          <Grid item sx={sx.spinner}>
+            {loading ? (
+              <CircularProgress color="secondary" />
+            ) : (
+              <Button
+                onClick={removeCard}
+                variant="contained"
+                sx={sx.removeCard}
+              >
+                <Typography variant="h6" sx={sx.removeCardText}>
+                  remove card
+                </Typography>
+              </Button>
+            )}
           </Grid>
         )}
       </Grid>
@@ -197,7 +259,10 @@ const Payments = ({
               labelPlacement="start"
               control={
                 <Switch
-                  checked={saveCard}
+                  disabled={user.paymentMethods[slot].last4 !== ""}
+                  checked={
+                    user.paymentMethods[slot].last4 !== "" ? true : saveCard
+                  }
                   onChange={() => setSaveCard(!saveCard)}
                   color="secondary"
                 />
