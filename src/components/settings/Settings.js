@@ -11,6 +11,8 @@ import Edit from "./Edit"
 import Location from "./Location"
 import Payments from "./Payments"
 import { UserContext } from "../../contexts"
+import { Elements } from "@stripe/react-stripe-js"
+import { loadStripe } from "@stripe/stripe-js"
 
 const Settings = ({ setSelectedSetting }) => {
   const { user, dispatchUser } = useContext(UserContext)
@@ -37,6 +39,7 @@ const Settings = ({ setSelectedSetting }) => {
     const allErrors = { ...detailErrors, ...locationErrors }
     return Object.keys(allErrors).some(error => allErrors[error] === true)
   }, [detailErrors, locationErrors])
+  const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PK)
 
   // sx prop
   const sx = {
@@ -48,6 +51,7 @@ const Settings = ({ setSelectedSetting }) => {
     },
   }
 
+  // useEffects
   useEffect(() => {
     setDetailErrors({})
   }, [detailSlot])
@@ -70,7 +74,9 @@ const Settings = ({ setSelectedSetting }) => {
           errors={detailErrors}
           setErrors={setDetailErrors}
         />
-        <Payments user={user} slot={billingSlot} setSlot={setBillingSlot} />
+        <Elements stripe={stripePromise}>
+          <Payments user={user} slot={billingSlot} setSlot={setBillingSlot} />
+        </Elements>
       </Grid>
       <Grid container sx={{ ...sx.bottomRow, ...sx.sectionContainer }}>
         <Location
