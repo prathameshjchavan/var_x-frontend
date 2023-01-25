@@ -54,6 +54,7 @@ const Confirmation = ({
   const [promoErrors, setPromoErrors] = useState({})
   const [loading, setLoading] = useState(false)
   const [clientSecret, setClientSecret] = useState(null)
+  const [savedMethodID, setSavedMethodID] = useState(null)
   const { cart, dispatchCart } = useContext(CartContext)
   const { dispatchUser } = useContext(UserContext)
   const { dispatchFeedback } = useContext(FeedbackContext)
@@ -262,19 +263,21 @@ const Confirmation = ({
     const result = await stripe.confirmCardPayment(
       clientSecret,
       {
-        payment_method: {
-          card: cardElement,
-          billing_details: {
-            address: {
-              city: billingLocation.city,
-              state: billingLocation.state,
-              line1: billingLocation.street,
+        payment_method: savedMethodID
+          ? savedMethodID
+          : {
+              card: cardElement,
+              billing_details: {
+                address: {
+                  city: billingLocation.city,
+                  state: billingLocation.state,
+                  line1: billingLocation.street,
+                },
+                email: billingDetails.email,
+                name: billingDetails.name,
+                phone: billingDetails.phone,
+              },
             },
-            email: billingDetails.email,
-            name: billingDetails.name,
-            phone: billingDetails.phone,
-          },
-        },
         setup_future_usage: saveCard ? "off_session" : undefined,
       },
       { idempotencyKey }
@@ -370,6 +373,10 @@ const Confirmation = ({
             idempotencyKey,
             storedIntent,
             email: detailValues.email,
+            savedCard:
+              user.jwt && user.paymentMethods[cardSlot].last4 !== ""
+                ? card.last4
+                : undefined,
           },
           {
             headers: user.jwt
@@ -381,6 +388,7 @@ const Confirmation = ({
         )
         .then(response => {
           setClientSecret(response.data.data.attributes.client_secret)
+          setSavedMethodID(response.data.data.attributes.savedMethodID)
           localStorage.setItem(
             "intentID",
             response.data.data.attributes.intentID
@@ -419,8 +427,6 @@ const Confirmation = ({
         })
     }
   }, [cart])
-
-  console.log("CLIENT SECRET", clientSecret)
 
   return (
     <Grid item container sx={sx.mainContainer} direction="column">
