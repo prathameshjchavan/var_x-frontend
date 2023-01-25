@@ -8,7 +8,7 @@ import {
   useTheme,
 } from "@mui/material"
 import { styled } from "@mui/material/styles"
-import React, { useMemo } from "react"
+import React, { useCallback, useMemo } from "react"
 import cardIcon from "../../images/card.svg"
 import Slots from "./Slots"
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js"
@@ -44,22 +44,25 @@ const Payments = ({
     if (!stripe || !elements) return
   }
 
-  const handleCardChange = async event => {
-    if (event.complete) {
-      const cardElement = elements.getElement(CardElement)
-      const { paymentMethod } = await stripe.createPaymentMethod({
-        type: "card",
-        card: cardElement,
-      })
-      setCard({
-        brand: paymentMethod.card.brand,
-        last4: paymentMethod.card.last4,
-      })
-      setCardError(false)
-    } else {
-      setCardError(true)
-    }
-  }
+  const handleCardChange = useCallback(
+    async event => {
+      if (event.complete) {
+        const cardElement = elements.getElement(CardElement)
+        const { paymentMethod } = await stripe.createPaymentMethod({
+          type: "card",
+          card: cardElement,
+        })
+        setCard({
+          brand: paymentMethod.card.brand,
+          last4: paymentMethod.card.last4,
+        })
+        setCardError(false)
+      } else {
+        setCardError(true)
+      }
+    },
+    [elements, stripe]
+  )
 
   // styled components
   const Form = styled("form")(() => ({
@@ -90,7 +93,7 @@ const Payments = ({
         />
       </Form>
     ),
-    []
+    [handleCardChange]
   )
 
   // sx prop

@@ -274,8 +274,8 @@ const Confirmation = ({
             name: billingDetails.name,
             phone: billingDetails.phone,
           },
-          setup_future_usage: saveCard ? "off_session" : undefined,
         },
+        setup_future_usage: saveCard ? "off_session" : undefined,
       },
       { idempotencyKey }
     )
