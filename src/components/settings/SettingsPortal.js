@@ -25,6 +25,7 @@ import { useSpring, useSprings, animated } from "@react-spring/web"
 import useResizeAware from "react-resize-aware"
 import Settings from "./Settings"
 import { setUser } from "../../contexts/actions"
+import OrderHistory from "./OrderHistory"
 
 const SettingsPortal = () => {
   const { user, dispatchUser, defaultUser } = useContext(UserContext)
@@ -41,7 +42,7 @@ const SettingsPortal = () => {
       {
         label: "Order History",
         icon: orderHistoryIcon,
-        component: Settings,
+        component: OrderHistory,
       },
       {
         label: "Favorites",
