@@ -10,11 +10,12 @@ const OrderHistory = () => {
 
   // DataGrid data
   const columns = [
-    { field: "shipping", headerName: "Shipping", flex: 1 },
+    { field: "shipping", headerName: "Shipping", sortable: false, flex: 1 },
     { field: "order", headerName: "Order", flex: 1 },
     { field: "status", headerName: "Status", flex: 1 },
-    { field: "date", headerName: "Date", flex: 1 },
+    { field: "date", headerName: "Date", type: "date", flex: 1 },
     { field: "total", headerName: "Total", flex: 1 },
+    { field: "", flex: 1.5, disableColumnMenu: true, sortable: false },
   ]
   const rows = []
 
@@ -23,6 +24,34 @@ const OrderHistory = () => {
     item: {
       height: "100%",
       width: "100%",
+    },
+    dataGrid: {
+      "& .MuiDataGrid-columnHeaderTitle": {
+        fontWeight: 600,
+        textAlign: "center",
+      },
+      "& .MuiDataGrid-columnSeparator": {
+        display: "none",
+      },
+      "& .MuiDataGrid-columnHeader": {
+        position: "relative",
+      },
+      "& .MuiDataGrid-columnHeaderTitleContainer": {
+        position: "absolute",
+        left: "50%",
+        transform: "translateX(-50%)",
+        paddingLeft: "27.975px",
+      },
+      "& .MuiDataGrid-columnHeaderTitleContainer .MuiDataGrid-iconButtonContainer":
+        {
+          width: "27.975px",
+        },
+      "& .MuiDataGrid-menuIcon": {
+        marginLeft: "auto",
+      },
+      "& .MuiDataGrid-columnHeader--moving": {
+        backgroundColor: "transparent",
+      },
     },
   }
 
@@ -42,7 +71,7 @@ const OrderHistory = () => {
 
   return (
     <Grid item sx={sx.item}>
-      <DataGrid columns={columns} rows={rows} pageSize={5} />
+      <DataGrid sx={sx.dataGrid} columns={columns} rows={rows} pageSize={5} />
     </Grid>
   )
 }
