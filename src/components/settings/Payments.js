@@ -41,7 +41,8 @@ const Payments = ({
   const { dispatchFeedback } = useContext(FeedbackContext)
   const { dispatchUser } = useContext(UserContext)
   const matchesVertical = useMediaQuery("(max-width: 1300px)")
-  const matchesXS = useMediaQuery("(max-width: 700px)")
+  const matchesXS = useMediaQuery("(max-width: 500px)")
+  const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
   const card = useMemo(
     () =>
       user.name === "Guest"
@@ -117,7 +118,7 @@ const Payments = ({
 
   // styled components
   const Form = styled("form")(() => ({
-    width: "75%",
+    width: matchesSM ? "85%" : "75%",
     borderBottom: "2px solid #fff",
     height: "2rem",
     marginTop: "-1rem",
@@ -157,10 +158,11 @@ const Payments = ({
     },
     number: {
       color: "#fff",
-      marginBottom: "5rem",
+      marginBottom: matchesXS ? (checkout ? "1rem" : undefined) : "5rem",
+      fontSize: checkout ? "1.5rem" : undefined,
     },
     icon: {
-      marginBottom: matchesXS ? "1rem" : "3rem",
+      marginBottom: matchesXS ? (checkout ? "3rem" : "1rem") : "3rem",
     },
     removeCard: {
       backgroundColor: "#fff",
@@ -169,7 +171,8 @@ const Payments = ({
       "&:hover": {
         backgroundColor: "#fff",
       },
-      marginLeft: "2rem",
+      marginLeft: matchesXS ? "0px" : "2rem",
+      marginTop: checkout ? (matchesXS ? "0px" : "-0.25rem") : undefined,
     },
     removeCardText: {
       fontSize: "1rem",
@@ -186,10 +189,19 @@ const Payments = ({
       "& .MuiTypography-root": {
         color: "#fff",
         fontWeight: "bold",
+        fontSize: matchesXS ? "1.25rem" : undefined,
       },
     },
     spinner: {
       marginLeft: loading ? "3rem" : undefined,
+    },
+    switchItem: {
+      width: matchesSM ? "100%" : undefined,
+    },
+    numberWrapper: {
+      flexDirection: matchesXS ? "column" : "row",
+      alignItems: matchesXS ? "center" : undefined,
+      marginBottom: checkout && matchesXS ? "6rem" : undefined,
     },
   }
 
@@ -220,7 +232,7 @@ const Payments = ({
       <Grid item sx={sx.icon}>
         <img src={cardIcon} alt="payment settings" />
       </Grid>
-      <Grid item container justifyContent="center">
+      <Grid item container justifyContent="center" sx={sx.numberWrapper}>
         {checkout && !card.last4 && cardWrapper}
         <Grid item>
           <Typography align="center" variant="h3" sx={sx.number}>
@@ -252,7 +264,7 @@ const Payments = ({
       <Grid item container justifyContent="space-between" sx={sx.slotContainer}>
         <Slots slot={slot} setSlot={setSlot} noLabel />
         {checkout && user.name !== "Guest" && (
-          <Grid item>
+          <Grid item sx={sx.switchItem}>
             <FormControlLabel
               sx={sx.switchWrapper}
               label="Save Card For Future Use"
