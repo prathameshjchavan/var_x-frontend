@@ -6,6 +6,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material"
+import OrderDetailItem from "./OrderDetailItem"
 
 const OrderDetails = ({ orders, open, setOpen }) => {
   const theme = useTheme()
@@ -104,7 +105,7 @@ const OrderDetails = ({ orders, open, setOpen }) => {
           </Grid>
         </Grid>
         <Grid item sx={sx.padding}>
-          <Typography variant="body2" sx={sx.bold}>
+          <Typography variant="body2" sx={{ ...sx.bold }}>
             Billing
           </Typography>
           <Typography variant="body2">
@@ -157,7 +158,7 @@ const OrderDetails = ({ orders, open, setOpen }) => {
                 <Typography variant="body2">{price.string}</Typography>
               ) : (
                 <Chip
-                  label={`$${price.value.toFixed(2)}`}
+                  label={`$${price.value?.toFixed(2)}`}
                   color="secondary"
                   sx={sx.bold}
                 />
@@ -165,6 +166,14 @@ const OrderDetails = ({ orders, open, setOpen }) => {
             </Grid>
           </Grid>
         ))}
+        <Grid item sx={{ ...sx.dark, ...sx.padding }}>
+          <Typography variant="body2" sx={sx.bold} gutterBottom>
+            Items
+          </Typography>
+          {order?.items.map(item => (
+            <OrderDetailItem key={item.variant.id} item={item} />
+          ))}
+        </Grid>
       </Grid>
     </SwipeableDrawer>
   )
