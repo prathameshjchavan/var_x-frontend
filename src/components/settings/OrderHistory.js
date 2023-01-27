@@ -83,6 +83,15 @@ const OrderHistory = ({ setSelectedSetting }) => {
         width: "2rem",
         height: "2rem",
       },
+      "& .MuiDataGrid-overlay": {
+        top: "-8rem",
+      },
+      "& .MuiDataGrid-main > div": {
+        overflow: "hidden",
+      },
+      "& .MuiDataGrid-virtualScroller": {
+        height: "calc(904px - 8rem) !important",
+      },
     },
     chip: {
       "& .MuiChip-label": {
@@ -114,30 +123,30 @@ const OrderHistory = ({ setSelectedSetting }) => {
 
   // DataGrid data
   const columns = [
-    { field: "shipping", headerName: "Shipping", sortable: false, flex: 1 },
-    { field: "order", headerName: "Order", flex: 1 },
+    { field: "shipping", headerName: "Shipping", sortable: false, width: 400 },
+    { field: "order", headerName: "Order", width: 250 },
     {
       field: "status",
       headerName: "Status",
-      flex: 1,
+      width: 250,
       renderCell: ({ value }) => (
         <Chip label={value} sx={sx.chip} color="secondary" />
       ),
     },
-    { field: "date", headerName: "Date", type: "date", flex: 1 },
+    { field: "date", headerName: "Date", type: "date", width: 250 },
     {
       field: "total",
       headerName: "Total",
-      flex: 1,
+      width: 250,
       renderCell: ({ value }) => (
         <Chip label={`$${value}`} sx={sx.chip} color="secondary" />
       ),
     },
     {
       field: "",
-      flex: 1.5,
       disableColumnMenu: true,
       sortable: false,
+      width: 350,
       renderCell: () => (
         <IconButton>
           <img src={detailsIcon} alt="order details" />

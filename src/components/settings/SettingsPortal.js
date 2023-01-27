@@ -38,6 +38,7 @@ const SettingsPortal = () => {
         label: "Settings",
         icon: settingsIcon,
         component: Settings,
+        large: true,
       },
       {
         label: "Order History",
@@ -89,6 +90,7 @@ const SettingsPortal = () => {
       color: theme.palette.secondary.main,
     },
     button: {
+      display: "flex",
       backgroundColor: theme.palette.primary.main,
       "&:hover": !showComponent
         ? {
@@ -170,7 +172,7 @@ const SettingsPortal = () => {
         const size = {
           height:
             selectedSetting === button.label
-              ? matchesLG
+              ? matchesLG && button.large
                 ? "120rem"
                 : "60rem"
               : buttonHeight,
