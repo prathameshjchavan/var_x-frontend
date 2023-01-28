@@ -7,6 +7,7 @@ const OrderDetailItem = ({ item }) => {
   const sx = {
     itemInfo: {
       textAlign: "right",
+      flex: 1,
     },
     container: {
       height: "10rem",

@@ -4,6 +4,7 @@ import {
   SwipeableDrawer,
   Chip,
   Typography,
+  Button,
   useTheme,
   useMediaQuery,
 } from "@mui/material"
@@ -42,7 +43,7 @@ const OrderDetails = ({ orders, open, setOpen }) => {
       "& .MuiPaper-root": {
         height: "100%",
         width: matchesSM ? "100%" : "30rem",
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: "transparent",
       },
     },
     id: {
@@ -73,6 +74,9 @@ const OrderDetails = ({ orders, open, setOpen }) => {
     dark: {
       backgroundColor: theme.palette.secondary.main,
     },
+    light: {
+      backgroundColor: theme.palette.primary.main,
+    },
     prices: {
       padding: "0.5rem 1rem",
     },
@@ -81,7 +85,7 @@ const OrderDetails = ({ orders, open, setOpen }) => {
     },
     text: {
       overflow: "hidden",
-      whiteSpace: "no-wrap",
+      whiteSpace: "nowrap",
       textOverflow: "ellipsis",
       [theme.breakpoints.down("sm")]: {
         fontSize: "1.25rem",
@@ -89,6 +93,9 @@ const OrderDetails = ({ orders, open, setOpen }) => {
     },
     priceValue: {
       maxWidth: "100%",
+    },
+    spacer: {
+      minHeight: "10rem",
     },
   }
 
@@ -102,7 +109,14 @@ const OrderDetails = ({ orders, open, setOpen }) => {
       disableBackdropTransition={!iOS}
       disableDiscovery={iOS}
     >
-      <Grid container direction="column">
+      <Grid
+        item
+        sx={sx.spacer}
+        component={Button}
+        disableRipple
+        onClick={() => setOpen(null)}
+      />
+      <Grid container direction="column" sx={sx.light}>
         <Grid item sx={sx.dark}>
           <Typography variant="h2" sx={sx.id}>
             Order #{order?.id}
