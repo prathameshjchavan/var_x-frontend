@@ -46,6 +46,10 @@ const FeaturedProducts = () => {
       padding: "0 2.5rem",
       [theme.breakpoints.down("lg")]: {
         paddingBottom: "15rem",
+        height: "220rem",
+        "& > :not(:last-of-type)": {
+          marginBottom: "8rem",
+        },
       },
     },
     frame: {
