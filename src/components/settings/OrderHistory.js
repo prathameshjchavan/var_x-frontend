@@ -90,7 +90,7 @@ const OrderHistory = ({ setSelectedSetting }) => {
         overflow: "hidden",
       },
       "& .MuiDataGrid-virtualScroller": {
-        height: "calc(904px - 8rem) !important",
+        height: "calc(904px - 8rem + 26px) !important",
       },
     },
     chip: {

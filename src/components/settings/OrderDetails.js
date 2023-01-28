@@ -5,11 +5,13 @@ import {
   Chip,
   Typography,
   useTheme,
+  useMediaQuery,
 } from "@mui/material"
 import OrderDetailItem from "./OrderDetailItem"
 
 const OrderDetails = ({ orders, open, setOpen }) => {
   const theme = useTheme()
+  const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
   const iOS =
     typeof navigator !== "undefined" &&
     /iPad|iPhone|iPod/.test(navigator.userAgent)
@@ -39,7 +41,7 @@ const OrderDetails = ({ orders, open, setOpen }) => {
     drawer: {
       "& .MuiPaper-root": {
         height: "100%",
-        width: "30rem",
+        width: matchesSM ? "100%" : "30rem",
         backgroundColor: theme.palette.primary.main,
       },
     },
@@ -74,6 +76,20 @@ const OrderDetails = ({ orders, open, setOpen }) => {
     prices: {
       padding: "0.5rem 1rem",
     },
+    detailContainer: {
+      width: "100%",
+    },
+    text: {
+      overflow: "hidden",
+      whiteSpace: "no-wrap",
+      textOverflow: "ellipsis",
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "1.25rem",
+      },
+    },
+    priceValue: {
+      maxWidth: "100%",
+    },
   }
 
   return (
@@ -82,7 +98,7 @@ const OrderDetails = ({ orders, open, setOpen }) => {
       onOpen={() => null}
       onClose={() => setOpen(null)}
       sx={sx.drawer}
-      anchor="right"
+      anchor={matchesSM ? "bottom" : "right"}
       disableBackdropTransition={!iOS}
       disableDiscovery={iOS}
     >
@@ -104,11 +120,11 @@ const OrderDetails = ({ orders, open, setOpen }) => {
             }`}</Typography>
           </Grid>
         </Grid>
-        <Grid item sx={sx.padding}>
+        <Grid item sx={{ ...sx.padding, ...sx.detailContainer }}>
           <Typography variant="body2" sx={{ ...sx.bold }}>
             Billing
           </Typography>
-          <Typography variant="body2">
+          <Typography variant="body2" sx={sx.text}>
             {order?.billingInfo.name}
             <br />
             {order?.billingInfo.email}
@@ -122,11 +138,11 @@ const OrderDetails = ({ orders, open, setOpen }) => {
             {order?.billingAddress.zip}
           </Typography>
         </Grid>
-        <Grid item sx={{ ...sx.padding, ...sx.dark }}>
+        <Grid item sx={{ ...sx.padding, ...sx.dark, ...sx.detailContainer }}>
           <Typography variant="body2" sx={sx.bold}>
             Shipping
           </Typography>
-          <Typography variant="body2">
+          <Typography variant="body2" sx={sx.text}>
             {order?.shippingInfo.name}
             <br />
             {order?.shippingInfo.email}
@@ -153,9 +169,11 @@ const OrderDetails = ({ orders, open, setOpen }) => {
                 {price.label}
               </Typography>
             </Grid>
-            <Grid item>
+            <Grid item sx={sx.priceValue}>
               {price.string ? (
-                <Typography variant="body2">{price.string}</Typography>
+                <Typography variant="body2" sx={sx.text}>
+                  {price.string}
+                </Typography>
               ) : (
                 <Chip
                   label={`$${price.value?.toFixed(2)}`}
