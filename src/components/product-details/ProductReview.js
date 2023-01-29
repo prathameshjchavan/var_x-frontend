@@ -1,6 +1,6 @@
 import { Button, Grid, Typography, useTheme } from "@mui/material"
 import { styled } from "@mui/material/styles"
-import React, { useContext, useState } from "react"
+import React, { useContext, useState, useRef } from "react"
 import Rating from "../home/Rating"
 import { UserContext } from "../../contexts"
 import Fields from "../auth/Fields"
@@ -8,6 +8,7 @@ import Fields from "../auth/Fields"
 const ProductReview = () => {
   const theme = useTheme()
   const { user } = useContext(UserContext)
+  const ratingRef = useRef(null)
   const [values, setValues] = useState({ message: "" })
 
   // sx prop
@@ -48,7 +49,14 @@ const ProductReview = () => {
             {user.name}
           </Typography>
         </Grid>
-        <Grid item>
+        <Grid
+          item
+          ref={ratingRef}
+          onMouseMove={e => {
+            const hoverRating =
+              ratingRef.current.getBoundingClientRect().left - e.clientX
+          }}
+        >
           <Rating number={0} size={2.5} />
         </Grid>
       </Grid>
@@ -77,7 +85,6 @@ const ProductReview = () => {
             <ButtonText type="cancel">Cancel</ButtonText>
           </Button>
         </Grid>
-        <Grid item></Grid>
       </Grid>
     </Grid>
   )
