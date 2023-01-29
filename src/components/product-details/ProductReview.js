@@ -11,6 +11,7 @@ const ProductReview = () => {
   const ratingRef = useRef(null)
   const [values, setValues] = useState({ message: "" })
   const [tempRating, setTempRating] = useState(0)
+  const [rating, setRating] = useState(null)
 
   // sx prop
   const sx = {
@@ -25,6 +26,9 @@ const ProductReview = () => {
     },
     buttonContainer: {
       marginTop: "2rem",
+    },
+    rating: {
+      cursor: "pointer",
     },
   }
 
@@ -52,16 +56,26 @@ const ProductReview = () => {
         </Grid>
         <Grid
           item
+          sx={sx.rating}
           ref={ratingRef}
           onMouseMove={e => {
             const hoverRating =
               ((e.clientX - ratingRef.current.getBoundingClientRect().left) /
                 ratingRef.current.getBoundingClientRect().width) *
               5
-            setTempRating(Math.ceil(hoverRating * 2) / 2)
+            setTempRating(Math.round(hoverRating * 2) / 2)
           }}
+          onMouseLeave={() => {
+            if (tempRating > rating) {
+              setTempRating(rating)
+            }
+          }}
+          onClick={() => setRating(tempRating)}
         >
-          <Rating number={tempRating} size={2.5} />
+          <Rating
+            number={rating > tempRating ? rating : tempRating}
+            size={2.5}
+          />
         </Grid>
       </Grid>
       <Grid item>
