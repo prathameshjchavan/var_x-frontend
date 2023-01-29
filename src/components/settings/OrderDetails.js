@@ -96,6 +96,7 @@ const OrderDetails = ({ orders, open, setOpen }) => {
     },
     spacer: {
       minHeight: "10rem",
+      display: matchesSM ? undefined : "none",
     },
   }
 

@@ -4,12 +4,12 @@ import halfStar from "../../images/half-star.svg"
 import emptyStar from "../../images/empty-star.svg"
 import { styled } from "@mui/material/styles"
 
-const Rating = ({ number }) => {
+const Rating = ({ number, size }) => {
   const diff = 5 - Math.ceil(number)
 
   const Star = styled("img")(() => ({
-    height: "2rem",
-    width: "2rem",
+    height: `${size || 2}rem`,
+    width: `${size || 2}rem`,
   }))
 
   return (

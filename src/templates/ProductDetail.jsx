@@ -6,6 +6,7 @@ import RecentlyViewed from "../components/product-details/RecentlyViewed"
 import Layout from "../components/ui/layout"
 import { useQuery } from "@apollo/client"
 import { GET_DETAILS } from "../apollo/queries"
+import ProductReviews from "../components/product-details/ProductReviews"
 
 const ProductDetail = ({
   pageContext: { id, name, category, description, product, variants },
@@ -89,6 +90,7 @@ const ProductDetail = ({
           <RecentlyViewed
             products={JSON.parse(window.localStorage.getItem("recentlyViewed"))}
           />
+          <ProductReviews />
         </Grid>
       ) : (
         <Grid container sx={{ height: "100vh" }} />
