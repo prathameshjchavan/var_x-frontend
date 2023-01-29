@@ -10,6 +10,7 @@ const ProductReview = () => {
   const { user } = useContext(UserContext)
   const ratingRef = useRef(null)
   const [values, setValues] = useState({ message: "" })
+  const [tempRating, setTempRating] = useState(0)
 
   // sx prop
   const sx = {
@@ -54,10 +55,13 @@ const ProductReview = () => {
           ref={ratingRef}
           onMouseMove={e => {
             const hoverRating =
-              ratingRef.current.getBoundingClientRect().left - e.clientX
+              ((e.clientX - ratingRef.current.getBoundingClientRect().left) /
+                ratingRef.current.getBoundingClientRect().width) *
+              5
+            setTempRating(Math.ceil(hoverRating * 2) / 2)
           }}
         >
-          <Rating number={0} size={2.5} />
+          <Rating number={tempRating} size={2.5} />
         </Grid>
       </Grid>
       <Grid item>
