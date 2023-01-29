@@ -14,6 +14,7 @@ const Fields = ({
   fullWidth,
   settings,
   sm,
+  noError,
 }) => {
   const theme = useTheme()
 
@@ -60,16 +61,18 @@ const Fields = ({
           disabled={disabled}
           onChange={e => {
             setValues({ ...values, [field]: e.target.value })
+            if (noError) return
             const valid = validateHelper(e)
             if (errors[field] || valid[field] === true)
               setErrors({ ...errors, [field]: !valid[field] })
           }}
           onBlur={e => {
+            if (noError) return
             const valid = validateHelper(e)
             setErrors({ ...errors, [field]: !valid[field] })
           }}
-          error={errors[field]}
-          helperText={errors[field] && fields[field].helperText}
+          error={noError ? false : errors[field]}
+          helperText={noError ? "" : errors[field] && fields[field].helperText}
           sx={sx.textfield}
           InputProps={{
             startAdornment: (
