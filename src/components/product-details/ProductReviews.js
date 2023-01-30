@@ -2,7 +2,7 @@ import { Grid } from "@mui/material"
 import React from "react"
 import ProductReview from "./ProductReview"
 
-const ProductReviews = () => {
+const ProductReviews = ({ product }) => {
   // sx prop
   const sx = {
     reviews: {
@@ -11,7 +11,7 @@ const ProductReviews = () => {
   }
   return (
     <Grid item container direction="column" sx={sx.reviews}>
-      <ProductReview />
+      <ProductReview product={product} />
     </Grid>
   )
 }

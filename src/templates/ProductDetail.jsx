@@ -90,7 +90,7 @@ const ProductDetail = ({
           <RecentlyViewed
             products={JSON.parse(window.localStorage.getItem("recentlyViewed"))}
           />
-          <ProductReviews />
+          <ProductReviews product={id} />
         </Grid>
       ) : (
         <Grid container sx={{ height: "100vh" }} />

@@ -1,17 +1,27 @@
-import { Button, Grid, Typography, useTheme } from "@mui/material"
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  Typography,
+  useTheme,
+} from "@mui/material"
 import { styled } from "@mui/material/styles"
 import React, { useContext, useState, useRef } from "react"
 import Rating from "../home/Rating"
-import { UserContext } from "../../contexts"
+import { UserContext, FeedbackContext } from "../../contexts"
+import { setSnackbar } from "../../contexts/actions"
 import Fields from "../auth/Fields"
+import axios from "axios"
 
-const ProductReview = () => {
+const ProductReview = ({ product }) => {
   const theme = useTheme()
   const { user } = useContext(UserContext)
+  const { dispatchFeedback } = useContext(FeedbackContext)
   const ratingRef = useRef(null)
   const [values, setValues] = useState({ message: "" })
   const [tempRating, setTempRating] = useState(0)
   const [rating, setRating] = useState(null)
+  const [loading, setLoading] = useState(null)
 
   // sx prop
   const sx = {
@@ -37,6 +47,45 @@ const ProductReview = () => {
       helperText: "",
       placeholder: "Write you review",
     },
+  }
+
+  // functions
+  const handleReview = () => {
+    setLoading("leave-review")
+
+    axios
+      .post(
+        `${process.env.STRAPI_API_URL}/api/reviews`,
+        {
+          text: values.message,
+          rating,
+          product,
+        },
+        { headers: { Authorization: `Bearer ${user.jwt}` } }
+      )
+      .then(response => {
+        setValues({ message: "" })
+        setRating(null)
+        dispatchFeedback(
+          setSnackbar({
+            status: "success",
+            message: "Product Reviewed Successfully",
+          })
+        )
+      })
+      .catch(error => {
+        console.error(error)
+        dispatchFeedback(
+          setSnackbar({
+            status: "error",
+            message:
+              "There was a problem leaving your review. Please try again.",
+          })
+        )
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   // styled components
@@ -94,9 +143,18 @@ const ProductReview = () => {
       </Grid>
       <Grid item container sx={sx.buttonContainer}>
         <Grid item>
-          <Button variant="contained" color="primary">
-            <ButtonText type="review">Leave Review</ButtonText>
-          </Button>
+          {loading === "leave-review" ? (
+            <CircularProgress />
+          ) : (
+            <Button
+              onClick={handleReview}
+              disabled={!rating}
+              variant="contained"
+              color="primary"
+            >
+              <ButtonText type="review">Leave Review</ButtonText>
+            </Button>
+          )}
         </Grid>
         <Grid item>
           <Button variant="contained" sx={sx.cancelButton}>
