@@ -13,15 +13,28 @@ import { setSnackbar } from "../../contexts/actions"
 import Fields from "../auth/Fields"
 import axios from "axios"
 
-const ProductReview = ({ product, review, setEdit }) => {
+const ProductReview = ({ product, review, reviews, setEdit }) => {
   const theme = useTheme()
   const { user } = useContext(UserContext)
   const { dispatchFeedback } = useContext(FeedbackContext)
+  const found = !review
+    ? reviews.data.find(
+        review => parseInt(review.attributes.user.data.id) === user.id
+      )
+    : null
   const ratingRef = useRef(null)
-  const [values, setValues] = useState({ message: "" })
+  const [values, setValues] = useState({
+    message: found ? found.attributes.text : "",
+  })
   const [tempRating, setTempRating] = useState(0)
-  const [rating, setRating] = useState(review ? review.attributes.rating : null)
+  const [rating, setRating] = useState(
+    review ? review.attributes.rating : found ? found.attributes.rating : null
+  )
   const [loading, setLoading] = useState(null)
+  const buttonDisabled = found
+    ? found.attributes.text === values.message &&
+      found.attributes.rating === rating
+    : !rating
 
   // sx prop
   const sx = {
@@ -161,7 +174,7 @@ const ProductReview = ({ product, review, setEdit }) => {
             ) : (
               <Button
                 onClick={handleReview}
-                disabled={!rating}
+                disabled={buttonDisabled}
                 variant="contained"
                 color="primary"
               >

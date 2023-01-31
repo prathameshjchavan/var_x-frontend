@@ -23,9 +23,16 @@ const ProductReviews = ({ product, edit, setEdit }) => {
 
   return (
     <Grid id="reviews" item container direction="column" sx={sx.reviews}>
-      {edit && <ProductReview product={product} setEdit={setEdit} />}
+      {edit && (
+        <ProductReview reviews={reviews} product={product} setEdit={setEdit} />
+      )}
       {reviews?.data?.map(review => (
-        <ProductReview key={review.id} product={product} review={review} />
+        <ProductReview
+          key={review.id}
+          reviews={reviews}
+          product={product}
+          review={review}
+        />
       ))}
     </Grid>
   )

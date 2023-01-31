@@ -33,6 +33,7 @@ export const GET_REVIEWS = gql`
                 createdAt
                 user {
                   data {
+                    id
                     attributes {
                       name
                     }
