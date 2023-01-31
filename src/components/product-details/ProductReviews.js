@@ -1,11 +1,13 @@
 import { Grid } from "@mui/material"
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import ProductReview from "./ProductReview"
 import { useQuery } from "@apollo/client"
 import { GET_REVIEWS } from "../../apollo/queries"
+import { UserContext } from "../../contexts"
 
 const ProductReviews = ({ product, edit, setEdit }) => {
   const [reviews, setReviews] = useState([])
+  const { user } = useContext(UserContext)
   const { data } = useQuery(GET_REVIEWS, { variables: { id: product } })
 
   // sx prop
@@ -24,16 +26,27 @@ const ProductReviews = ({ product, edit, setEdit }) => {
   return (
     <Grid id="reviews" item container direction="column" sx={sx.reviews}>
       {edit && (
-        <ProductReview reviews={reviews} product={product} setEdit={setEdit} />
-      )}
-      {reviews?.data?.map(review => (
         <ProductReview
-          key={review.id}
           reviews={reviews}
           product={product}
-          review={review}
+          setEdit={setEdit}
+          user={user}
         />
-      ))}
+      )}
+      {reviews?.data
+        ?.filter(review =>
+          edit
+            ? review.attributes.user.data.attributes.name !== user.name
+            : true
+        )
+        .map(review => (
+          <ProductReview
+            key={review.id}
+            reviews={reviews}
+            product={product}
+            review={review}
+          />
+        ))}
     </Grid>
   )
 }

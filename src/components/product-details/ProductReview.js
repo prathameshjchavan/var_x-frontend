@@ -8,14 +8,13 @@ import {
 import { styled } from "@mui/material/styles"
 import React, { useContext, useState, useRef } from "react"
 import Rating from "../home/Rating"
-import { UserContext, FeedbackContext } from "../../contexts"
+import { FeedbackContext } from "../../contexts"
 import { setSnackbar } from "../../contexts/actions"
 import Fields from "../auth/Fields"
 import axios from "axios"
 
-const ProductReview = ({ product, review, reviews, setEdit }) => {
+const ProductReview = ({ product, review, reviews, setEdit, user }) => {
   const theme = useTheme()
-  const { user } = useContext(UserContext)
   const { dispatchFeedback } = useContext(FeedbackContext)
   const found = !review
     ? reviews.data.find(
@@ -178,7 +177,9 @@ const ProductReview = ({ product, review, reviews, setEdit }) => {
                 variant="contained"
                 color="primary"
               >
-                <ButtonText type="review">Leave Review</ButtonText>
+                <ButtonText type="review">
+                  {found ? "Edit" : "Leave"} Review
+                </ButtonText>
               </Button>
             )}
           </Grid>
