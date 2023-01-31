@@ -13,18 +13,21 @@ import { setSnackbar } from "../../contexts/actions"
 import Fields from "../auth/Fields"
 import axios from "axios"
 
-const ProductReview = ({ product }) => {
+const ProductReview = ({ product, review }) => {
   const theme = useTheme()
   const { user } = useContext(UserContext)
   const { dispatchFeedback } = useContext(FeedbackContext)
   const ratingRef = useRef(null)
   const [values, setValues] = useState({ message: "" })
   const [tempRating, setTempRating] = useState(0)
-  const [rating, setRating] = useState(null)
+  const [rating, setRating] = useState(review ? review.attributes.rating : null)
   const [loading, setLoading] = useState(null)
 
   // sx prop
   const sx = {
+    review: {
+      marginBottom: "3rem",
+    },
     light: {
       color: theme.palette.primary.main,
     },
@@ -38,7 +41,7 @@ const ProductReview = ({ product }) => {
       marginTop: "2rem",
     },
     rating: {
-      cursor: "pointer",
+      cursor: !review ? "pointer" : undefined,
     },
   }
 
@@ -96,11 +99,11 @@ const ProductReview = ({ product }) => {
   }))
 
   return (
-    <Grid item container direction="column">
+    <Grid item container direction="column" sx={sx.review}>
       <Grid item container justifyContent="space-between">
         <Grid item>
           <Typography variant="h4" sx={sx.light}>
-            {user.name}
+            {review ? review.attributes.user.data.attributes.name : user.name}
           </Typography>
         </Grid>
         <Grid
@@ -108,6 +111,7 @@ const ProductReview = ({ product }) => {
           sx={sx.rating}
           ref={ratingRef}
           onMouseMove={e => {
+            if (review) return
             const hoverRating =
               ((e.clientX - ratingRef.current.getBoundingClientRect().left) /
                 ratingRef.current.getBoundingClientRect().width) *
@@ -115,11 +119,12 @@ const ProductReview = ({ product }) => {
             setTempRating(Math.round(hoverRating * 2) / 2)
           }}
           onMouseLeave={() => {
+            if (review) return
             if (tempRating > rating) {
               setTempRating(rating)
             }
           }}
-          onClick={() => setRating(tempRating)}
+          onClick={() => (review ? null : setRating(tempRating))}
         >
           <Rating
             number={rating > tempRating ? rating : tempRating}
@@ -129,39 +134,47 @@ const ProductReview = ({ product }) => {
       </Grid>
       <Grid item>
         <Typography variant="h5" sx={{ ...sx.light, ...sx.date }}>
-          {new Date().toLocaleDateString()}
+          {review
+            ? new Date(review.attributes.createdAt).toLocaleDateString()
+            : new Date().toLocaleDateString()}
         </Typography>
       </Grid>
       <Grid item>
-        <Fields
-          fields={fields}
-          values={values}
-          setValues={setValues}
-          fullWidth
-          noError
-        />
+        {review ? (
+          <Typography variant="body1">{review.attributes.text}</Typography>
+        ) : (
+          <Fields
+            fields={fields}
+            values={values}
+            setValues={setValues}
+            fullWidth
+            noError
+          />
+        )}
       </Grid>
-      <Grid item container sx={sx.buttonContainer}>
-        <Grid item>
-          {loading === "leave-review" ? (
-            <CircularProgress />
-          ) : (
-            <Button
-              onClick={handleReview}
-              disabled={!rating}
-              variant="contained"
-              color="primary"
-            >
-              <ButtonText type="review">Leave Review</ButtonText>
+      {!review && (
+        <Grid item container sx={sx.buttonContainer}>
+          <Grid item>
+            {loading === "leave-review" ? (
+              <CircularProgress />
+            ) : (
+              <Button
+                onClick={handleReview}
+                disabled={!rating}
+                variant="contained"
+                color="primary"
+              >
+                <ButtonText type="review">Leave Review</ButtonText>
+              </Button>
+            )}
+          </Grid>
+          <Grid item>
+            <Button variant="contained" sx={sx.cancelButton}>
+              <ButtonText type="cancel">Cancel</ButtonText>
             </Button>
-          )}
+          </Grid>
         </Grid>
-        <Grid item>
-          <Button variant="contained" sx={sx.cancelButton}>
-            <ButtonText type="cancel">Cancel</ButtonText>
-          </Button>
-        </Grid>
-      </Grid>
+      )}
     </Grid>
   )
 }

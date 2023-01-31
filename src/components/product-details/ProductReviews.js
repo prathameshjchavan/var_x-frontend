@@ -25,7 +25,7 @@ const ProductReviews = ({ product }) => {
 
   return (
     <Grid item container direction="column" sx={sx.reviews}>
-      {reviews.data.map(review => (
+      {reviews?.data?.map(review => (
         <ProductReview key={review.id} product={product} review={review} />
       ))}
     </Grid>
