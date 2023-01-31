@@ -13,7 +13,7 @@ import { setSnackbar } from "../../contexts/actions"
 import Fields from "../auth/Fields"
 import axios from "axios"
 
-const ProductReview = ({ product, review }) => {
+const ProductReview = ({ product, review, setEdit }) => {
   const theme = useTheme()
   const { user } = useContext(UserContext)
   const { dispatchFeedback } = useContext(FeedbackContext)
@@ -88,6 +88,7 @@ const ProductReview = ({ product, review }) => {
       })
       .finally(() => {
         setLoading(false)
+        setEdit(false)
       })
   }
 
@@ -169,7 +170,11 @@ const ProductReview = ({ product, review }) => {
             )}
           </Grid>
           <Grid item>
-            <Button variant="contained" sx={sx.cancelButton}>
+            <Button
+              onClick={() => setEdit(false)}
+              variant="contained"
+              sx={sx.cancelButton}
+            >
               <ButtonText type="cancel">Cancel</ButtonText>
             </Button>
           </Grid>

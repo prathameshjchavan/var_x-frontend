@@ -4,7 +4,7 @@ import ProductReview from "./ProductReview"
 import { useQuery } from "@apollo/client"
 import { GET_REVIEWS } from "../../apollo/queries"
 
-const ProductReviews = ({ product }) => {
+const ProductReviews = ({ product, edit, setEdit }) => {
   const [reviews, setReviews] = useState([])
   const { data } = useQuery(GET_REVIEWS, { variables: { id: product } })
 
@@ -21,10 +21,9 @@ const ProductReviews = ({ product }) => {
     }
   }, [data])
 
-  console.log(reviews)
-
   return (
-    <Grid item container direction="column" sx={sx.reviews}>
+    <Grid id="reviews" item container direction="column" sx={sx.reviews}>
+      {edit && <ProductReview product={product} setEdit={setEdit} />}
       {reviews?.data?.map(review => (
         <ProductReview key={review.id} product={product} review={review} />
       ))}

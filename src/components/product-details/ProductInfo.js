@@ -14,7 +14,9 @@ import Sizes from "../product-list/Sizes"
 import Swatches from "../product-list/Swatches"
 import QtyButton from "../product-list/QtyButton"
 import { getColorIndex, getStockIndex } from "../../utils/productList"
-import React, { useState, useEffect, useMemo } from "react"
+import { UserContext, FeedbackContext } from "../../contexts"
+import { setSnackbar } from "../../contexts/actions"
+import React, { useState, useEffect, useMemo, useContext } from "react"
 
 export const getStockDisplay = (stock, variantId) => {
   switch (stock) {
@@ -42,6 +44,7 @@ const ProductInfo = ({
   selectedVariant,
   setSelectedVariant,
   stock,
+  setEdit,
 }) => {
   const [selectedSize, setSelectedSize] = useState(
     variants[selectedVariant].size
@@ -57,6 +60,8 @@ const ProductInfo = ({
     variants[selectedVariant],
     selectedColor
   )
+  const { user } = useContext(UserContext)
+  const { dispatchFeedback } = useContext(FeedbackContext)
 
   const sizes = useMemo(
     () =>
@@ -184,6 +189,22 @@ const ProductInfo = ({
     })
   }
 
+  const handleEdit = () => {
+    if (user.name === "Guest") {
+      dispatchFeedback(
+        setSnackbar({
+          status: "error",
+          message: "You must be logged in to leave a review.",
+        })
+      )
+      return
+    }
+
+    setEdit(true)
+    const reviewsRef = document.getElementById("reviews")
+    reviewsRef.scrollIntoView({ behavior: "smooth" })
+  }
+
   return (
     <Grid
       item
@@ -220,7 +241,7 @@ const ProductInfo = ({
                 <Rating number={4.5} />
               </Grid>
               <Grid item>
-                <Button>
+                <Button onClick={handleEdit}>
                   <Typography variant="body2" sx={sx.reviewButton}>
                     Leave a Review &gt;
                   </Typography>

@@ -14,6 +14,7 @@ const ProductDetail = ({
   const [selectedVariant, setSelectedVariant] = useState(null)
   const [selectedImage, setSelectedImage] = useState(0)
   const [stock, setStock] = useState(null)
+  const [edit, setEdit] = useState(false)
   const searchParams = window.location.search
   const params = useMemo(
     () => new URLSearchParams(searchParams),
@@ -85,12 +86,13 @@ const ProductDetail = ({
               selectedVariant={selectedVariant}
               setSelectedVariant={setSelectedVariant}
               stock={stock}
+              setEdit={setEdit}
             />
           </Grid>
           <RecentlyViewed
             products={JSON.parse(window.localStorage.getItem("recentlyViewed"))}
           />
-          <ProductReviews product={id} />
+          <ProductReviews product={id} edit={edit} setEdit={setEdit} />
         </Grid>
       ) : (
         <Grid container sx={{ height: "100vh" }} />
