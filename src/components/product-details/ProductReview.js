@@ -13,7 +13,14 @@ import { setSnackbar } from "../../contexts/actions"
 import Fields from "../auth/Fields"
 import axios from "axios"
 
-const ProductReview = ({ product, review, reviews, setEdit, user }) => {
+const ProductReview = ({
+  product,
+  review,
+  reviews,
+  setReviews,
+  setEdit,
+  user,
+}) => {
   const theme = useTheme()
   const { dispatchFeedback } = useContext(FeedbackContext)
   const found = !review
@@ -68,19 +75,36 @@ const ProductReview = ({ product, review, reviews, setEdit, user }) => {
   const handleReview = () => {
     setLoading("leave-review")
 
-    axios
-      .post(
-        `${process.env.STRAPI_API_URL}/api/reviews`,
-        {
-          text: values.message,
-          rating,
-          product,
-        },
-        { headers: { Authorization: `Bearer ${user.jwt}` } }
-      )
+    const axiosFunction = found ? axios.put : axios.post
+    const route = found ? `/api/reviews/${found.id}` : `/api/reviews`
+    const body = { text: values.message, rating }
+    if (!found) {
+      body.product = product
+    }
+
+    axiosFunction(`${process.env.STRAPI_API_URL}${route}`, body, {
+      headers: { Authorization: `Bearer ${user.jwt}` },
+    })
       .then(response => {
         setValues({ message: "" })
         setRating(null)
+
+        if (found) {
+          const { text, rating, updatedAt } = response.data
+          let newReviews = structuredClone(reviews)
+          const reviewIndex = newReviews.data.findIndex(
+            review => review.id === found.id
+          )
+          const newReview = {
+            ...found,
+            attributes: { ...found.attributes, text, rating, updatedAt },
+          }
+
+          newReviews.data[reviewIndex] = newReview
+
+          setReviews(newReviews)
+        }
+
         dispatchFeedback(
           setSnackbar({
             status: "success",
@@ -93,8 +117,9 @@ const ProductReview = ({ product, review, reviews, setEdit, user }) => {
         dispatchFeedback(
           setSnackbar({
             status: "error",
-            message:
-              "There was a problem leaving your review. Please try again.",
+            message: `There was a problem ${
+              found ? "updating" : "leaving"
+            } your review. Please try again.`,
           })
         )
       })
@@ -148,7 +173,7 @@ const ProductReview = ({ product, review, reviews, setEdit, user }) => {
       <Grid item>
         <Typography variant="h5" sx={{ ...sx.light, ...sx.date }}>
           {review
-            ? new Date(review.attributes.createdAt).toLocaleDateString()
+            ? new Date(review.attributes.updatedAt).toLocaleDateString()
             : new Date().toLocaleDateString()}
         </Typography>
       </Grid>

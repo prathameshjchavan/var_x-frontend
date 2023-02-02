@@ -30,7 +30,7 @@ export const GET_REVIEWS = gql`
               attributes {
                 text
                 rating
-                createdAt
+                updatedAt
                 user {
                   data {
                     id

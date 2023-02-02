@@ -6,7 +6,7 @@ import { GET_REVIEWS } from "../../apollo/queries"
 import { UserContext } from "../../contexts"
 
 const ProductReviews = ({ product, edit, setEdit }) => {
-  const [reviews, setReviews] = useState([])
+  const [reviews, setReviews] = useState({})
   const { user } = useContext(UserContext)
   const { data } = useQuery(GET_REVIEWS, { variables: { id: product } })
 
@@ -28,6 +28,7 @@ const ProductReviews = ({ product, edit, setEdit }) => {
       {edit && (
         <ProductReview
           reviews={reviews}
+          setReviews={setReviews}
           product={product}
           setEdit={setEdit}
           user={user}
