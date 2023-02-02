@@ -24,22 +24,19 @@ const ProductReview = ({
   const theme = useTheme()
   const { dispatchFeedback } = useContext(FeedbackContext)
   const found = !review
-    ? reviews.data.find(
-        review => parseInt(review.attributes.user.data.id) === user.id
-      )
+    ? reviews.find(review => review.user.id === user.id)
     : null
   const ratingRef = useRef(null)
   const [values, setValues] = useState({
-    message: found ? found.attributes.text : "",
+    message: found ? found.text : "",
   })
   const [tempRating, setTempRating] = useState(0)
   const [rating, setRating] = useState(
-    review ? review.attributes.rating : found ? found.attributes.rating : null
+    review ? review.rating : found ? found.rating : null
   )
   const [loading, setLoading] = useState(null)
   const buttonDisabled = found
-    ? found.attributes.text === values.message &&
-      found.attributes.rating === rating
+    ? found.text === values.message && found.rating === rating
     : !rating
 
   // sx prop
@@ -64,7 +61,6 @@ const ProductReview = ({
     },
     delete: {
       backgroundColor: theme.palette.error.main,
-      margin: "0 0.5rem",
       color: "#fff",
       "&:hover": {
         backgroundColor: theme.palette.error.dark,
@@ -84,39 +80,58 @@ const ProductReview = ({
     setLoading(option === "delete" ? "delete-review" : "leave-review")
 
     const axiosFunction =
-      option === "delete" ? axios.delete : found ? axios.put : axios.post
+      option === "delete"
+        ? axios.delete
+        : option === "update"
+        ? axios.put
+        : axios.post
     const route = found ? `/api/reviews/${found.id}` : `/api/reviews`
     const body = option === "delete" ? {} : { text: values.message, rating }
+    const auth = { Authorization: `Bearer ${user.jwt}` }
     if (!found) {
       body.product = product
     }
 
-    axiosFunction(`${process.env.STRAPI_API_URL}${route}`, body, {
-      headers: { Authorization: `Bearer ${user.jwt}` },
-    })
+    axiosFunction(
+      `${process.env.STRAPI_API_URL}${route}`,
+      { ...body, headers: option === "delete" ? auth : undefined },
+      {
+        headers: auth,
+      }
+    )
       .then(response => {
         setValues({ message: "" })
         setRating(null)
 
-        if (found) {
-          const { text, rating, updatedAt } = response.data
-          let newReviews = structuredClone(reviews)
-          const reviewIndex = newReviews.data.findIndex(
+        const { id, text, rating, updatedAt } = response.data
+        let newReviews = structuredClone(reviews)
+        if (option === "create") {
+          const newReview = {
+            id,
+            text,
+            rating,
+            updatedAt,
+            user: { id: user.id, name: user.name },
+          }
+          newReviews.push(newReview)
+        } else {
+          const reviewIndex = newReviews.findIndex(
             review => review.id === found.id
           )
           if (option === "delete") {
-            newReviews.data.splice(reviewIndex, 1)
+            newReviews.splice(reviewIndex, 1)
           } else {
             const newReview = {
               ...found,
-              attributes: { ...found.attributes, text, rating, updatedAt },
+              text,
+              rating,
+              updatedAt,
             }
 
-            newReviews.data[reviewIndex] = newReview
+            newReviews[reviewIndex] = newReview
           }
-
-          setReviews(newReviews)
         }
+        setReviews(newReviews)
 
         dispatchFeedback(
           setSnackbar({
@@ -133,7 +148,11 @@ const ProductReview = ({
           setSnackbar({
             status: "error",
             message: `There was a problem ${
-              option === "delete" ? "removing" : found ? "updating" : "leaving"
+              option === "delete"
+                ? "removing"
+                : option === "update"
+                ? "updating"
+                : "leaving"
             } your review. Please try again.`,
           })
         )
@@ -159,7 +178,7 @@ const ProductReview = ({
       <Grid item container justifyContent="space-between">
         <Grid item>
           <Typography variant="h4" sx={sx.light}>
-            {review ? review.attributes.user.data.attributes.name : user.name}
+            {review ? review.user.name : user.name}
           </Typography>
         </Grid>
         <Grid
@@ -191,13 +210,13 @@ const ProductReview = ({
       <Grid item>
         <Typography variant="h5" sx={{ ...sx.light, ...sx.date }}>
           {review
-            ? new Date(review.attributes.updatedAt).toLocaleDateString()
+            ? new Date(review.updatedAt).toLocaleDateString()
             : new Date().toLocaleDateString()}
         </Typography>
       </Grid>
       <Grid item>
         {review ? (
-          <Typography variant="body1">{review.attributes.text}</Typography>
+          <Typography variant="body1">{review.text}</Typography>
         ) : (
           <Fields
             fields={fields}
@@ -209,13 +228,15 @@ const ProductReview = ({
         )}
       </Grid>
       {!review && (
-        <Grid item container sx={sx.buttonContainer}>
+        <Grid item container sx={sx.buttonContainer} columnSpacing="0.5rem">
           <Grid item>
             {loading === "leave-review" ? (
               <CircularProgress />
             ) : (
               <Button
-                onClick={handleReview}
+                onClick={() =>
+                  found ? handleReview("update") : handleReview("create")
+                }
                 disabled={buttonDisabled}
                 variant="contained"
                 color="primary"

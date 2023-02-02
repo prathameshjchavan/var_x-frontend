@@ -6,7 +6,7 @@ import { GET_REVIEWS } from "../../apollo/queries"
 import { UserContext } from "../../contexts"
 
 const ProductReviews = ({ product, edit, setEdit }) => {
-  const [reviews, setReviews] = useState({})
+  const [reviews, setReviews] = useState([])
   const { user } = useContext(UserContext)
   const { data } = useQuery(GET_REVIEWS, { variables: { id: product } })
 
@@ -19,7 +19,19 @@ const ProductReviews = ({ product, edit, setEdit }) => {
 
   useEffect(() => {
     if (data) {
-      setReviews(data.product.data.attributes.reviews)
+      const productReviews = data.product.data.attributes.reviews.data.map(
+        ({ id, attributes: { text, rating, updatedAt, user } }) => ({
+          id: parseInt(id),
+          text,
+          rating,
+          updatedAt,
+          user: {
+            id: parseInt(user.data.id),
+            name: user.data.attributes.name,
+          },
+        })
+      )
+      setReviews(productReviews)
     }
   }, [data])
 
@@ -34,12 +46,8 @@ const ProductReviews = ({ product, edit, setEdit }) => {
           user={user}
         />
       )}
-      {reviews?.data
-        ?.filter(review =>
-          edit
-            ? review.attributes.user.data.attributes.name !== user.name
-            : true
-        )
+      {reviews
+        .filter(review => (edit ? review.user.name !== user.name : true))
         .map(review => (
           <ProductReview
             key={review.id}
