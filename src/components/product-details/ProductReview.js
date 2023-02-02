@@ -57,10 +57,18 @@ const ProductReview = ({
       backgroundColor: "#fff",
     },
     buttonContainer: {
-      marginTop: "2rem",
+      marginTop: "1rem",
     },
     rating: {
       cursor: !review ? "pointer" : undefined,
+    },
+    delete: {
+      backgroundColor: theme.palette.error.main,
+      margin: "0 0.5rem",
+      color: "#fff",
+      "&:hover": {
+        backgroundColor: theme.palette.error.dark,
+      },
     },
   }
 
@@ -72,12 +80,13 @@ const ProductReview = ({
   }
 
   // functions
-  const handleReview = () => {
-    setLoading("leave-review")
+  const handleReview = option => {
+    setLoading(option === "delete" ? "delete-review" : "leave-review")
 
-    const axiosFunction = found ? axios.put : axios.post
+    const axiosFunction =
+      option === "delete" ? axios.delete : found ? axios.put : axios.post
     const route = found ? `/api/reviews/${found.id}` : `/api/reviews`
-    const body = { text: values.message, rating }
+    const body = option === "delete" ? {} : { text: values.message, rating }
     if (!found) {
       body.product = product
     }
@@ -95,12 +104,16 @@ const ProductReview = ({
           const reviewIndex = newReviews.data.findIndex(
             review => review.id === found.id
           )
-          const newReview = {
-            ...found,
-            attributes: { ...found.attributes, text, rating, updatedAt },
-          }
+          if (option === "delete") {
+            newReviews.data.splice(reviewIndex, 1)
+          } else {
+            const newReview = {
+              ...found,
+              attributes: { ...found.attributes, text, rating, updatedAt },
+            }
 
-          newReviews.data[reviewIndex] = newReview
+            newReviews.data[reviewIndex] = newReview
+          }
 
           setReviews(newReviews)
         }
@@ -108,7 +121,9 @@ const ProductReview = ({
         dispatchFeedback(
           setSnackbar({
             status: "success",
-            message: "Product Reviewed Successfully",
+            message: `${
+              option === "delete" ? "Review Deleted" : "Product Reviewed"
+            } Successfully`,
           })
         )
       })
@@ -118,7 +133,7 @@ const ProductReview = ({
           setSnackbar({
             status: "error",
             message: `There was a problem ${
-              found ? "updating" : "leaving"
+              option === "delete" ? "removing" : found ? "updating" : "leaving"
             } your review. Please try again.`,
           })
         )
@@ -131,7 +146,10 @@ const ProductReview = ({
 
   // styled components
   const ButtonText = styled("span")(({ type }) => ({
-    color: type === "review" ? "#fff" : theme.palette.primary.main,
+    color:
+      type === "review" || type === "delete"
+        ? "#fff"
+        : theme.palette.primary.main,
     fontFamily: "Montserrat",
     fontWeight: 600,
   }))
@@ -208,6 +226,21 @@ const ProductReview = ({
               </Button>
             )}
           </Grid>
+          {found && (
+            <Grid item>
+              {loading === "delete-review" ? (
+                <CircularProgress />
+              ) : (
+                <Button
+                  onClick={() => handleReview("delete")}
+                  variant="contained"
+                  sx={sx.delete}
+                >
+                  <ButtonText type="delete">Delete</ButtonText>
+                </Button>
+              )}
+            </Grid>
+          )}
           <Grid item>
             <Button
               onClick={() => setEdit(false)}
