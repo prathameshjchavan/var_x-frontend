@@ -1,12 +1,12 @@
-import { Grid, Pagination, useTheme } from "@mui/material"
+import { Grid } from "@mui/material"
 import React, { useState, useEffect, useContext, useMemo } from "react"
 import ProductReview from "./ProductReview"
 import { useQuery } from "@apollo/client"
 import { GET_REVIEWS } from "../../apollo/queries"
 import { UserContext } from "../../contexts"
+import { StyledPagination } from "../styled"
 
 const ProductReviews = ({ product, edit, setEdit }) => {
-  const theme = useTheme()
   const [reviews, setReviews] = useState([])
   const [page, setPage] = useState(1)
   const { user } = useContext(UserContext)
@@ -24,18 +24,6 @@ const ProductReviews = ({ product, edit, setEdit }) => {
     },
     pagination: {
       marginBottom: "3rem",
-      "& .MuiPaginationItem-text": {
-        "&:not(.Mui-disabled)": {
-          fontFamily: "Montserrat",
-          fontSize: "2rem",
-        },
-        "&:not(.Mui-selected)": {
-          color: theme.palette.primary.main,
-        },
-      },
-      "& .Mui-selected": {
-        color: "#fff !important",
-      },
     },
   }
 
@@ -81,7 +69,7 @@ const ProductReviews = ({ product, edit, setEdit }) => {
         ))}
       <Grid item container justifyContent="flex-end">
         <Grid item>
-          <Pagination
+          <StyledPagination
             sx={sx.pagination}
             count={numPages}
             page={page}

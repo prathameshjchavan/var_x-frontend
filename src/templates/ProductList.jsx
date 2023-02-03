@@ -1,4 +1,4 @@
-import { Fab, Grid, Pagination, useTheme } from "@mui/material"
+import { Fab, Grid } from "@mui/material"
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward"
 import { graphql } from "gatsby"
 import React, { useState, useEffect, useRef, useCallback } from "react"
@@ -10,6 +10,7 @@ import {
   time,
   price,
 } from "../components/product-list/sortFunctions"
+import { StyledPagination } from "../components/styled"
 
 const ProductList = ({
   pageContext: { filterOptions: options, name, description },
@@ -29,7 +30,6 @@ const ProductList = ({
     { label: "PRICE ↓", active: false, function: data => price(data, "desc") },
     { label: "REVIEWS", active: false, function: data => data },
   ])
-  const theme = useTheme()
   const scrollRef = useRef(null)
   const productsPerPage = layout === "grid" ? 16 : 6
 
@@ -52,18 +52,6 @@ const ProductList = ({
       marginRight: "2%",
       marginTop: "-3rem",
       marginBottom: "4rem",
-      "& .MuiPaginationItem-text": {
-        "&:not(.Mui-disabled)": {
-          fontFamily: "Montserrat",
-          fontSize: "2rem",
-        },
-        "&:not(.Mui-selected)": {
-          color: theme.palette.primary.main,
-        },
-      },
-      "& .Mui-selected": {
-        color: "#fff !important",
-      },
       "@media (900px <= width <= 1200px)": {
         marginTop: "1rem",
       },
@@ -161,7 +149,7 @@ const ProductList = ({
           content={content}
           layout={layout}
         />
-        <Pagination
+        <StyledPagination
           sx={sx.pagination}
           count={numPages}
           page={page}
