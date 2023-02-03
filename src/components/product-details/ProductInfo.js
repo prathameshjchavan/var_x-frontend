@@ -44,6 +44,7 @@ const ProductInfo = ({
   selectedVariant,
   setSelectedVariant,
   stock,
+  rating,
   setEdit,
 }) => {
   const [selectedSize, setSelectedSize] = useState(
@@ -238,7 +239,7 @@ const ProductInfo = ({
                 </Typography>
               </Grid>
               <Grid item>
-                <Rating number={4.5} />
+                <Rating number={rating} />
               </Grid>
               <Grid item>
                 <Button onClick={handleEdit}>

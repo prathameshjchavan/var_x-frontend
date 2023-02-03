@@ -14,6 +14,7 @@ const ProductDetail = ({
   const [selectedVariant, setSelectedVariant] = useState(null)
   const [selectedImage, setSelectedImage] = useState(0)
   const [stock, setStock] = useState(null)
+  const [rating, setRating] = useState(0)
   const [edit, setEdit] = useState(false)
   const searchParams = window.location.search
   const params = useMemo(
@@ -66,6 +67,7 @@ const ProductDetail = ({
       setStock(-1)
     } else if (data) {
       setStock(data.product.data.attributes.variants.data)
+      setRating(data.product.data.attributes.rating)
     }
   }, [error, data])
 
@@ -86,6 +88,7 @@ const ProductDetail = ({
               selectedVariant={selectedVariant}
               setSelectedVariant={setSelectedVariant}
               stock={stock}
+              rating={rating}
               setEdit={setEdit}
             />
           </Grid>

@@ -13,6 +13,7 @@ export const GET_DETAILS = gql`
               }
             }
           }
+          rating
         }
       }
     }

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Grid from "@mui/material/Grid"
 import Typography from "@mui/material/Typography"
 import IconButton from "@mui/material/IconButton"
@@ -11,6 +11,8 @@ import featuredAdornment from "../../images/featured-adornment.svg"
 import frame from "../../images/product-frame-grid.svg"
 import explore from "../../images/explore.svg"
 import { useMediaQuery } from "@mui/material"
+import { useQuery } from "@apollo/client"
+import { GET_DETAILS } from "../../apollo/queries"
 
 const FeaturedProducts = () => {
   const [expanded, setExpanded] = useState(null)
@@ -128,6 +130,7 @@ const FeaturedProducts = () => {
       sx={sx.mainContainer}
     >
       {data.allStrapiProduct.edges.map(({ node }, i) => {
+        const [rating, setRating] = useState(0)
         const alignment = matchesLG
           ? "center"
           : i % 3 === 0
@@ -145,6 +148,15 @@ const FeaturedProducts = () => {
             : matchesLG && expanded === i
             ? { ...sx.slide, ...sx.slideDown }
             : sx.slide
+        const { data } = useQuery(GET_DETAILS, {
+          variables: { id: node.strapi_id },
+        })
+
+        useEffect(() => {
+          if (data) {
+            setRating(data.product.data.attributes.rating)
+          }
+        }, [data])
 
         return (
           <Grid
@@ -174,7 +186,7 @@ const FeaturedProducts = () => {
                 <Typography variant="h4">{node.name.split("-")[0]}</Typography>
               </Grid>
               <Grid item>
-                <Rating number={2.5} />
+                <Rating number={rating} />
               </Grid>
               <Grid item>
                 <Chip sx={sx.chip} label={`$${node.variants[0].price}`} />
