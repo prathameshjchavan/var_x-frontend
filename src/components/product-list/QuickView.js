@@ -34,6 +34,7 @@ const QuickView = ({
   setSelectedColor,
   hasStyles,
   stock,
+  rating,
   handleSizeChange,
 }) => {
   const theme = useTheme()
@@ -138,7 +139,7 @@ const QuickView = ({
               >
                 <Grid item>
                   <Typography variant="h4">{name}</Typography>
-                  <Rating number={4} />
+                  <Rating number={rating} />
                 </Grid>
                 <Grid item>
                   <Typography variant="h3" sx={sx.stock}>
@@ -157,7 +158,7 @@ const QuickView = ({
               </Grid>
             </Grid>
             <Grid item sx={sx.chipContainer}>
-              <Chip label={`$${price}`} sx={sx.chip} />
+              <Chip label={`$${price}`} sx={sx.chip} color="secondary" />
             </Grid>
             <Grid item>
               <Grid container direction="column">

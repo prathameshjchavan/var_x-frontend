@@ -20,6 +20,7 @@ const ProductFrameGrid = ({
   disableQuickView,
   small,
   stock,
+  rating,
   handleSizeChange,
 }) => {
   const theme = useTheme()
@@ -126,6 +127,7 @@ const ProductFrameGrid = ({
         setSelectedSize={setSelectedSize}
         hasStyles={hasStyles}
         stock={stock}
+        rating={rating}
         handleSizeChange={handleSizeChange}
       />
     </Grid>

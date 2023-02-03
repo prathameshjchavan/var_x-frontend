@@ -17,10 +17,10 @@ function ProductFrameList({
   colors,
   selectedSize,
   selectedColor,
-  setSelectedSize,
   setSelectedColor,
   hasStyles,
   stock,
+  rating,
   handleSizeChange,
 }) {
   const theme = useTheme()
@@ -123,10 +123,10 @@ function ProductFrameList({
             </Typography>
           </Grid>
           <Grid item>
-            <Rating number={3.5} />
+            <Rating number={rating} />
           </Grid>
           <Grid item>
-            <Chip sx={sx.chip} label={`$${variant.price}`} />
+            <Chip sx={sx.chip} label={`$${variant.price}`} color="secondary" />
           </Grid>
           <Grid item>
             <Typography variant="h3" sx={sx.stock}>

@@ -24,6 +24,7 @@ const ListOfProducts = ({
     const [selectedColor, setSelectedColor] = useState(variant.color)
     const [selectedVariant, setSelectedVariant] = useState(variant)
     const [stock, setStock] = useState(null)
+    const [rating, setRating] = useState(0)
     const hasStyles = useMemo(
       () => product.node.variants.some(variant => variant.style !== null),
       [product]
@@ -64,6 +65,7 @@ const ListOfProducts = ({
         setStock(-1)
       } else if (data) {
         setStock(data.product.data.attributes.variants.data)
+        setRating(data.product.data.attributes.rating)
       }
     }, [error, data])
 
@@ -92,6 +94,7 @@ const ListOfProducts = ({
         setSelectedColor={setSelectedColor}
         hasStyles={hasStyles}
         stock={stock}
+        rating={rating}
         handleSizeChange={handleSizeChange}
       />
     )
