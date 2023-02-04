@@ -7,8 +7,9 @@ import {
   CircularProgress,
   useMediaQuery,
   useTheme,
+  Box,
 } from "@mui/material"
-import favorite from "../../images/favorite.svg"
+import Favorite from "../../images/Favorite"
 import subscription from "../../images/subscription.svg"
 import Rating from "../home/Rating"
 import { styled } from "@mui/material/styles"
@@ -102,6 +103,10 @@ const ProductInfo = ({
     variants[selectedVariant].strapi_id
   )
   const stockIndex = getStockIndex(stock, variants[selectedVariant].strapi_id)
+  const existingFavorite = useMemo(
+    () => user?.favorites.find(favorite => favorite.product === product),
+    [user, product]
+  )
 
   // sx prop
   const sx = {
@@ -168,6 +173,7 @@ const ProductInfo = ({
     stock: {
       color: "#fff",
     },
+    icon: { height: "4rem", width: "4rem", margin: "0.5rem 1rem" },
     iconButton: {
       padding: 0,
       "&:hover": {
@@ -230,14 +236,20 @@ const ProductInfo = ({
 
     setLoading(true)
 
-    axios
-      .post(
-        `${process.env.STRAPI_API_URL}/api/favorites`,
-        {
-          product,
-        },
-        { headers: { Authorization: `Bearer ${user.jwt}` } }
-      )
+    const axiosFunction = existingFavorite ? axios.delete : axios.post
+    const route = existingFavorite
+      ? `/api/favorites/${existingFavorite.id}`
+      : "/api/favorites"
+    const auth = { Authorization: `Bearer ${user.jwt}` }
+
+    axiosFunction(
+      `${process.env.STRAPI_API_URL}${route}`,
+      {
+        product,
+        headers: existingFavorite ? auth : undefined,
+      },
+      { headers: auth }
+    )
       .then(response => {
         dispatchFeedback(
           setSnackbar({
@@ -276,7 +288,9 @@ const ProductInfo = ({
             <CircularProgress size="4rem" />
           ) : (
             <IconButton sx={sx.iconButton} onClick={handleFavorite}>
-              <Icon src={favorite} alt="add item to favorites" />
+              <Box sx={sx.icon}>
+                <Favorite filled={existingFavorite} />
+              </Box>
             </IconButton>
           )}
         </Grid>
