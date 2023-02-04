@@ -3,24 +3,20 @@ import {
   Chip,
   Grid,
   Typography,
-  IconButton,
-  CircularProgress,
   useMediaQuery,
   useTheme,
-  Box,
 } from "@mui/material"
-import Favorite from "../../images/Favorite"
 import subscription from "../../images/subscription.svg"
 import Rating from "../home/Rating"
+import Favorite from "../ui/Favorite"
 import { styled } from "@mui/material/styles"
 import Sizes from "../product-list/Sizes"
 import Swatches from "../product-list/Swatches"
 import QtyButton from "../product-list/QtyButton"
 import { getColorIndex, getStockIndex } from "../../utils/productList"
 import { UserContext, FeedbackContext } from "../../contexts"
-import { setSnackbar, setUser } from "../../contexts/actions"
+import { setSnackbar } from "../../contexts/actions"
 import React, { useState, useEffect, useMemo, useContext } from "react"
-import axios from "axios"
 
 export const getStockDisplay = (stock, variantId) => {
   switch (stock) {
@@ -58,7 +54,6 @@ const ProductInfo = ({
   const [selectedColor, setSelectedColor] = useState(
     variants[selectedVariant].color
   )
-  const [loading, setLoading] = useState(false)
   const theme = useTheme()
   const matchesVertical = useMediaQuery("(max-width: 1400px)")
   const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
@@ -67,7 +62,7 @@ const ProductInfo = ({
     variants[selectedVariant],
     selectedColor
   )
-  const { user, dispatchUser } = useContext(UserContext)
+  const { user } = useContext(UserContext)
   const { dispatchFeedback } = useContext(FeedbackContext)
 
   const sizes = useMemo(
@@ -103,10 +98,6 @@ const ProductInfo = ({
     variants[selectedVariant].strapi_id
   )
   const stockIndex = getStockIndex(stock, variants[selectedVariant].strapi_id)
-  const existingFavorite = useMemo(
-    () => user?.favorites.find(favorite => favorite.product === product),
-    [user, product]
-  )
 
   // sx prop
   const sx = {
@@ -173,12 +164,8 @@ const ProductInfo = ({
     stock: {
       color: "#fff",
     },
-    icon: { height: "4rem", width: "4rem", margin: "0.5rem 1rem" },
-    iconButton: {
-      padding: 0,
-      "&:hover": {
-        backgroundColor: "transparent",
-      },
+    iconWrapper: {
+      margin: "0.5rem 1rem",
     },
   }
 
@@ -223,76 +210,6 @@ const ProductInfo = ({
     reviewsRef.scrollIntoView({ behavior: "smooth" })
   }
 
-  const handleFavorite = () => {
-    if (user.name === "Guest") {
-      dispatchFeedback(
-        setSnackbar({
-          status: "error",
-          message: "You must be logged in to add an item to favorites.",
-        })
-      )
-      return
-    }
-
-    setLoading(true)
-
-    const axiosFunction = existingFavorite ? axios.delete : axios.post
-    const route = existingFavorite
-      ? `/api/favorites/${existingFavorite.id}`
-      : "/api/favorites"
-    const auth = { Authorization: `Bearer ${user.jwt}` }
-
-    axiosFunction(
-      `${process.env.STRAPI_API_URL}${route}`,
-      {
-        product,
-        headers: existingFavorite ? auth : undefined,
-      },
-      { headers: auth }
-    )
-      .then(response => {
-        let newFavorites = [...user.favorites]
-
-        if (existingFavorite) {
-          newFavorites = newFavorites.filter(
-            favorite => favorite.id !== existingFavorite.id
-          )
-        } else {
-          newFavorites.push({
-            id: response.data.id,
-            product: response.data.product.id,
-          })
-        }
-
-        dispatchUser(setUser({ ...user, favorites: newFavorites }))
-
-        dispatchFeedback(
-          setSnackbar({
-            status: "success",
-            message: `${existingFavorite ? "Deleted" : "Added"} Product ${
-              existingFavorite ? "From" : "To"
-            } Favorites`,
-          })
-        )
-      })
-      .catch(error => {
-        console.error(error)
-        dispatchFeedback(
-          setSnackbar({
-            status: "error",
-            message: `There was a problem ${
-              existingFavorite ? "removing" : "adding"
-            } this item ${
-              existingFavorite ? "from" : "to"
-            } favorites. Please try again.`,
-          })
-        )
-      })
-      .finally(() => {
-        setLoading(false)
-      })
-  }
-
   return (
     <Grid
       item
@@ -303,16 +220,8 @@ const ProductInfo = ({
       alignItems="flex-end"
     >
       <Grid item container sx={sx.background} justifyContent="flex-end">
-        <Grid item>
-          {loading ? (
-            <CircularProgress size="4rem" />
-          ) : (
-            <IconButton sx={sx.iconButton} onClick={handleFavorite}>
-              <Box sx={sx.icon}>
-                <Favorite filled={existingFavorite} />
-              </Box>
-            </IconButton>
-          )}
+        <Grid item sx={sx.iconWrapper}>
+          <Favorite size={4} product={product} />
         </Grid>
         <Grid item>
           <Icon src={subscription} alt="add item to subscriptions" />
