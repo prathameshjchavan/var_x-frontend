@@ -6,7 +6,7 @@ import { IconButton, CircularProgress } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import FavoriteIcon from "../../images/Favorite"
 
-const Favorite = ({ color, size, product }) => {
+const Favorite = ({ color, size, product, buttonSx, noPadding }) => {
   const { user, dispatchUser } = useContext(UserContext)
   const { dispatchFeedback } = useContext(FeedbackContext)
   const [loading, setLoading] = useState(false)
@@ -18,7 +18,7 @@ const Favorite = ({ color, size, product }) => {
   // sx prop
   const sx = {
     iconButton: {
-      padding: 0,
+      padding: noPadding ? 0 : undefined,
       "&:hover": {
         backgroundColor: "transparent",
       },
@@ -105,7 +105,7 @@ const Favorite = ({ color, size, product }) => {
   return loading ? (
     <CircularProgress size={`${size || 2}rem`} />
   ) : (
-    <IconButton sx={sx.iconButton} onClick={handleFavorite}>
+    <IconButton sx={{ ...sx.iconButton, ...buttonSx }} onClick={handleFavorite}>
       <Icon>
         <FavoriteIcon color={color} filled={existingFavorite} />
       </Icon>

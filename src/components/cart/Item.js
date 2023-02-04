@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo } from "react"
+import React, { useCallback, useContext } from "react"
 import {
   Grid,
   Typography,
@@ -9,11 +9,11 @@ import {
 } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import QtyButton from "../product-list/QtyButton"
-import FavoriteIcon from "../../images/Favorite"
 import SubscriptionIcon from "../../images/Subscription"
 import DeleteIcon from "../../images/Delete"
 import { CartContext } from "../../contexts"
 import { removeFromCart } from "../../contexts/actions"
+import Favorite from "../ui/favorite"
 
 const Item = ({ item }) => {
   const theme = useTheme()
@@ -67,28 +67,28 @@ const Item = ({ item }) => {
   }, [dispatchCart, item])
 
   // actions
-  const actions = useMemo(
-    () => [
-      {
-        icon: FavoriteIcon,
-        alt: "favorite",
+  const actions = [
+    {
+      component: Favorite,
+      props: {
         color: theme.palette.secondary.main,
+        size: matchesSM ? 2 : 3,
+        buttonSx: sx.actionButton,
       },
-      {
-        icon: SubscriptionIcon,
-        alt: "subscription",
-        color: theme.palette.secondary.main,
-      },
-      {
-        icon: DeleteIcon,
-        alt: "delete",
-        color: theme.palette.error.main,
-        size: matchesSM ? "1.75rem" : "2.5rem",
-        onClick: handleDelete,
-      },
-    ],
-    [theme, handleDelete, matchesSM]
-  )
+    },
+    {
+      icon: SubscriptionIcon,
+      alt: "subscription",
+      color: theme.palette.secondary.main,
+    },
+    {
+      icon: DeleteIcon,
+      alt: "delete",
+      color: theme.palette.error.main,
+      size: matchesSM ? "1.75rem" : "2.5rem",
+      onClick: handleDelete,
+    },
+  ]
 
   // styled components
   const ProductImage = styled("img")(() => ({
@@ -154,21 +154,25 @@ const Item = ({ item }) => {
           <Grid item container justifyContent="flex-end" xs={5} sm={4}>
             {actions.map((action, index) => (
               <Grid item key={index}>
-                <IconButton
-                  onClick={() => action.onClick && action.onClick()}
-                  disableRipple
-                  sx={sx.actionButton}
-                >
-                  <ActionWrapper
-                    style={
-                      action.size
-                        ? { height: action.size, width: action.size }
-                        : undefined
-                    }
+                {action.component ? (
+                  <action.component {...action.props} />
+                ) : (
+                  <IconButton
+                    onClick={() => action.onClick && action.onClick()}
+                    disableRipple
+                    sx={sx.actionButton}
                   >
-                    <action.icon color={action.color} />
-                  </ActionWrapper>
-                </IconButton>
+                    <ActionWrapper
+                      style={
+                        action.size
+                          ? { height: action.size, width: action.size }
+                          : undefined
+                      }
+                    >
+                      <action.icon color={action.color} />
+                    </ActionWrapper>
+                  </IconButton>
+                )}
               </Grid>
             ))}
           </Grid>

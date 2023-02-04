@@ -8,7 +8,7 @@ import {
 } from "@mui/material"
 import subscription from "../../images/subscription.svg"
 import Rating from "../home/Rating"
-import Favorite from "../ui/Favorite"
+import Favorite from "../ui/favorite"
 import { styled } from "@mui/material/styles"
 import Sizes from "../product-list/Sizes"
 import Swatches from "../product-list/Swatches"
