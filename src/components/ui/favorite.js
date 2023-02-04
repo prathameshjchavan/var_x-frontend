@@ -6,13 +6,13 @@ import { IconButton, CircularProgress } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import FavoriteIcon from "../../images/Favorite"
 
-const Favorite = ({ color, size, product, buttonSx, noPadding }) => {
+const Favorite = ({ color, size, variant, buttonSx, noPadding }) => {
   const { user, dispatchUser } = useContext(UserContext)
   const { dispatchFeedback } = useContext(FeedbackContext)
   const [loading, setLoading] = useState(false)
   const existingFavorite = useMemo(
-    () => user?.favorites.find(favorite => favorite.product === product),
-    [user, product]
+    () => user?.favorites.find(favorite => favorite.variant === variant),
+    [user, variant]
   )
 
   // sx prop
@@ -48,7 +48,7 @@ const Favorite = ({ color, size, product, buttonSx, noPadding }) => {
     axiosFunction(
       `${process.env.STRAPI_API_URL}${route}`,
       {
-        product,
+        variant,
         headers: existingFavorite ? auth : undefined,
       },
       { headers: auth }
@@ -63,7 +63,7 @@ const Favorite = ({ color, size, product, buttonSx, noPadding }) => {
         } else {
           newFavorites.push({
             id: response.data.id,
-            product: response.data.product.id,
+            variant: response.data.variant.id,
           })
         }
 

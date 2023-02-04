@@ -74,6 +74,7 @@ const Item = ({ item }) => {
         color: theme.palette.secondary.main,
         size: matchesSM ? 2 : 3,
         buttonSx: sx.actionButton,
+        variant: item.variant.strapi_id,
       },
     },
     {

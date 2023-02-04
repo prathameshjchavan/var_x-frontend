@@ -38,7 +38,6 @@ export const getStockDisplay = (stock, variantId) => {
 }
 
 const ProductInfo = ({
-  product,
   name,
   description,
   variants,
@@ -221,7 +220,11 @@ const ProductInfo = ({
     >
       <Grid item container sx={sx.background} justifyContent="flex-end">
         <Grid item sx={sx.iconWrapper}>
-          <Favorite size={4} product={product} />
+          <Favorite
+            size={4}
+            variant={variants[selectedVariant].strapi_id}
+            noPadding
+          />
         </Grid>
         <Grid item>
           <Icon src={subscription} alt="add item to subscriptions" />
