@@ -18,7 +18,7 @@ import Swatches from "../product-list/Swatches"
 import QtyButton from "../product-list/QtyButton"
 import { getColorIndex, getStockIndex } from "../../utils/productList"
 import { UserContext, FeedbackContext } from "../../contexts"
-import { setSnackbar } from "../../contexts/actions"
+import { setSnackbar, setUser } from "../../contexts/actions"
 import React, { useState, useEffect, useMemo, useContext } from "react"
 import axios from "axios"
 
@@ -67,7 +67,7 @@ const ProductInfo = ({
     variants[selectedVariant],
     selectedColor
   )
-  const { user } = useContext(UserContext)
+  const { user, dispatchUser } = useContext(UserContext)
   const { dispatchFeedback } = useContext(FeedbackContext)
 
   const sizes = useMemo(
@@ -251,10 +251,27 @@ const ProductInfo = ({
       { headers: auth }
     )
       .then(response => {
+        let newFavorites = [...user.favorites]
+
+        if (existingFavorite) {
+          newFavorites = newFavorites.filter(
+            favorite => favorite.id !== existingFavorite.id
+          )
+        } else {
+          newFavorites.push({
+            id: response.data.id,
+            product: response.data.product.id,
+          })
+        }
+
+        dispatchUser(setUser({ ...user, favorites: newFavorites }))
+
         dispatchFeedback(
           setSnackbar({
             status: "success",
-            message: "Added Product To Favorites",
+            message: `${existingFavorite ? "Deleted" : "Added"} Product ${
+              existingFavorite ? "From" : "To"
+            } Favorites`,
           })
         )
       })
@@ -263,8 +280,11 @@ const ProductInfo = ({
         dispatchFeedback(
           setSnackbar({
             status: "error",
-            message:
-              "There was a problem adding this item to favorites. Please try again.",
+            message: `There was a problem ${
+              existingFavorite ? "removing" : "adding"
+            } this item ${
+              existingFavorite ? "from" : "to"
+            } favorites. Please try again.`,
           })
         )
       })
