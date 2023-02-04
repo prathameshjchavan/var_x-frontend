@@ -3,6 +3,8 @@ import {
   Chip,
   Grid,
   Typography,
+  IconButton,
+  CircularProgress,
   useMediaQuery,
   useTheme,
 } from "@mui/material"
@@ -17,6 +19,7 @@ import { getColorIndex, getStockIndex } from "../../utils/productList"
 import { UserContext, FeedbackContext } from "../../contexts"
 import { setSnackbar } from "../../contexts/actions"
 import React, { useState, useEffect, useMemo, useContext } from "react"
+import axios from "axios"
 
 export const getStockDisplay = (stock, variantId) => {
   switch (stock) {
@@ -38,6 +41,7 @@ export const getStockDisplay = (stock, variantId) => {
 }
 
 const ProductInfo = ({
+  product,
   name,
   description,
   variants,
@@ -53,6 +57,7 @@ const ProductInfo = ({
   const [selectedColor, setSelectedColor] = useState(
     variants[selectedVariant].color
   )
+  const [loading, setLoading] = useState(false)
   const theme = useTheme()
   const matchesVertical = useMediaQuery("(max-width: 1400px)")
   const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
@@ -163,6 +168,12 @@ const ProductInfo = ({
     stock: {
       color: "#fff",
     },
+    iconButton: {
+      padding: 0,
+      "&:hover": {
+        backgroundColor: "transparent",
+      },
+    },
   }
 
   const Icon = styled("img")(() => ({
@@ -206,6 +217,50 @@ const ProductInfo = ({
     reviewsRef.scrollIntoView({ behavior: "smooth" })
   }
 
+  const handleFavorite = () => {
+    if (user.name === "Guest") {
+      dispatchFeedback(
+        setSnackbar({
+          status: "error",
+          message: "You must be logged in to add an item to favorites.",
+        })
+      )
+      return
+    }
+
+    setLoading(true)
+
+    axios
+      .post(
+        `${process.env.STRAPI_API_URL}/api/favorites`,
+        {
+          product,
+        },
+        { headers: { Authorization: `Bearer ${user.jwt}` } }
+      )
+      .then(response => {
+        dispatchFeedback(
+          setSnackbar({
+            status: "success",
+            message: "Added Product To Favorites",
+          })
+        )
+      })
+      .catch(error => {
+        console.error(error)
+        dispatchFeedback(
+          setSnackbar({
+            status: "error",
+            message:
+              "There was a problem adding this item to favorites. Please try again.",
+          })
+        )
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }
+
   return (
     <Grid
       item
@@ -217,7 +272,13 @@ const ProductInfo = ({
     >
       <Grid item container sx={sx.background} justifyContent="flex-end">
         <Grid item>
-          <Icon src={favorite} alt="add item to favorites" />
+          {loading ? (
+            <CircularProgress size="4rem" />
+          ) : (
+            <IconButton sx={sx.iconButton} onClick={handleFavorite}>
+              <Icon src={favorite} alt="add item to favorites" />
+            </IconButton>
+          )}
         </Grid>
         <Grid item>
           <Icon src={subscription} alt="add item to subscriptions" />

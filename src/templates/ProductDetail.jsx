@@ -82,6 +82,7 @@ const ProductDetail = ({
               setSelectedImage={setSelectedImage}
             />
             <ProductInfo
+              product={id}
               name={name}
               description={description}
               variants={variants}
