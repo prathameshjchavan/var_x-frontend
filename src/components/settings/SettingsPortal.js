@@ -26,6 +26,7 @@ import useResizeAware from "react-resize-aware"
 import Settings from "./Settings"
 import { setUser } from "../../contexts/actions"
 import OrderHistory from "./OrderHistory"
+import Favorites from "./Favorites"
 
 const SettingsPortal = () => {
   const { user, dispatchUser, defaultUser } = useContext(UserContext)
@@ -48,7 +49,7 @@ const SettingsPortal = () => {
       {
         label: "Favorites",
         icon: favoritesIcon,
-        component: Settings,
+        component: Favorites,
       },
       {
         label: "Subscriptions",
