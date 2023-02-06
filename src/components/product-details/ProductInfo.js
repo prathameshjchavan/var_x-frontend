@@ -289,7 +289,7 @@ const ProductInfo = ({
                 <Sizes
                   sizes={sizes}
                   selectedSize={selectedSize}
-                  handleSizeChange={handleSizeChange}
+                  setSelectedSize={handleSizeChange}
                 />
                 <Swatches
                   colors={colors}

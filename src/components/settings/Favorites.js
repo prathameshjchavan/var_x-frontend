@@ -13,6 +13,9 @@ import Delete from "../../images/Delete"
 const Favorites = () => {
   const { user } = useContext(UserContext)
   const [products, setProducts] = useState([])
+  const [selectedVariants, setSelectedVariants] = useState({})
+  const [selectedSizes, setSelectedSizes] = useState({})
+  const [selectedColors, setSelectedColors] = useState({})
   const { dispatchFeedback } = useContext(FeedbackContext)
 
   // sx prop
@@ -39,9 +42,16 @@ const Favorites = () => {
           image: item.variant.images[0].url,
         },
         variant: { all: item.variants, current: item.variant },
-        quantity: item.variant.quantity,
+        quantity: { variants: item.variants, variant: item.variant },
         price: item.variant.price,
       })),
+    []
+  )
+
+  const setSelectedHelper = useCallback(
+    (selectedFunction, values, value, row) => {
+      selectedFunction({ ...values, [row]: value })
+    },
     []
   )
 
@@ -81,18 +91,60 @@ const Favorites = () => {
       headerName: "Variant",
       width: 275,
       sortable: false,
-      renderCell: ({ value }) => (
-        <Grid container direction="column">
-          {value.current.id}
-        </Grid>
-      ),
+      renderCell: ({ value, row }) => {
+        let sizes = []
+        let colors = []
+
+        value.all.forEach(variant => {
+          sizes.push(variant.size)
+          sizes = [...new Set(sizes)].sort().reverse()
+
+          if (
+            !colors.includes(variant.color) &&
+            variant.size === selectedSizes[row.id] &&
+            variant.style === value.current.style
+          ) {
+            colors.push(variant.color)
+          }
+        })
+
+        return (
+          <Grid container direction="column">
+            <Sizes
+              sizes={sizes}
+              selectedSize={selectedSizes[row.id]}
+              setSelectedSize={size =>
+                setSelectedHelper(setSelectedSizes, selectedSizes, size, row.id)
+              }
+            />
+            <Swatches
+              colors={colors}
+              selectedColor={selectedColors[row.id]}
+              setSelectedColor={color =>
+                setSelectedHelper(
+                  setSelectedColors,
+                  selectedColors,
+                  color,
+                  row.id
+                )
+              }
+            />
+          </Grid>
+        )
+      },
     },
     {
       field: "quantity",
       headerName: "Quantity",
       width: 250,
       sortable: false,
-      renderCell: ({ value }) => <div>{value}</div>,
+      renderCell: ({ value }) => (
+        <QtyButton
+          variant={value.variants[0]}
+          stock={{ attributes: { quantity: value.variants[0].quantity } }}
+          name={value.variant.product.name.split(" ")[0]}
+        />
+      ),
     },
     {
       field: "price",
