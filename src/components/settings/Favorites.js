@@ -18,6 +18,10 @@ const Favorites = () => {
   const [selectedColors, setSelectedColors] = useState({})
   const { dispatchFeedback } = useContext(FeedbackContext)
 
+  console.log(selectedVariants)
+  console.log(selectedSizes)
+  console.log(selectedColors)
+
   // sx prop
   const sx = {
     container: {
@@ -35,17 +39,21 @@ const Favorites = () => {
   // functions
   const createData = useCallback(
     data =>
-      data.map(item => ({
-        id: item.id,
-        item: {
-          name: item.variant.product.name.split(" ")[0],
-          image: item.variant.images[0].url,
-        },
-        variant: { all: item.variants, current: item.variant },
-        quantity: { variants: item.variants, variant: item.variant },
-        price: item.variant.price,
-      })),
-    []
+      data.map(item => {
+        const selectedVariant = selectedVariants[item.id]
+
+        return {
+          id: item.id,
+          item: {
+            name: item.variant.product.name.split(" ")[0],
+            image: item.variants[selectedVariant].images[0].url,
+          },
+          variant: { all: item.variants, current: item.variant },
+          quantity: { variants: item.variants, variant: item.variant },
+          price: item.variants[selectedVariant].price,
+        }
+      }),
+    [selectedVariants]
   )
 
   const setSelectedHelper = useCallback(
@@ -165,7 +173,8 @@ const Favorites = () => {
       ),
     },
   ]
-  const rows = createData(products)
+  const rows =
+    Object.keys(selectedVariants).length > 0 ? createData(products) : []
 
   // useEffects
   useEffect(() => {
@@ -175,6 +184,23 @@ const Favorites = () => {
       })
       .then(response => {
         setProducts(response.data)
+
+        let newVariants = {}
+        let newSizes = {}
+        let newColors = {}
+
+        response.data.forEach(favorite => {
+          const index = favorite.variants.findIndex(
+            variant => variant.id === favorite.variant.id
+          )
+          newVariants = { ...newVariants, [favorite.id]: index }
+          newSizes = { ...newSizes, [favorite.id]: favorite.variant.size }
+          newColors = { ...newColors, [favorite.id]: favorite.variant.color }
+        })
+
+        setSelectedVariants(newVariants)
+        setSelectedSizes(newSizes)
+        setSelectedColors(newColors)
       })
       .catch(error => {
         console.error(error)
