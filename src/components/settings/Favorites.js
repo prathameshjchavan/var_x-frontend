@@ -18,10 +18,6 @@ const Favorites = () => {
   const [selectedColors, setSelectedColors] = useState({})
   const { dispatchFeedback } = useContext(FeedbackContext)
 
-  console.log(selectedVariants)
-  console.log(selectedSizes)
-  console.log(selectedColors)
-
   // sx prop
   const sx = {
     container: {
@@ -56,12 +52,46 @@ const Favorites = () => {
     [selectedVariants]
   )
 
-  const setSelectedHelper = useCallback(
-    (selectedFunction, values, value, row) => {
-      selectedFunction({ ...values, [row]: value })
-    },
-    []
-  )
+  const setSelectedHelper = (selectedFunction, values, value, row) => {
+    selectedFunction({ ...values, [row]: value })
+
+    const { variants } = products.find(favorite => favorite.id === row)
+    const selectedVariant = selectedVariants[row]
+    let newVariant
+
+    if (value.includes("#")) {
+      newVariant = variants.find(
+        variant =>
+          variant.size === selectedSizes[row] &&
+          variant.style === variants[selectedVariant].style &&
+          variant.color === value
+      )
+    } else {
+      let newColors = []
+
+      variants.forEach(variant => {
+        if (
+          !newColors.includes(variant.color) &&
+          variant.size === value &&
+          variants[selectedVariant].style === variant.style
+        ) {
+          newColors.push(variant.color)
+        }
+      })
+
+      newVariant = variants.find(
+        variant =>
+          variant.size === value &&
+          variant.style === variants[selectedVariant].style &&
+          variant.color === newColors[0]
+      )
+    }
+
+    setSelectedVariants({
+      ...selectedVariants,
+      [row]: variants.findIndex(variant => variant.id === newVariant.id),
+    })
+  }
 
   // styled components
   const Image = styled("img")(() => ({
@@ -146,13 +176,21 @@ const Favorites = () => {
       headerName: "Quantity",
       width: 250,
       sortable: false,
-      renderCell: ({ value }) => (
-        <QtyButton
-          variant={value.variants[0]}
-          stock={{ attributes: { quantity: value.variants[0].quantity } }}
-          name={value.variant.product.name.split(" ")[0]}
-        />
-      ),
+      renderCell: ({ value, row }) => {
+        const selectedVariant = selectedVariants[row.id]
+
+        return (
+          <QtyButton
+            variant={value.variants[selectedVariant]}
+            stock={{
+              attributes: {
+                quantity: value.variants[selectedVariant].quantity,
+              },
+            }}
+            name={value.variant.product.name.split(" ")[0]}
+          />
+        )
+      },
     },
     {
       field: "price",
