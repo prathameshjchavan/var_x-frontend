@@ -85,6 +85,8 @@ const Favorites = () => {
           variant.style === variants[selectedVariant].style &&
           variant.color === newColors[0]
       )
+
+      setSelectedColors({ ...selectedColors, [row]: newColors[0] })
     }
 
     setSelectedVariants({
