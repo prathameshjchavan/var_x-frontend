@@ -4,7 +4,7 @@ import ProductReview from "./ProductReview"
 import { useQuery } from "@apollo/client"
 import { GET_REVIEWS } from "../../apollo/queries"
 import { UserContext } from "../../contexts"
-import { StyledPagination } from "../styled"
+import StyledPagination from "../styled/Pagination"
 
 const ProductReviews = ({ product, edit, setEdit }) => {
   const [reviews, setReviews] = useState([])

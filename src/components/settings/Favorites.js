@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect, useCallback } from "react"
 import { UserContext, FeedbackContext } from "../../contexts"
 import { setSnackbar } from "../../contexts/actions"
-import { DataGrid } from "@mui/x-data-grid"
 import { Grid, IconButton, Chip, Typography } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import axios from "axios"
@@ -9,8 +8,9 @@ import Sizes from "../product-list/Sizes"
 import Swatches from "../product-list/Swatches"
 import QtyButton from "../product-list/QtyButton"
 import Delete from "../../images/Delete"
+import SettingsGrid from "./SettingsGrid"
 
-const Favorites = () => {
+const Favorites = ({ setSelectedSetting }) => {
   const { user } = useContext(UserContext)
   const [products, setProducts] = useState([])
   const [selectedVariants, setSelectedVariants] = useState({})
@@ -198,12 +198,15 @@ const Favorites = () => {
       field: "price",
       headerName: "Price",
       width: 250,
-      renderCell: ({ value }) => <Chip sx={sx.chip} label={`$${value}`} />,
+      renderCell: ({ value }) => (
+        <Chip sx={sx.chip} label={`$${value}`} color="secondary" />
+      ),
     },
     {
       field: "",
       width: 500,
       sortable: false,
+      disableColumnMenu: true,
       renderCell: ({ value }) => (
         <IconButton>
           <DeleteWrapper>
@@ -257,11 +260,11 @@ const Favorites = () => {
 
   return (
     <Grid item container sx={sx.container}>
-      <DataGrid
-        hideFooterSelectedRowCount
+      <SettingsGrid
+        setSelectedSetting={setSelectedSetting}
         rows={rows}
         columns={columns}
-        pageSize={5}
+        rowsPerPage={3}
       />
     </Grid>
   )

@@ -1,7 +1,7 @@
 import { Pagination } from "@mui/material"
 import { styled } from "@mui/material/styles"
 
-export const StyledPagination = styled(Pagination)(({ theme }) => ({
+const StyledPagination = styled(Pagination)(({ theme }) => ({
   "& .MuiPaginationItem-text": {
     "&:not(.Mui-disabled)": {
       fontFamily: "Montserrat",
@@ -15,3 +15,5 @@ export const StyledPagination = styled(Pagination)(({ theme }) => ({
     color: "#fff !important",
   },
 }))
+
+export default StyledPagination

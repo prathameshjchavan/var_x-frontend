@@ -10,7 +10,7 @@ import {
   time,
   price,
 } from "../components/product-list/sortFunctions"
-import { StyledPagination } from "../components/styled"
+import Pagination from "../components/styled/Pagination"
 
 const ProductList = ({
   pageContext: { filterOptions: options, name, description },
@@ -149,7 +149,7 @@ const ProductList = ({
           content={content}
           layout={layout}
         />
-        <StyledPagination
+        <Pagination
           sx={sx.pagination}
           count={numPages}
           page={page}
