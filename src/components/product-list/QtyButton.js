@@ -101,7 +101,7 @@ const QtyButton = ({ variant, stock, name, isCart }) => {
   const handleChange = useCallback(
     direction => {
       if (qty === stock.attributes.quantity && direction === "up") return null
-      if (qty === 1 && direction === "down") return null
+      if (qty <= 1 && direction === "down") return null
       const newQty = direction === "up" ? qty + 1 : qty - 1
       setQty(newQty)
 
@@ -124,7 +124,11 @@ const QtyButton = ({ variant, stock, name, isCart }) => {
   // useEffects
   useEffect(() => {
     if (stock === -1) return undefined
-    if (qty > stock.attributes.quantity) setQty(stock.attributes.quantity)
+    if (qty === 0 && stock.attributes.quantity !== 0) {
+      setQty(1)
+    } else if (qty > stock.attributes.quantity) {
+      setQty(stock.attributes.quantity)
+    }
   }, [stock, qty])
 
   useEffect(() => {
@@ -177,6 +181,7 @@ const QtyButton = ({ variant, stock, name, isCart }) => {
           {isCart ? null : (
             <Button
               onClick={handleCart}
+              disabled={stock ? stock.attributes.quantity === 0 : true}
               disableRipple
               sx={{ ...sx.button, ...sx.cartButton, ...sx.success }}
             >
