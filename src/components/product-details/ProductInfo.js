@@ -227,7 +227,11 @@ const ProductInfo = ({
           />
         </Grid>
         <Grid item>
-          <Subscription size={4} />
+          <Subscription
+            size={4}
+            stock={stock}
+            variant={variants[selectedVariant]}
+          />
         </Grid>
       </Grid>
       <Grid item container sx={sx.center} direction="column">

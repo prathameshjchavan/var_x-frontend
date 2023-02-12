@@ -13,7 +13,7 @@ import QtyButton from "../product-list/QtyButton"
 import { CartContext } from "../../contexts"
 import SubscriptionIcon from "../../images/Subscription"
 
-const Subscription = ({ size }) => {
+const Subscription = ({ size, stock, variant }) => {
   const theme = useTheme()
   const [open, setOpen] = useState(false)
 
@@ -21,6 +21,7 @@ const Subscription = ({ size }) => {
   const sx = {
     row: {
       height: "4rem",
+      padding: "0 0.5rem",
     },
     dark: {
       backgroundColor: theme.palette.secondary.main,
@@ -67,10 +68,20 @@ const Subscription = ({ size }) => {
             item
             container
             justifyContent="space-between"
+            alignItems="center"
             sx={{ ...sx.row, ...sx.dark }}
           >
             <Grid item>
               <Typography variant="h4">Quantity</Typography>
+            </Grid>
+            <Grid item>
+              <QtyButton
+                stock={{ attributes: { quantity: stock } }}
+                variant={variant}
+                white
+                hideCartButton
+                round
+              />
             </Grid>
           </Grid>
           <Grid

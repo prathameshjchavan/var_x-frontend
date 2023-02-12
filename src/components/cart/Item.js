@@ -135,6 +135,8 @@ const Item = ({ item }) => {
               name={item.name}
               stock={{ attributes: { quantity: item.stock } }}
               isCart
+              white
+              hideCartButton
             />
           </Grid>
         </Grid>

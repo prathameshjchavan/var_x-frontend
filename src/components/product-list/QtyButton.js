@@ -10,7 +10,15 @@ import React, {
 import { CartContext } from "../../contexts"
 import { addToCart, removeFromCart } from "../../contexts/actions"
 
-const QtyButton = ({ variant, stock, name, isCart }) => {
+const QtyButton = ({
+  variant,
+  stock,
+  name,
+  isCart,
+  white,
+  hideCartButton,
+  round,
+}) => {
   const theme = useTheme()
   const [success, setSuccess] = useState(false)
   const { cart, dispatchCart } = useContext(CartContext)
@@ -18,6 +26,7 @@ const QtyButton = ({ variant, stock, name, isCart }) => {
     () => cart.find(item => item.variant.id === variant.id),
     [cart, variant]
   )
+
   const [qty, setQty] = useState(isCart ? existingItem.qty : 1)
 
   // sx prop
@@ -27,13 +36,11 @@ const QtyButton = ({ variant, stock, name, isCart }) => {
     },
     buttonContainer: {
       width: "fit-content",
-      border: !isCart
-        ? `3px solid ${theme.palette.secondary.light}`
-        : undefined,
+      border: !white ? `3px solid ${theme.palette.secondary.light}` : undefined,
       borderRadius: 50,
     },
     button: {
-      background: isCart ? "#fff" : theme.palette.secondary.main,
+      background: white ? "#fff" : theme.palette.secondary.main,
       border: "none !important",
       borderRadius: 0,
     },
@@ -47,17 +54,19 @@ const QtyButton = ({ variant, stock, name, isCart }) => {
       "& :first-of-type .MuiButton-root": {
         height: "25.5px",
         borderBottom: `3px solid ${
-          isCart ? theme.palette.secondary.main : "#fff"
+          white ? theme.palette.secondary.main : "#fff"
         } !important`,
       },
       "& :last-of-type .MuiButton-root > .MuiTypography-root": {
         marginTop: "-0.3rem",
       },
-      borderWidth: "0 3px 0 3px",
+      borderWidth: `0 ${round ? "0" : "3px"} 0 3px`,
       borderStyle: "solid",
-      borderColor: isCart ? theme.palette.secondary.main : "#fff",
-      borderRight: isCart ? "none" : undefined,
+      borderColor: white ? theme.palette.secondary.main : "#fff",
+      borderRight: white ? "none" : undefined,
       width: "3.5rem",
+      borderRadius: round ? "0px 50px 50px 0px" : 0,
+      overflow: "hidden",
     },
     editButtonWrapper: {
       position: "relative",
@@ -70,6 +79,9 @@ const QtyButton = ({ variant, stock, name, isCart }) => {
       position: "absolute",
       top: 0,
       left: 0,
+      "&:hover": {
+        backgroundColor: white ? "#fff" : theme.palette.secondary.light,
+      },
     },
     qtyButton: {
       borderRadius: "50px 0 0 50px",
@@ -80,7 +92,7 @@ const QtyButton = ({ variant, stock, name, isCart }) => {
         marginRight: "-0.3rem",
       },
       "&:hover": {
-        backgroundColor: isCart ? "#fff" : theme.palette.secondary.main,
+        backgroundColor: white ? "#fff" : theme.palette.secondary.main,
       },
     },
     cartButton: {
@@ -93,7 +105,7 @@ const QtyButton = ({ variant, stock, name, isCart }) => {
       },
     },
     qtyText: {
-      color: isCart ? theme.palette.secondary.main : "#fff",
+      color: white ? theme.palette.secondary.main : "#fff",
     },
     badge: {
       "& .MuiBadge-badge": {
@@ -196,7 +208,7 @@ const QtyButton = ({ variant, stock, name, isCart }) => {
           </Grid>
         </Grid>
         <Grid item>
-          {isCart ? null : (
+          {hideCartButton ? null : (
             <Button
               onClick={handleCart}
               disabled={stock ? stock.attributes.quantity === 0 : true}
