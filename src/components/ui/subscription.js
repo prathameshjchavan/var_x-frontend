@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react"
+import React, { useState, useMemo, Fragment } from "react"
 import {
   Grid,
   Dialog,
@@ -6,6 +6,8 @@ import {
   Button,
   IconButton,
   Typography,
+  Select,
+  MenuItem,
   useTheme,
 } from "@mui/material"
 import { styled } from "@mui/material/styles"
@@ -16,6 +18,7 @@ import SubscriptionIcon from "../../images/Subscription"
 const Subscription = ({ size, stock, variant }) => {
   const theme = useTheme()
   const [open, setOpen] = useState(false)
+  const [frequency, setFrequency] = useState("Month")
 
   // sx prop
   const sx = {
@@ -41,7 +44,43 @@ const Subscription = ({ size, stock, variant }) => {
     dialog: {
       "& .MuiPaper-root": { borderRadius: 0 },
     },
+    chip: {
+      backgroundColor: "#fff",
+      height: "3rem",
+      borderRadius: "50px",
+      "& .MuiChip-label": {
+        color: theme.palette.secondary.main,
+      },
+      "&:hover": {
+        cursor: "pointer",
+      },
+    },
+    select: {
+      "& .MuiInputBase-input": {
+        padding: 0,
+      },
+      "& .MuiOutlinedInput-notchedOutline": {
+        border: "none",
+      },
+      "& .MuiSelect-select": {
+        padding: "0 !important",
+      },
+    },
+    menu: {
+      "& .MuiPaper-root": {
+        backgroundColor: theme.palette.primary.main,
+      },
+    },
+    menuItem: {
+      color: "#fff",
+    },
   }
+
+  // data
+  const frequencies = useMemo(
+    () => ["Week", "Two Weeks", "Month", "Three Months", "Six Months", "Year"],
+    []
+  )
 
   // styled components
   const IconWrapper = styled("span")(() => ({
@@ -88,10 +127,28 @@ const Subscription = ({ size, stock, variant }) => {
             item
             container
             justifyContent="space-between"
+            alignItems="center"
             sx={{ ...sx.row, ...sx.light }}
           >
             <Grid item>
               <Typography variant="h4">Deliver Every</Typography>
+            </Grid>
+            <Grid item>
+              <Select
+                sx={sx.select}
+                IconComponent={() => null}
+                MenuProps={{ sx: sx.menu }}
+                value={frequency}
+                onChange={event => setFrequency(event.target.value)}
+                renderValue={selected => <Chip label={selected} sx={sx.chip} />}
+                disableUnderline
+              >
+                {frequencies.map(frequency => (
+                  <MenuItem key={frequency} sx={sx.menuItem} value={frequency}>
+                    {frequency}
+                  </MenuItem>
+                ))}
+              </Select>
             </Grid>
           </Grid>
           <Grid item>
