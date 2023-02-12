@@ -6,7 +6,6 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material"
-import subscription from "../../images/subscription.svg"
 import Rating from "../home/Rating"
 import Favorite from "../ui/favorite"
 import { styled } from "@mui/material/styles"
@@ -17,6 +16,7 @@ import { getColorIndex, getStockIndex } from "../../utils/productList"
 import { UserContext, FeedbackContext } from "../../contexts"
 import { setSnackbar } from "../../contexts/actions"
 import React, { useState, useEffect, useMemo, useContext } from "react"
+import Subscription from "../ui/subscription"
 
 export const getStockDisplay = (stock, variantId) => {
   switch (stock) {
@@ -227,7 +227,7 @@ const ProductInfo = ({
           />
         </Grid>
         <Grid item>
-          <Icon src={subscription} alt="add item to subscriptions" />
+          <Subscription size={4} />
         </Grid>
       </Grid>
       <Grid item container sx={sx.center} direction="column">
