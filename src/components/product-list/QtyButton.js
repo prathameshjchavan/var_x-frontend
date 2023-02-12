@@ -38,6 +38,12 @@ const QtyButton = ({ variant, stock, name, isCart }) => {
       borderRadius: 0,
     },
     editButtonContainer: {
+      "& :first-of-type": {
+        minHeight: "25.5px",
+      },
+      "& :last-of-type": {
+        minHeight: "22.5px",
+      },
       "& :first-of-type .MuiButton-root": {
         height: "25.5px",
         borderBottom: `3px solid ${
@@ -53,11 +59,17 @@ const QtyButton = ({ variant, stock, name, isCart }) => {
       borderRight: isCart ? "none" : undefined,
       width: "3.5rem",
     },
+    editButtonWrapper: {
+      position: "relative",
+    },
     editButton: {
       height: "22.5px",
       padding: 0,
       minWidth: 0,
       width: "100%",
+      position: "absolute",
+      top: 0,
+      left: 0,
     },
     qtyButton: {
       borderRadius: "50px 0 0 50px",
@@ -153,22 +165,28 @@ const QtyButton = ({ variant, stock, name, isCart }) => {
         </Grid>
         <Grid item>
           <Grid container direction="column" sx={sx.editButtonContainer}>
-            <Grid item>
+            <Grid item sx={sx.editButtonWrapper}>
               <Button
                 disableRipple
                 onClick={() => handleChange("up")}
-                sx={{ ...sx.button, ...sx.editButton }}
+                sx={{
+                  ...sx.button,
+                  ...sx.editButton,
+                }}
               >
                 <Typography variant="h3" sx={sx.qtyText}>
                   +
                 </Typography>
               </Button>
             </Grid>
-            <Grid item>
+            <Grid item sx={sx.editButtonWrapper}>
               <Button
                 disableRipple
                 onClick={() => handleChange("down")}
-                sx={{ ...sx.button, ...sx.editButton }}
+                sx={{
+                  ...sx.button,
+                  ...sx.editButton,
+                }}
               >
                 <Typography variant="h3" sx={sx.qtyText}>
                   -
