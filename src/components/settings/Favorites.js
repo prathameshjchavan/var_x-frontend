@@ -158,7 +158,7 @@ const Favorites = ({ setSelectedSetting }) => {
       headerName: "Item",
       width: 250,
       renderCell: ({ value }) => (
-        <Grid container direction="column">
+        <Grid container direction="column" alignItems="center">
           <Grid item>
             <Image
               src={`${process.env.STRAPI_API_URL}${value.image}`}
@@ -183,8 +183,9 @@ const Favorites = ({ setSelectedSetting }) => {
         let colors = []
 
         value.all.forEach(variant => {
-          sizes.push(variant.size)
-          sizes = [...new Set(sizes)].sort().reverse()
+          if (variant.size) {
+            sizes.push(variant.size)
+          }
 
           if (
             !colors.includes(variant.color) &&
@@ -194,6 +195,8 @@ const Favorites = ({ setSelectedSetting }) => {
             colors.push(variant.color)
           }
         })
+
+        sizes = [...new Set(sizes)].sort().reverse()
 
         return (
           <Grid container direction="column">
