@@ -9,6 +9,7 @@ import {
   Select,
   MenuItem,
   useTheme,
+  useMediaQuery,
 } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import QtyButton from "../product-list/QtyButton"
@@ -23,11 +24,14 @@ const Subscription = ({ size, stock, variant, name }) => {
   const [qty, setQty] = useState(1)
   const { dispatchFeedback } = useContext(FeedbackContext)
   const { dispatchCart } = useContext(CartContext)
+  const matches700 = useMediaQuery("(max-width: 700px)")
+  const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
+  const matches500 = useMediaQuery("(max-width: 500px)")
 
   // sx prop
   const sx = {
     row: {
-      height: "4rem",
+      height: matches500 ? "auto" : "4rem",
       padding: "0 0.5rem",
     },
     dark: {
@@ -37,16 +41,19 @@ const Subscription = ({ size, stock, variant, name }) => {
       backgroundColor: theme.palette.primary.main,
     },
     cartButton: {
-      height: "8rem",
+      minHeight: matchesSM ? "auto" : "8rem",
       borderRadius: 0,
       width: "100%",
     },
     cartText: {
       color: "#fff",
-      fontSize: "4rem",
+      fontSize: matches500 ? "2.5rem" : matches700 ? "3.25rem" : "4rem",
     },
     dialog: {
-      "& .MuiPaper-root": { borderRadius: 0 },
+      "& .MuiPaper-root": {
+        borderRadius: 0,
+        backgroundColor: theme.palette.primary.main,
+      },
     },
     chip: {
       backgroundColor: "#fff",
@@ -77,6 +84,9 @@ const Subscription = ({ size, stock, variant, name }) => {
     },
     menuItem: {
       color: "#fff",
+    },
+    frequency: {
+      marginBottom: matches500 ? "1rem" : undefined,
     },
   }
 
@@ -115,12 +125,13 @@ const Subscription = ({ size, stock, variant, name }) => {
       </IconButton>
       <Dialog
         fullWidth
+        fullScreen={matches500}
         maxWidth="md"
         sx={sx.dialog}
         open={open}
         onClose={() => setOpen(false)}
       >
-        <Grid container direction="column">
+        <Grid container direction="column" alignItems="center">
           <Grid
             item
             container
@@ -146,7 +157,8 @@ const Subscription = ({ size, stock, variant, name }) => {
             item
             container
             justifyContent="space-between"
-            alignItems="center"
+            alignItems={matches500 ? "flex-start" : "center"}
+            direction={matches500 ? "column" : "row"}
             sx={{ ...sx.row, ...sx.light }}
           >
             <Grid item>
@@ -154,7 +166,7 @@ const Subscription = ({ size, stock, variant, name }) => {
             </Grid>
             <Grid item>
               <Select
-                sx={sx.select}
+                sx={{ ...sx.select, ...sx.frequency }}
                 IconComponent={() => null}
                 MenuProps={{ sx: sx.menu }}
                 value={frequency}
@@ -181,6 +193,13 @@ const Subscription = ({ size, stock, variant, name }) => {
               </Typography>
             </Button>
           </Grid>
+          {matches500 && (
+            <Grid item>
+              <Button onClick={() => setOpen(false)}>
+                <Typography variant="body2">Cancel</Typography>
+              </Button>
+            </Grid>
+          )}
         </Grid>
       </Dialog>
     </Fragment>

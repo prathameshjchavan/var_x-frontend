@@ -222,7 +222,7 @@ const ProductInfo = ({
         <Grid item>
           <Subscription
             size={4}
-            stock={stock[stockIndex]}
+            stock={stock && stock[stockIndex]}
             variant={variants[selectedVariant]}
             name={name.split(" ")[0]}
           />
