@@ -154,7 +154,7 @@ const Payments = ({
       display: checkout && !visible ? "none" : "flex",
       borderLeft: !matchesVertical && !checkout ? "4px solid #fff" : undefined,
       position: "relative",
-      height: matchesVertical ? "30rem" : undefined,
+      height: matchesVertical ? (!checkout ? "30rem" : "100%") : "100%",
     },
     number: {
       color: "#fff",

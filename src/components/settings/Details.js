@@ -79,7 +79,7 @@ const Details = ({
     detailsContainer: {
       position: "relative",
       borderBottom: matchesVertical ? "4px solid #fff" : undefined,
-      height: matchesVertical ? "30rem" : undefined,
+      height: matchesVertical ? (!checkout ? "30rem" : "100%") : "100%",
     },
     visibleIcon: {
       padding: 0,
