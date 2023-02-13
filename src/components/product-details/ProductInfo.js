@@ -105,11 +105,8 @@ const ProductInfo = ({
     },
     background: {
       backgroundColor: theme.palette.secondary.main,
-      height: "45rem",
+      height: matchesSM ? "53rem" : matchesVertical ? "40rem" : "32rem",
       width: matchesVertical ? "100%" : "35rem",
-      [theme.breakpoints.down("sm")]: {
-        height: "53rem",
-      },
     },
     center: {
       backgroundColor: theme.palette.primary.main,

@@ -31,12 +31,12 @@ const Item = ({ item }) => {
     infoContainer: {
       width: "35rem",
       position: "relative",
-      height: "8rem",
+      height: !!item.subscription ? "10rem" : "8rem",
       marginLeft: "1rem",
     },
     chipWrapper: {
       position: "absolute",
-      top: "3.5rem",
+      top: item.subscription ? "4.25rem" : "3.5rem",
     },
     actionButton: {
       "&:hover": {
@@ -59,6 +59,20 @@ const Item = ({ item }) => {
         fontSize: "0.75rem",
       },
     },
+    chip: {
+      marginLeft: "1rem",
+      "& .MuiChip-label": {
+        [theme.breakpoints.down("sm")]: {
+          fontSize: "1.25rem",
+        },
+      },
+    },
+    actionContainer: {
+      marginBottom: "-0.5rem",
+    },
+    favoriteIcon: {
+      marginTop: "2px",
+    },
   }
 
   // functions
@@ -73,7 +87,7 @@ const Item = ({ item }) => {
       props: {
         color: theme.palette.secondary.main,
         size: matchesSM ? 2 : 3,
-        buttonSx: sx.actionButton,
+        buttonSx: { ...sx.actionButton, ...sx.favoriteIcon },
         variant: item.variant.strapi_id,
       },
     },
@@ -100,7 +114,6 @@ const Item = ({ item }) => {
   const ActionWrapper = styled("span")(({ style }) => ({
     height: "3rem",
     width: "3rem",
-    marginBottom: "-8px",
     ...style,
     [theme.breakpoints.down("sm")]: {
       height: "2rem",
@@ -142,6 +155,13 @@ const Item = ({ item }) => {
         </Grid>
         <Grid item sx={sx.chipWrapper}>
           <Chip label={`$${item.variant.price}`} color="secondary" />
+          {item.subscription && (
+            <Chip
+              sx={sx.chip}
+              label={`Every ${item.subscription}`}
+              color="secondary"
+            />
+          )}
         </Grid>
         <Grid
           item
@@ -154,7 +174,14 @@ const Item = ({ item }) => {
               ID: {item.variant.id}
             </Typography>
           </Grid>
-          <Grid item container justifyContent="flex-end" xs={5} sm={4}>
+          <Grid
+            item
+            container
+            sx={sx.actionContainer}
+            justifyContent="flex-end"
+            xs={5}
+            sm={4}
+          >
             {actions.map((action, index) => (
               <Grid item key={index}>
                 {action.component ? (

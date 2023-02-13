@@ -88,6 +88,9 @@ const Subscription = ({ size, stock, variant, name }) => {
     frequency: {
       marginBottom: matches500 ? "1rem" : undefined,
     },
+    buttonWrapper: {
+      width: "100%",
+    },
   }
 
   // functions
@@ -181,7 +184,7 @@ const Subscription = ({ size, stock, variant, name }) => {
               </Select>
             </Grid>
           </Grid>
-          <Grid item>
+          <Grid item sx={sx.buttonWrapper}>
             <Button
               onClick={handleCart}
               variant="contained"
