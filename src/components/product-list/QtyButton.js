@@ -18,6 +18,7 @@ const QtyButton = ({
   white,
   hideCartButton,
   round,
+  override,
 }) => {
   const theme = useTheme()
   const [success, setSuccess] = useState(false)
@@ -26,8 +27,16 @@ const QtyButton = ({
     () => cart.find(item => item.variant.id === variant.id),
     [cart, variant]
   )
-
-  const [qty, setQty] = useState(isCart ? existingItem.qty : 1)
+  const [qty, setQtyState] = useState(isCart ? existingItem.qty : 1)
+  let setQty
+  if (override) {
+    setQty = value => {
+      override.setValue(value)
+      setQtyState(value)
+    }
+  } else {
+    setQty = setQtyState
+  }
 
   // sx prop
   const sx = {
@@ -122,23 +131,20 @@ const QtyButton = ({
   }
 
   // functions
-  const handleChange = useCallback(
-    direction => {
-      if (qty === stock.attributes.quantity && direction === "up") return null
-      if (qty <= 1 && direction === "down") return null
-      const newQty = direction === "up" ? qty + 1 : qty - 1
-      setQty(newQty)
+  const handleChange = direction => {
+    if (qty === stock.attributes.quantity && direction === "up") return null
+    if (qty <= 1 && direction === "down") return null
+    const newQty = direction === "up" ? qty + 1 : qty - 1
+    setQty(newQty)
 
-      if (isCart) {
-        if (direction === "up") {
-          dispatchCart(addToCart(variant, 1, name, stock.attributes.quantity))
-        } else if (direction === "down") {
-          dispatchCart(removeFromCart(variant, 1))
-        }
+    if (isCart) {
+      if (direction === "up") {
+        dispatchCart(addToCart(variant, 1, name, stock.attributes.quantity))
+      } else if (direction === "down") {
+        dispatchCart(removeFromCart(variant, 1))
       }
-    },
-    [qty, stock.attributes.quantity, isCart, dispatchCart, name, variant]
-  )
+    }
+  }
 
   const handleCart = useCallback(() => {
     setSuccess(true)

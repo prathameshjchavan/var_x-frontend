@@ -1,4 +1,4 @@
-import React, { useState, useMemo, Fragment } from "react"
+import React, { useState, useMemo, Fragment, useContext } from "react"
 import {
   Grid,
   Dialog,
@@ -12,13 +12,17 @@ import {
 } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import QtyButton from "../product-list/QtyButton"
-import { CartContext } from "../../contexts"
 import SubscriptionIcon from "../../images/Subscription"
+import { CartContext, FeedbackContext } from "../../contexts"
+import { setSnackbar, addToCart } from "../../contexts/actions"
 
-const Subscription = ({ size, stock, variant }) => {
+const Subscription = ({ size, stock, variant, name }) => {
   const theme = useTheme()
   const [open, setOpen] = useState(false)
   const [frequency, setFrequency] = useState("Month")
+  const [qty, setQty] = useState(1)
+  const { dispatchFeedback } = useContext(FeedbackContext)
+  const { dispatchCart } = useContext(CartContext)
 
   // sx prop
   const sx = {
@@ -76,6 +80,20 @@ const Subscription = ({ size, stock, variant }) => {
     },
   }
 
+  // functions
+  const handleCart = () => {
+    dispatchCart(
+      addToCart(variant, qty, name, stock.attributes.quantity, frequency)
+    )
+    setOpen(false)
+    dispatchFeedback(
+      setSnackbar({
+        status: "success",
+        message: "Subscription Add To Cart.",
+      })
+    )
+  }
+
   // data
   const frequencies = useMemo(
     () => ["Week", "Two Weeks", "Month", "Three Months", "Six Months", "Year"],
@@ -116,6 +134,7 @@ const Subscription = ({ size, stock, variant }) => {
             <Grid item>
               <QtyButton
                 stock={{ attributes: { quantity: stock } }}
+                override={{ value: qty, setValue: setQty }}
                 variant={variant}
                 white
                 hideCartButton
@@ -141,7 +160,6 @@ const Subscription = ({ size, stock, variant }) => {
                 value={frequency}
                 onChange={event => setFrequency(event.target.value)}
                 renderValue={selected => <Chip label={selected} sx={sx.chip} />}
-                disableUnderline
               >
                 {frequencies.map(frequency => (
                   <MenuItem key={frequency} sx={sx.menuItem} value={frequency}>
@@ -152,7 +170,12 @@ const Subscription = ({ size, stock, variant }) => {
             </Grid>
           </Grid>
           <Grid item>
-            <Button variant="contained" color="secondary" sx={sx.cartButton}>
+            <Button
+              onClick={handleCart}
+              variant="contained"
+              color="secondary"
+              sx={sx.cartButton}
+            >
               <Typography variant="h1" sx={sx.cartText}>
                 Add Subscription To Cart
               </Typography>

@@ -8,7 +8,6 @@ import {
 } from "@mui/material"
 import Rating from "../home/Rating"
 import Favorite from "../ui/favorite"
-import { styled } from "@mui/material/styles"
 import Sizes from "../product-list/Sizes"
 import Swatches from "../product-list/Swatches"
 import QtyButton from "../product-list/QtyButton"
@@ -168,12 +167,6 @@ const ProductInfo = ({
     },
   }
 
-  const Icon = styled("img")(() => ({
-    height: "4rem",
-    width: "4rem",
-    margin: "0.5rem 1rem",
-  }))
-
   useEffect(() => {
     if (imageIndex !== -1) {
       setSelectedVariant(imageIndex)
@@ -229,8 +222,9 @@ const ProductInfo = ({
         <Grid item>
           <Subscription
             size={4}
-            stock={stock}
+            stock={stock[stockIndex]}
             variant={variants[selectedVariant]}
+            name={name.split(" ")[0]}
           />
         </Grid>
       </Grid>
