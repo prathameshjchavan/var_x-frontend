@@ -108,7 +108,7 @@ const ProductInfo = ({
       height: "45rem",
       width: matchesVertical ? "100%" : "35rem",
       [theme.breakpoints.down("sm")]: {
-        height: "48rem",
+        height: "53rem",
       },
     },
     center: {
@@ -116,6 +116,7 @@ const ProductInfo = ({
       height: "35rem",
       width: "45rem",
       position: "absolute",
+      bottom: 0,
       [theme.breakpoints.down("xl")]: {
         width: matchesVertical ? "100%" : "40rem",
       },
