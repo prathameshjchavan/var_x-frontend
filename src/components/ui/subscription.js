@@ -14,7 +14,7 @@ import {
 import { styled } from "@mui/material/styles"
 import QtyButton from "../product-list/QtyButton"
 import SubscriptionIcon from "../../images/Subscription"
-import { CartContext, FeedbackContext } from "../../contexts"
+import { CartContext, FeedbackContext, UserContext } from "../../contexts"
 import { setSnackbar, addToCart } from "../../contexts/actions"
 
 const Subscription = ({ size, stock, variant, name }) => {
@@ -24,6 +24,7 @@ const Subscription = ({ size, stock, variant, name }) => {
   const [qty, setQty] = useState(1)
   const { dispatchFeedback } = useContext(FeedbackContext)
   const { dispatchCart } = useContext(CartContext)
+  const { user } = useContext(UserContext)
   const matches700 = useMediaQuery("(max-width: 700px)")
   const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
   const matches500 = useMediaQuery("(max-width: 500px)")
@@ -107,6 +108,20 @@ const Subscription = ({ size, stock, variant, name }) => {
     )
   }
 
+  const handleOpen = () => {
+    if (user.name === "Guest") {
+      dispatchFeedback(
+        setSnackbar({
+          status: "error",
+          message: "You must be logged in to create a subscription.",
+        })
+      )
+      return
+    } else {
+      setOpen(true)
+    }
+  }
+
   // data
   const frequencies = useMemo(
     () => ["Week", "Two Weeks", "Month", "Three Months", "Six Months", "Year"],
@@ -121,7 +136,7 @@ const Subscription = ({ size, stock, variant, name }) => {
 
   return (
     <Fragment>
-      <IconButton onClick={() => setOpen(true)}>
+      <IconButton onClick={handleOpen}>
         <IconWrapper>
           <SubscriptionIcon />
         </IconWrapper>
@@ -187,6 +202,7 @@ const Subscription = ({ size, stock, variant, name }) => {
           <Grid item sx={sx.buttonWrapper}>
             <Button
               onClick={handleCart}
+              disabled={stock.attributes.quantity === 0}
               variant="contained"
               color="secondary"
               sx={sx.cartButton}

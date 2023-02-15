@@ -40,6 +40,7 @@ const Settings = ({ setSelectedSetting }) => {
     return Object.keys(allErrors).some(error => allErrors[error] === true)
   }, [detailErrors, locationErrors])
   const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PK)
+  const hasSubscriptionActive = user.subscriptions.length > 0
 
   // sx prop
   const sx = {
@@ -75,7 +76,12 @@ const Settings = ({ setSelectedSetting }) => {
           setErrors={setDetailErrors}
         />
         <Elements stripe={stripePromise}>
-          <Payments user={user} slot={billingSlot} setSlot={setBillingSlot} />
+          <Payments
+            user={user}
+            slot={billingSlot}
+            setSlot={setBillingSlot}
+            hasSubscriptionActive={hasSubscriptionActive}
+          />
         </Elements>
       </Grid>
       <Grid container sx={{ ...sx.bottomRow, ...sx.sectionContainer }}>
