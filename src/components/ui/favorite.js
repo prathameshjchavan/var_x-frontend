@@ -11,7 +11,7 @@ const Favorite = ({ color, size, variant, buttonSx, noPadding }) => {
   const { dispatchFeedback } = useContext(FeedbackContext)
   const [loading, setLoading] = useState(false)
   const existingFavorite = useMemo(
-    () => user?.favorites.find(favorite => favorite.variant === variant),
+    () => user?.favorites?.find(favorite => favorite.variant === variant),
     [user, variant]
   )
 

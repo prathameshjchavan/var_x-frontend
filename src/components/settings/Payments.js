@@ -33,6 +33,8 @@ const Payments = ({
   checkout,
   visible,
   setCard,
+  hasSubscriptionCart,
+  hasSubscriptionActive,
 }) => {
   const theme = useTheme()
   const stripe = useStripe()
@@ -59,6 +61,18 @@ const Payments = ({
   }
 
   const removeCard = () => {
+    const remaining = user.paymentMethods.filter(method => method.last4 !== "")
+    if (hasSubscriptionActive && remaining.length === 1) {
+      dispatchFeedback(
+        setSnackbar({
+          status: "error",
+          message:
+            "You cannot remove your last card with an active subscription. Please add another card first.",
+        })
+      )
+      return
+    }
+
     setLoading(true)
 
     axios
@@ -271,9 +285,15 @@ const Payments = ({
               labelPlacement="start"
               control={
                 <Switch
-                  disabled={user.paymentMethods[slot].last4 !== ""}
+                  disabled={
+                    user.paymentMethods[slot].last4 !== "" ||
+                    hasSubscriptionCart
+                  }
                   checked={
-                    user.paymentMethods[slot].last4 !== "" ? true : saveCard
+                    user.paymentMethods[slot].last4 !== "" ||
+                    hasSubscriptionCart
+                      ? true
+                      : saveCard
                   }
                   onChange={() => setSaveCard(!saveCard)}
                   color="secondary"

@@ -1,5 +1,11 @@
 import { Grid, useTheme, useMediaQuery } from "@mui/material"
-import React, { useCallback, useEffect, useMemo, useState } from "react"
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useContext,
+} from "react"
 import CheckoutNavigation from "./CheckoutNavigation"
 import Details from "../settings/Details"
 import Location from "../settings/Location"
@@ -11,12 +17,16 @@ import BillingConfirmation from "./BillingConfirmation"
 import Thankyou from "./Thankyou"
 import { Elements } from "@stripe/react-stripe-js"
 import { loadStripe } from "@stripe/stripe-js"
+import { CartContext } from "../../contexts"
 
 const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PK)
 
 const CheckoutPortal = ({ user }) => {
   const theme = useTheme()
+  const { cart } = useContext(CartContext)
   const matchesXL = useMediaQuery(theme.breakpoints.down("xl"))
+  const hasSubscriptionCart = cart.some(item => item.subscription)
+  const hasSubscriptionActive = user.subscriptions.length > 0
   const [detailValues, setDetailValues] = useState({
     name: "",
     email: "",
@@ -44,7 +54,7 @@ const CheckoutPortal = ({ user }) => {
   const [locationSlot, setLocationSlot] = useState(0)
   const [locationForBilling, setLocationForBilling] = useState(false)
   const [cardSlot, setCardSlot] = useState(0)
-  const [saveCard, setSaveCard] = useState(false)
+  const [saveCard, setSaveCard] = useState(hasSubscriptionCart)
   const [card, setCard] = useState({ brand: "", last4: "" })
   const [errors, setErrors] = useState({})
   const [cardError, setCardError] = useState(true)
@@ -294,6 +304,8 @@ const CheckoutPortal = ({ user }) => {
             checkout
             visible={steps[selectedStep].title === "Payment"}
             setCard={setCard}
+            hasSubscriptionCart={hasSubscriptionCart}
+            hasSubscriptionActive={hasSubscriptionActive}
           />
         </Elements>
       </Grid>
