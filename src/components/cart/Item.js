@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from "react"
+import React, { useCallback, useContext, useState } from "react"
 import {
   Grid,
   Typography,
@@ -12,11 +12,13 @@ import QtyButton from "../product-list/QtyButton"
 import SubscriptionIcon from "../../images/Subscription"
 import DeleteIcon from "../../images/Delete"
 import { CartContext } from "../../contexts"
-import { removeFromCart } from "../../contexts/actions"
+import { removeFromCart, changeFrequency } from "../../contexts/actions"
 import Favorite from "../ui/favorite"
+import SelectFrequency from "../ui/select-frequency"
 
 const Item = ({ item }) => {
   const theme = useTheme()
+  const [frequency, setFrequency] = useState(item.subscription)
   const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
   const { dispatchCart } = useContext(CartContext)
 
@@ -66,6 +68,9 @@ const Item = ({ item }) => {
           fontSize: "1.25rem",
         },
       },
+      "&:hover": {
+        cursor: "pointer",
+      },
     },
     actionContainer: {
       marginBottom: "-0.5rem",
@@ -79,6 +84,11 @@ const Item = ({ item }) => {
   const handleDelete = useCallback(() => {
     dispatchCart(removeFromCart(item.variant, item.qty))
   }, [dispatchCart, item])
+
+  const handleFrequency = newFrequency => {
+    dispatchCart(changeFrequency(item.variant, newFrequency))
+    setFrequency(newFrequency)
+  }
 
   // actions
   const actions = [
@@ -153,14 +163,24 @@ const Item = ({ item }) => {
             />
           </Grid>
         </Grid>
-        <Grid item sx={sx.chipWrapper}>
-          <Chip label={`$${item.variant.price}`} color="secondary" />
+        <Grid item container alignItems="center" sx={sx.chipWrapper}>
+          <Grid item>
+            <Chip label={`$${item.variant.price}`} color="secondary" />
+          </Grid>
           {item.subscription && (
-            <Chip
-              sx={sx.chip}
-              label={`Every ${item.subscription}`}
-              color="secondary"
-            />
+            <Grid item>
+              <SelectFrequency
+                chip={
+                  <Chip
+                    sx={sx.chip}
+                    label={`Every ${frequency}`}
+                    color="secondary"
+                  />
+                }
+                value={frequency}
+                setValue={handleFrequency}
+              />
+            </Grid>
           )}
         </Grid>
         <Grid

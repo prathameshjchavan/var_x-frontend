@@ -1,7 +1,7 @@
 import React, { useMemo } from "react"
 import { Select, Chip, MenuItem, useMediaQuery, useTheme } from "@mui/material"
 
-const SelectFrequency = ({ value, setValue }) => {
+const SelectFrequency = ({ value, setValue, chip }) => {
   const theme = useTheme()
   const matches500 = useMediaQuery("(max-width: 500px)")
 
@@ -55,7 +55,7 @@ const SelectFrequency = ({ value, setValue }) => {
       MenuProps={{ sx: sx.menu }}
       value={value}
       onChange={event => setValue(event.target.value)}
-      renderValue={selected => <Chip label={selected} sx={sx.chip} />}
+      renderValue={selected => chip || <Chip label={selected} sx={sx.chip} />}
     >
       {frequencies.map(frequency => (
         <MenuItem key={frequency} sx={sx.menuItem} value={frequency}>
