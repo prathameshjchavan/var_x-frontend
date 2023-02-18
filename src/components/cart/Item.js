@@ -9,7 +9,7 @@ import {
 } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import QtyButton from "../product-list/QtyButton"
-import SubscriptionIcon from "../../images/Subscription"
+import Subscription from "../ui/subscription"
 import DeleteIcon from "../../images/Delete"
 import { CartContext } from "../../contexts"
 import { removeFromCart, changeFrequency } from "../../contexts/actions"
@@ -102,9 +102,13 @@ const Item = ({ item }) => {
       },
     },
     {
-      icon: SubscriptionIcon,
-      alt: "subscription",
-      color: theme.palette.secondary.main,
+      component: Subscription,
+      props: {
+        color: theme.palette.secondary.main,
+        isCart: item,
+        stock: { attributes: { quantity: item.stock } },
+        size: matchesSM ? 2 : 3,
+      },
     },
     {
       icon: DeleteIcon,

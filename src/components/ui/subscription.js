@@ -15,7 +15,7 @@ import { CartContext, FeedbackContext, UserContext } from "../../contexts"
 import { setSnackbar, addToCart } from "../../contexts/actions"
 import SelectFrequency from "./select-frequency"
 
-const Subscription = ({ size, stock, variant, name }) => {
+const Subscription = ({ size, stock, variant, name, color }) => {
   const theme = useTheme()
   const [open, setOpen] = useState(false)
   const [frequency, setFrequency] = useState("Month")
@@ -97,7 +97,7 @@ const Subscription = ({ size, stock, variant, name }) => {
     <Fragment>
       <IconButton onClick={handleOpen}>
         <IconWrapper>
-          <SubscriptionIcon />
+          <SubscriptionIcon color={color} />
         </IconWrapper>
       </IconButton>
       <Dialog
