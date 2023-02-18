@@ -12,10 +12,22 @@ import { styled } from "@mui/material/styles"
 import QtyButton from "../product-list/QtyButton"
 import SubscriptionIcon from "../../images/Subscription"
 import { CartContext, FeedbackContext, UserContext } from "../../contexts"
-import { setSnackbar, addToCart } from "../../contexts/actions"
+import {
+  setSnackbar,
+  addToCart,
+  toggleSubscription,
+} from "../../contexts/actions"
 import SelectFrequency from "./select-frequency"
 
-const Subscription = ({ size, stock, variant, name, color }) => {
+const Subscription = ({
+  size,
+  stock,
+  variant,
+  name,
+  color,
+  isCart,
+  cartFrequency,
+}) => {
   const theme = useTheme()
   const [open, setOpen] = useState(false)
   const [frequency, setFrequency] = useState("Month")
@@ -74,6 +86,11 @@ const Subscription = ({ size, stock, variant, name, color }) => {
   }
 
   const handleOpen = () => {
+    if (isCart) {
+      dispatchCart(toggleSubscription(isCart.variant, cartFrequency))
+      return
+    }
+
     if (user.name === "Guest") {
       dispatchFeedback(
         setSnackbar({

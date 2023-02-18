@@ -18,7 +18,7 @@ import SelectFrequency from "../ui/select-frequency"
 
 const Item = ({ item }) => {
   const theme = useTheme()
-  const [frequency, setFrequency] = useState(item.subscription)
+  const [frequency, setFrequency] = useState(item.subscription || "Month")
   const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
   const { dispatchCart } = useContext(CartContext)
 
@@ -108,6 +108,7 @@ const Item = ({ item }) => {
         isCart: item,
         stock: { attributes: { quantity: item.stock } },
         size: matchesSM ? 2 : 3,
+        cartFrequency: frequency,
       },
     },
     {

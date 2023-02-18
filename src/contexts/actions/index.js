@@ -5,4 +5,5 @@ export {
   removeFromCart,
   clearCart,
   changeFrequency,
+  toggleSubscription,
 } from "./cart-actions"
