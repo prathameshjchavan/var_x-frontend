@@ -1,13 +1,10 @@
-import React, { useState, useMemo, Fragment, useContext } from "react"
+import React, { useState, Fragment, useContext } from "react"
 import {
   Grid,
   Dialog,
-  Chip,
   Button,
   IconButton,
   Typography,
-  Select,
-  MenuItem,
   useTheme,
   useMediaQuery,
 } from "@mui/material"
@@ -16,6 +13,7 @@ import QtyButton from "../product-list/QtyButton"
 import SubscriptionIcon from "../../images/Subscription"
 import { CartContext, FeedbackContext, UserContext } from "../../contexts"
 import { setSnackbar, addToCart } from "../../contexts/actions"
+import SelectFrequency from "./select-frequency"
 
 const Subscription = ({ size, stock, variant, name }) => {
   const theme = useTheme()
@@ -56,39 +54,6 @@ const Subscription = ({ size, stock, variant, name }) => {
         backgroundColor: theme.palette.primary.main,
       },
     },
-    chip: {
-      backgroundColor: "#fff",
-      height: "3rem",
-      borderRadius: "50px",
-      "& .MuiChip-label": {
-        color: theme.palette.secondary.main,
-      },
-      "&:hover": {
-        cursor: "pointer",
-      },
-    },
-    select: {
-      "& .MuiInputBase-input": {
-        padding: 0,
-      },
-      "& .MuiOutlinedInput-notchedOutline": {
-        border: "none",
-      },
-      "& .MuiSelect-select": {
-        padding: "0 !important",
-      },
-    },
-    menu: {
-      "& .MuiPaper-root": {
-        backgroundColor: theme.palette.primary.main,
-      },
-    },
-    menuItem: {
-      color: "#fff",
-    },
-    frequency: {
-      marginBottom: matches500 ? "1rem" : undefined,
-    },
     buttonWrapper: {
       width: "100%",
     },
@@ -121,12 +86,6 @@ const Subscription = ({ size, stock, variant, name }) => {
       setOpen(true)
     }
   }
-
-  // data
-  const frequencies = useMemo(
-    () => ["Week", "Two Weeks", "Month", "Three Months", "Six Months", "Year"],
-    []
-  )
 
   // styled components
   const IconWrapper = styled("span")(() => ({
@@ -183,20 +142,7 @@ const Subscription = ({ size, stock, variant, name }) => {
               <Typography variant="h4">Deliver Every</Typography>
             </Grid>
             <Grid item>
-              <Select
-                sx={{ ...sx.select, ...sx.frequency }}
-                IconComponent={() => null}
-                MenuProps={{ sx: sx.menu }}
-                value={frequency}
-                onChange={event => setFrequency(event.target.value)}
-                renderValue={selected => <Chip label={selected} sx={sx.chip} />}
-              >
-                {frequencies.map(frequency => (
-                  <MenuItem key={frequency} sx={sx.menuItem} value={frequency}>
-                    {frequency}
-                  </MenuItem>
-                ))}
-              </Select>
+              <SelectFrequency value={frequency} setValue={setFrequency} />
             </Grid>
           </Grid>
           <Grid item sx={sx.buttonWrapper}>
