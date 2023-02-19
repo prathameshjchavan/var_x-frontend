@@ -44,7 +44,16 @@ const OrderDetailItem = ({ item }) => {
         {item.variant.size && (
           <Typography variant="body2">Size: {item.variant.size}</Typography>
         )}
-        <Chip label={`$${item.variant.price}`} color="primary" />
+        <Grid container direction="column" gap="0.5rem">
+          <Grid item>
+            <Chip label={`$${item.variant.price}`} color="primary" />
+          </Grid>
+          {item.subscription && (
+            <Grid item>
+              <Chip label={`Every ${item.subscription}`} color="primary" />
+            </Grid>
+          )}
+        </Grid>
       </Grid>
     </Grid>
   )
