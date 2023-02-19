@@ -26,7 +26,7 @@ const CheckoutPortal = ({ user }) => {
   const { cart } = useContext(CartContext)
   const matchesXL = useMediaQuery(theme.breakpoints.down("xl"))
   const hasSubscriptionCart = cart.some(item => item.subscription)
-  const hasSubscriptionActive = user.subscriptions.length > 0
+  const hasSubscriptionActive = user?.subscriptions?.length > 0
   const [detailValues, setDetailValues] = useState({
     name: "",
     email: "",
