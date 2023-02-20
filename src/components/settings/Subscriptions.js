@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useContext } from "react"
-import { Grid, Typography } from "@mui/material"
+import { Chip, Grid, Typography, IconButton } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import axios from "axios"
 import { UserContext, FeedbackContext } from "../../contexts"
 import { setSnackbar } from "../../contexts/actions"
 import SettingsGrid from "./SettingsGrid"
 import QtyButton from "../product-list/QtyButton"
+import DeleteIcon from "../../images/Delete"
+import pauseIcon from "../../images/pause.svg"
 
 const Subscriptions = ({ setSelectedSetting }) => {
   const { user } = useContext(UserContext)
@@ -16,6 +18,24 @@ const Subscriptions = ({ setSelectedSetting }) => {
   const sx = {
     bold: {
       fontWeight: 600,
+    },
+    method: {
+      color: "#fff",
+      textTransform: "uppercase",
+      marginTop: "1rem",
+    },
+    lineHeight: {
+      lineHeight: 1.1,
+    },
+    chip: {
+      "& .MuiChip-label": {
+        fontWeight: 600,
+      },
+    },
+    iconButton: {
+      "&:hover": {
+        background: "transparent",
+      },
     },
   }
 
@@ -57,6 +77,16 @@ const Subscriptions = ({ setSelectedSetting }) => {
     width: "10rem",
   }))
 
+  const DeleteWrapper = styled("span")(() => ({
+    height: "3rem",
+    width: "2.5rem",
+  }))
+
+  const Pause = styled("img")(() => ({
+    height: "3rem",
+    width: "3rem",
+  }))
+
   // data
   const columns = [
     {
@@ -65,13 +95,22 @@ const Subscriptions = ({ setSelectedSetting }) => {
       width: 350,
       sortable: false,
       renderCell: ({ value }) => (
-        <Typography variant="body2" sx={sx.bold}>
-          {value.shippingInfo.name}
-          <br />
-          {value.shippingAddress.street}
-          <br />
-          {`${value.shippingAddress.city}, ${value.shippingAddress.state} ${value.shippingAddress.zip}`}
-        </Typography>
+        <Grid container direction="column">
+          <Grid item>
+            <Typography variant="body2" sx={{ ...sx.bold, ...sx.lineHeight }}>
+              {value.shippingInfo.name}
+              <br />
+              {value.shippingAddress.street}
+              <br />
+              {`${value.shippingAddress.city}, ${value.shippingAddress.state} ${value.shippingAddress.zip}`}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="h3" sx={sx.method}>
+              {value.paymentMethod.brand} {value.paymentMethod.last4}
+            </Typography>
+          </Grid>
+        </Grid>
       ),
     },
     {
@@ -116,10 +155,53 @@ const Subscriptions = ({ setSelectedSetting }) => {
       headerName: "Frequency",
       width: 250,
       sortable: false,
+      renderCell: ({ value }) => (
+        <Chip
+          label={value.split("_").join(" ")}
+          color="secondary"
+          sx={sx.chip}
+        />
+      ),
     },
-    { field: "next_delivery", headerName: "Next Order", width: 250 },
-    { field: "total", headerName: "Total", width: 250 },
-    { field: "", width: 250, sortable: false },
+    {
+      field: "next_delivery",
+      headerName: "Next Order",
+      width: 250,
+      renderCell: ({ value }) => new Date(value).toLocaleDateString(),
+    },
+    {
+      field: "total",
+      headerName: "Total",
+      width: 250,
+      renderCell: ({ value }) => (
+        <Chip
+          label={`$${parseInt(value).toFixed(2)}`}
+          sx={sx.chip}
+          color="secondary"
+        />
+      ),
+    },
+    {
+      field: "",
+      width: 250,
+      sortable: false,
+      renderCell: () => (
+        <Grid container>
+          <Grid item>
+            <IconButton sx={sx.iconButton}>
+              <DeleteWrapper>
+                <DeleteIcon />
+              </DeleteWrapper>
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <IconButton sx={sx.iconButton}>
+              <Pause src={pauseIcon} alt="pause subscription" />
+            </IconButton>
+          </Grid>
+        </Grid>
+      ),
+    },
   ]
 
   const rows = createData(subscriptions)
