@@ -62,7 +62,14 @@ const Payments = ({
 
   const removeCard = () => {
     const remaining = user.paymentMethods.filter(method => method.last4 !== "")
-    if (hasSubscriptionActive && remaining.length === 1) {
+    const subscriptionPayment = user.subscriptions.find(
+      subscription => subscription.paymentMethod.last4 === card.last4
+    )
+
+    if (
+      (hasSubscriptionActive && remaining.length === 1) ||
+      subscriptionPayment
+    ) {
       dispatchFeedback(
         setSnackbar({
           status: "error",
