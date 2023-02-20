@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useContext } from "react"
-import { Grid } from "@mui/material"
+import { Grid, Typography } from "@mui/material"
+import { styled } from "@mui/material/styles"
 import axios from "axios"
 import { UserContext, FeedbackContext } from "../../contexts"
 import { setSnackbar } from "../../contexts/actions"
 import SettingsGrid from "./SettingsGrid"
+import QtyButton from "../product-list/QtyButton"
 
 const Subscriptions = ({ setSelectedSetting }) => {
   const { user } = useContext(UserContext)
@@ -11,7 +13,11 @@ const Subscriptions = ({ setSelectedSetting }) => {
   const [subscriptions, setSubscriptions] = useState([])
 
   // sx prop
-  const sx = {}
+  const sx = {
+    bold: {
+      fontWeight: 600,
+    },
+  }
 
   // functions
   const createData = data =>
@@ -45,11 +51,66 @@ const Subscriptions = ({ setSelectedSetting }) => {
       })
     )
 
+  // styled components
+  const ProductImage = styled("img")(() => ({
+    height: "10rem",
+    width: "10rem",
+  }))
+
   // data
   const columns = [
-    { field: "details", headerName: "Details", width: 250, sortable: false },
-    { field: "item", headerName: "Item", width: 250, sortable: false },
-    { field: "quantity", headerName: "Quantity", width: 250, sortable: false },
+    {
+      field: "details",
+      headerName: "Details",
+      width: 350,
+      sortable: false,
+      renderCell: ({ value }) => (
+        <Typography variant="body2" sx={sx.bold}>
+          {value.shippingInfo.name}
+          <br />
+          {value.shippingAddress.street}
+          <br />
+          {`${value.shippingAddress.city}, ${value.shippingAddress.state} ${value.shippingAddress.zip}`}
+        </Typography>
+      ),
+    },
+    {
+      field: "item",
+      headerName: "Item",
+      width: 250,
+      sortable: false,
+      renderCell: ({ value }) => (
+        <Grid container direction="column" alignItems="center">
+          <Grid item>
+            <ProductImage
+              src={`${process.env.STRAPI_API_URL}${value.variant.images[0].url}`}
+              alt={value.name}
+            />
+          </Grid>
+          <Grid item>
+            <Typography variant="body2" sx={sx.bold}>
+              {value.name}
+            </Typography>
+          </Grid>
+        </Grid>
+      ),
+    },
+    {
+      field: "quantity",
+      headerName: "Quantity",
+      width: 250,
+      sortable: false,
+      renderCell: ({ value }) => (
+        <QtyButton
+          stock={{ attributes: { quantity: value.variant.quantity } }}
+          variant={value.variant}
+          name={value.name}
+          hideCartButton
+          round
+          white
+        />
+      ),
+    },
     {
       field: "frequency",
       headerName: "Frequency",
@@ -62,8 +123,6 @@ const Subscriptions = ({ setSelectedSetting }) => {
   ]
 
   const rows = createData(subscriptions)
-
-  console.log(rows)
 
   // useEffects
   useEffect(() => {
@@ -89,7 +148,7 @@ const Subscriptions = ({ setSelectedSetting }) => {
   return (
     <SettingsGrid
       setSelectedSetting={setSelectedSetting}
-      rows={[]}
+      rows={rows}
       columns={columns}
       rowsPerPage={3}
     />
