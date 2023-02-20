@@ -13,6 +13,38 @@ const Subscriptions = ({ setSelectedSetting }) => {
   // sx prop
   const sx = {}
 
+  // functions
+  const createData = data =>
+    data.map(
+      ({
+        id,
+        shippingInfo,
+        shippingAddress,
+        billingInfo,
+        billingAddress,
+        paymentMethod,
+        name,
+        variant,
+        quantity,
+        frequency,
+        next_delivery,
+      }) => ({
+        id,
+        details: {
+          shippingInfo,
+          shippingAddress,
+          billingInfo,
+          billingAddress,
+          paymentMethod,
+        },
+        item: { name, variant },
+        quantity: { quantity, variant, name },
+        frequency,
+        next_delivery,
+        total: (variant.price * quantity * 1.075).toFixed(2),
+      })
+    )
+
   // data
   const columns = [
     { field: "details", headerName: "Details", width: 250, sortable: false },
@@ -24,10 +56,14 @@ const Subscriptions = ({ setSelectedSetting }) => {
       width: 250,
       sortable: false,
     },
-    { field: "next order", headerName: "Next Order", width: 250 },
+    { field: "next_delivery", headerName: "Next Order", width: 250 },
     { field: "total", headerName: "Total", width: 250 },
     { field: "", width: 250, sortable: false },
   ]
+
+  const rows = createData(subscriptions)
+
+  console.log(rows)
 
   // useEffects
   useEffect(() => {
