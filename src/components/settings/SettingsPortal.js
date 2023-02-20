@@ -27,6 +27,7 @@ import Settings from "./Settings"
 import { setUser } from "../../contexts/actions"
 import OrderHistory from "./OrderHistory"
 import Favorites from "./Favorites"
+import Subscriptions from "./Subscriptions"
 
 const SettingsPortal = () => {
   const { user, dispatchUser, defaultUser } = useContext(UserContext)
@@ -54,7 +55,7 @@ const SettingsPortal = () => {
       {
         label: "Subscriptions",
         icon: subscriptionIcon,
-        component: Settings,
+        component: Subscriptions,
       },
     ],
     []
