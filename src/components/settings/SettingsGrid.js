@@ -41,6 +41,10 @@ const SettingsGrid = ({
         transform: "translateX(-50%)",
         paddingLeft: "27.975px",
       },
+      "& .MuiDataGrid-columnHeaderTitleContainerContent:not(.MuiDataGrid-columnHeaderTitleContainerContent:has(+ .MuiDataGrid-iconButtonContainer))":
+        {
+          paddingRight: "1.75rem",
+        },
       "& .MuiDataGrid-columnHeaderTitleContainer .MuiDataGrid-iconButtonContainer":
         {
           width: "27.975px",
