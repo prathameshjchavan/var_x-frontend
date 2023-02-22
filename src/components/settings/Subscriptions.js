@@ -8,14 +8,23 @@ import SettingsGrid from "./SettingsGrid"
 import QtyButton from "../product-list/QtyButton"
 import DeleteIcon from "../../images/Delete"
 import pauseIcon from "../../images/pause.svg"
+import SubscriptionDetails from "./SubscriptionDetails"
 
 const Subscriptions = ({ setSelectedSetting }) => {
   const { user } = useContext(UserContext)
   const { dispatchFeedback } = useContext(FeedbackContext)
   const [subscriptions, setSubscriptions] = useState([])
+  const [open, setOpen] = useState(null)
+  const subscription = subscriptions.find(
+    subscription => subscription.id === open
+  )
 
   // sx prop
   const sx = {
+    item: {
+      height: "100%",
+      width: "100%",
+    },
     bold: {
       fontWeight: 600,
     },
@@ -228,12 +237,20 @@ const Subscriptions = ({ setSelectedSetting }) => {
   }, [])
 
   return (
-    <SettingsGrid
-      setSelectedSetting={setSelectedSetting}
-      rows={rows}
-      columns={columns}
-      rowsPerPage={3}
-    />
+    <Grid item container sx={sx.item}>
+      <SettingsGrid
+        setSelectedSetting={setSelectedSetting}
+        setOpen={setOpen}
+        rows={rows}
+        columns={columns}
+        rowsPerPage={3}
+      />
+      <SubscriptionDetails
+        subscription={subscription}
+        open={open}
+        setOpen={setOpen}
+      />
+    </Grid>
   )
 }
 

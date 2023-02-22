@@ -10,6 +10,7 @@ const OrderHistory = ({ setSelectedSetting }) => {
   const [orders, setOrders] = useState([])
   const [open, setOpen] = useState(null)
   const { user } = useContext(UserContext)
+  const order = orders.find(order => order.id === open)
 
   // sx prop
   const sx = {
@@ -97,7 +98,7 @@ const OrderHistory = ({ setSelectedSetting }) => {
         rows={rows}
         columns={columns}
       />
-      <OrderDetails orders={orders} open={open} setOpen={setOpen} />
+      <OrderDetails order={order} open={open} setOpen={setOpen} />
     </Grid>
   )
 }
