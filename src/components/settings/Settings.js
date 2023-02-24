@@ -40,7 +40,7 @@ const Settings = ({ setSelectedSetting }) => {
     return Object.keys(allErrors).some(error => allErrors[error] === true)
   }, [detailErrors, locationErrors])
   const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PK)
-  const hasSubscriptionActive = user.subscriptions.length > 0
+  const hasSubscriptionActive = user?.subscriptions?.length > 0
 
   // sx prop
   const sx = {

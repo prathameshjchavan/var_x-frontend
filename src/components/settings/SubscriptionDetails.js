@@ -171,6 +171,27 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
     dialogContent: {
       padding: 0,
     },
+    dialogSpacer: {
+      height: "4px",
+      width: "100%",
+      backgroundColor: "#fff",
+    },
+    actionButtonContainer: {
+      backgroundColor: theme.palette.secondary.main,
+      padding: "2rem",
+    },
+    button: {
+      color: "#fff",
+      fontSize: "1rem",
+      fontWeight: "600",
+    },
+  }
+
+  // functions
+  const handleClose = () => {
+    setDetailErrors({})
+    setLocationErrors({})
+    setEdit(null)
   }
 
   // styled components
@@ -293,13 +314,8 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
           )}
         </Grid>
       </SwipeableDrawer>
-      <Dialog
-        open={!!edit}
-        sx={sx.dialog}
-        maxWidth="lg"
-        onClose={() => setEdit(null)}
-      >
-        <DialogTitle variant="h2">Edit {edit} details</DialogTitle>
+      <Dialog open={!!edit} sx={sx.dialog} maxWidth="lg" onClose={handleClose}>
+        <DialogTitle variant="h2">Change {edit} details</DialogTitle>
         <DialogContent>
           <Grid container direction="column">
             <Grid item>
@@ -319,6 +335,7 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
                     />
                   </Grid>
                 </Grid>
+                <Grid item sx={sx.dialogSpacer} />
                 <Grid item sx={sx.editWrapper}>
                   <Grid container justifyContent="center" sx={sx.editContainer}>
                     <Location
@@ -332,6 +349,23 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
                       setChangesMade={setLocationChangesMade}
                       edit
                     />
+                  </Grid>
+                </Grid>
+                <Grid
+                  item
+                  container
+                  sx={sx.actionButtonContainer}
+                  justifyContent="flex-end"
+                >
+                  <Grid item>
+                    <Button sx={sx.button} onClick={handleClose}>
+                      Cancel
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button sx={sx.button} variant="contained">
+                      Save
+                    </Button>
                   </Grid>
                 </Grid>
               </Grid>
