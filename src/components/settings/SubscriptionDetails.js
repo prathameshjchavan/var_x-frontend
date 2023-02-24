@@ -8,6 +8,7 @@ import {
   useMediaQuery,
 } from "@mui/material"
 import React, { useMemo } from "react"
+import OrderDetailItem from "./OrderDetailItem"
 
 const SubscriptionDetails = ({ subscription, open, setOpen }) => {
   const theme = useTheme()
@@ -15,7 +16,6 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
   const iOS =
     typeof navigator !== "undefined" &&
     /iPad|iPhone|iPod/.test(navigator.userAgent)
-
   const details = useMemo(
     () => [
       {
@@ -39,6 +39,17 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
         }`,
       },
     ],
+    [subscription]
+  )
+  const item = useMemo(
+    () =>
+      subscription
+        ? {
+            name: subscription.name,
+            qty: subscription.quantity,
+            variant: subscription.variant,
+          }
+        : null,
     [subscription]
   )
 
@@ -202,14 +213,14 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
             </Grid>
           </Grid>
         ))}
-        {/* <Grid item sx={{ ...sx.dark, ...sx.padding }}>
-          <Typography variant="body2" sx={sx.bold} gutterBottom>
-            Items
-          </Typography>
-          {order?.items.map(item => (
-            <OrderDetailItem key={item.variant.id} item={item} />
-          ))}
-        </Grid> */}
+        {item && (
+          <Grid item sx={{ ...sx.dark, ...sx.padding }}>
+            <Typography variant="body2" sx={sx.bold} gutterBottom>
+              Item
+            </Typography>
+            <OrderDetailItem item={item} />
+          </Grid>
+        )}
       </Grid>
     </SwipeableDrawer>
   )
