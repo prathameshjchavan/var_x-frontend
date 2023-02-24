@@ -156,8 +156,20 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
         width: "100%",
       },
       "& .MuiDialogTitle-root": {
-        height: "4rem",
+        backgroundColor: theme.palette.secondary.main,
+        padding: "2rem",
       },
+      "& .MuiDialogContent-root": {
+        padding: 0,
+      },
+    },
+    editWrapper: { width: "100%", margin: "1rem 0" },
+    editContainer: {
+      width: "100%",
+      height: "30rem",
+    },
+    dialogContent: {
+      padding: 0,
     },
   }
 
@@ -287,36 +299,42 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
         maxWidth="lg"
         onClose={() => setEdit(null)}
       >
-        <DialogTitle>
-          <Typography variant="h2">Edit {edit} details</Typography>
-        </DialogTitle>
+        <DialogTitle variant="h2">Edit {edit} details</DialogTitle>
         <DialogContent>
-          <Grid container direction="column" alignItems="center">
-            <Grid item container>
-              <Details
-                user={user}
-                values={detailValues}
-                setValues={setDetailValues}
-                slot={detailSlot}
-                setSlot={setDetailSlot}
-                errors={detailErrors}
-                setErrors={setDetailErrors}
-                setChangesMade={setDetailChangesMade}
-                edit
-              />
-            </Grid>
-            <Grid item container>
-              <Location
-                user={user}
-                values={locationValues}
-                setValues={setLocationValues}
-                slot={locationSlot}
-                setSlot={setLocationSlot}
-                errors={locationErrors}
-                setErrors={setLocationErrors}
-                setChangesMade={setLocationChangesMade}
-                edit
-              />
+          <Grid container direction="column">
+            <Grid item>
+              <Grid container direction="column" alignItems="center">
+                <Grid item sx={sx.editWrapper}>
+                  <Grid container justifyContent="center" sx={sx.editContainer}>
+                    <Details
+                      user={user}
+                      values={detailValues}
+                      setValues={setDetailValues}
+                      slot={detailSlot}
+                      setSlot={setDetailSlot}
+                      errors={detailErrors}
+                      setErrors={setDetailErrors}
+                      setChangesMade={setDetailChangesMade}
+                      edit
+                    />
+                  </Grid>
+                </Grid>
+                <Grid item sx={sx.editWrapper}>
+                  <Grid container justifyContent="center" sx={sx.editContainer}>
+                    <Location
+                      user={user}
+                      values={locationValues}
+                      setValues={setLocationValues}
+                      slot={locationSlot}
+                      setSlot={setLocationSlot}
+                      errors={locationErrors}
+                      setErrors={setLocationErrors}
+                      setChangesMade={setLocationChangesMade}
+                      edit
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
         </DialogContent>
