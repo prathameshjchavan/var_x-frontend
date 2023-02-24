@@ -7,7 +7,7 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material"
-import React from "react"
+import React, { useMemo } from "react"
 
 const SubscriptionDetails = ({ subscription, open, setOpen }) => {
   const theme = useTheme()
@@ -15,6 +15,32 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
   const iOS =
     typeof navigator !== "undefined" &&
     /iPad|iPhone|iPod/.test(navigator.userAgent)
+
+  const details = useMemo(
+    () => [
+      {
+        label: "Frequency",
+        string: subscription?.frequency.split("_").join(" "),
+      },
+      {
+        label: "Next Order",
+        string: new Date(subscription?.next_delivery).toLocaleDateString(),
+      },
+      {
+        label: "Total",
+        value: (subscription?.variant.price * subscription?.quantity).toFixed(
+          2
+        ),
+      },
+      {
+        label: "Payment Method",
+        string: `${subscription?.paymentMethod.brand.toUpperCase()} ${
+          subscription?.paymentMethod.last4
+        }`,
+      },
+    ],
+    [subscription]
+  )
 
   // sx prop
   const sx = {
@@ -70,6 +96,12 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
       [theme.breakpoints.down("sm")]: {
         fontSize: "1.25rem",
       },
+    },
+    details: {
+      padding: "0.5rem 1rem",
+    },
+    detailValue: {
+      maxWidth: "100%",
     },
   }
 
@@ -148,35 +180,29 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
             {subscription?.shippingAddress.zip}
           </Typography>
         </Grid>
-        {/* {prices.map((price, index) => (
+        {details.map((detail, index) => (
           <Grid
             key={index}
             item
             container
             justifyContent="space-between"
-            sx={sx.prices}
+            sx={sx.details}
           >
             <Grid item>
               <Typography variant="body2" sx={sx.bold}>
-                {price.label}
+                {detail.label}
               </Typography>
             </Grid>
-            <Grid item sx={sx.priceValue}>
-              {price.string ? (
-                <Typography variant="body2" sx={sx.text}>
-                  {price.string}
-                </Typography>
-              ) : (
-                <Chip
-                  label={`$${price.value?.toFixed(2)}`}
-                  color="secondary"
-                  sx={sx.bold}
-                />
-              )}
+            <Grid item sx={sx.detailValue}>
+              <Chip
+                label={detail.string || `$${detail.value}`}
+                color="secondary"
+                sx={sx.bold}
+              />
             </Grid>
           </Grid>
         ))}
-        <Grid item sx={{ ...sx.dark, ...sx.padding }}>
+        {/* <Grid item sx={{ ...sx.dark, ...sx.padding }}>
           <Typography variant="body2" sx={sx.bold} gutterBottom>
             Items
           </Typography>
