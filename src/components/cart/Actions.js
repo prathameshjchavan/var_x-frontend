@@ -12,6 +12,7 @@ const Actions = ({ loading, handleAction, type }) => {
     actions: {
       position: "absolute",
       right: 0,
+      zIndex: 999,
     },
     iconButton: {
       [theme.breakpoints.down("sm")]: {

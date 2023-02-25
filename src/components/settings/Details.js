@@ -30,6 +30,7 @@ const Details = ({
   billingValues,
   setBillingValues,
   noSlots,
+  subscription,
 }) => {
   const theme = useTheme()
   const isMounted = useRef(false)
@@ -135,13 +136,13 @@ const Details = ({
   }, [slot, noSlots, user.name, user.contactInfo, setValues, checkout])
 
   useEffect(() => {
-    if (checkout) return
+    if (!checkout || subscription) {
+      const changed = Object.keys(user.contactInfo[slot]).some(
+        field => values[field] !== user.contactInfo[slot][field]
+      )
 
-    const changed = Object.keys(user.contactInfo[slot]).some(
-      field => values[field] !== user.contactInfo[slot][field]
-    )
-
-    setChangesMade(changed)
+      setChangesMade(changed)
+    }
   }, [user, slot, values, setChangesMade, checkout])
 
   useEffect(() => {
@@ -205,7 +206,7 @@ const Details = ({
           sx={sx.slotContainer}
         >
           <Slots slot={slot} setSlot={setSlot} checkout={checkout} />
-          {checkout && (
+          {checkout && !subscription && (
             <Grid item>
               <FormControlLabel
                 sx={sx.switchWrapper}

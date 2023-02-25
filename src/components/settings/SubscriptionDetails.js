@@ -12,18 +12,29 @@ import {
   DialogContent,
 } from "@mui/material"
 import { styled } from "@mui/material/styles"
-import React, { useState, useMemo, useContext, Fragment } from "react"
+import React, {
+  useState,
+  useMemo,
+  useContext,
+  Fragment,
+  useCallback,
+} from "react"
 import OrderDetailItem from "./OrderDetailItem"
 import editIcon from "../../images/edit.svg"
 import Details from "./Details"
 import Location from "./Location"
-import { UserContext } from "../../contexts"
+import { UserContext, FeedbackContext } from "../../contexts"
+import { setSnackbar, setUser } from "../../contexts/actions"
 import Actions from "../cart/Actions"
+import axios from "axios"
+import validate from "../ui/validate"
 
 const SubscriptionDetails = ({ subscription, open, setOpen }) => {
   const theme = useTheme()
   const { user } = useContext(UserContext)
   const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
+  const { dispatchFeedback } = useContext(FeedbackContext)
+  const { dispatchUser } = useContext(UserContext)
   const iOS =
     typeof navigator !== "undefined" &&
     /iPad|iPhone|iPod/.test(navigator.userAgent)
@@ -197,63 +208,78 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
     setEdit(null)
   }
 
+  const errorHelper = useCallback(values => {
+    const valid = validate(values)
+
+    return Object.keys(valid).some(value => !valid[value])
+  }, [])
+
   const handleAction = (action, type) => {
-    console.log(type)
-    // if (steps[selectedStep].error && action !== "delete") {
-    //   dispatchFeedback(
-    //     setSnackbar({
-    //       status: "error",
-    //       message: "All fields must be valid before saving",
-    //     })
-    //   )
-    //   return
-    // }
-    // setLoading(action)
-    // const isDetails = steps[selectedStep].title === "Contact Info"
-    // const isLocation = steps[selectedStep].title === "Address"
-    // axios
-    //   .put(
-    //     `${process.env.STRAPI_API_URL}/api/user/settings`,
-    //     {
-    //       details: isDetails && action !== "delete" ? details : undefined,
-    //       detailSlot: isDetails ? detailSlot : undefined,
-    //       location: isLocation && action !== "delete" ? location : undefined,
-    //       locationSlot: isLocation ? locationSlot : undefined,
-    //     },
-    //     {
-    //       headers: { Authorization: `Bearer ${user.jwt}` },
-    //     }
-    //   )
-    //   .then(response => {
-    //     dispatchFeedback(
-    //       setSnackbar({
-    //         status: "success",
-    //         message: `Information ${
-    //           action === "delete" ? "Deleted" : "Saved"
-    //         } Successfully`,
-    //       })
-    //     )
-    //     dispatchUser(
-    //       setUser({ ...response.data, jwt: user.jwt, onboarding: true })
-    //     )
-    //     if (action === "delete") {
-    //       setErrors({})
-    //     }
-    //   })
-    //   .catch(error => {
-    //     console.error(error)
-    //     dispatchFeedback(
-    //       setSnackbar({
-    //         status: "error",
-    //         message: `There was a problem ${
-    //           action === "delete" ? "deleting" : "saving"
-    //         } your information, please try again.`,
-    //       })
-    //     )
-    //   })
-    //   .finally(() => {
-    //     setLoading(null)
-    //   })
+    if (
+      type === "details"
+        ? errorHelper(detailValues)
+        : errorHelper(locationValues) && action !== "delete"
+    ) {
+      dispatchFeedback(
+        setSnackbar({
+          status: "error",
+          message: "All fields must be valid before saving",
+        })
+      )
+      return
+    }
+    setLoading(`${type}-${action}`)
+    axios
+      .put(
+        `${process.env.STRAPI_API_URL}/api/user/settings`,
+        {
+          details:
+            detailChangesMade && action !== "delete" ? detailValues : undefined,
+          detailSlot: detailChangesMade ? detailSlot : undefined,
+          location:
+            locationChangesMade && action !== "delete"
+              ? locationValues
+              : undefined,
+          locationSlot: locationChangesMade ? locationSlot : undefined,
+        },
+        {
+          headers: { Authorization: `Bearer ${user.jwt}` },
+        }
+      )
+      .then(response => {
+        dispatchFeedback(
+          setSnackbar({
+            status: "success",
+            message: `Information ${
+              action === "delete" ? "Deleted" : "Saved"
+            } Successfully`,
+          })
+        )
+        dispatchUser(
+          setUser({ ...response.data, jwt: user.jwt, onboarding: true })
+        )
+        if (action === "delete") {
+          if (type === "details") {
+            setDetailErrors({})
+          } else {
+            setLocationErrors({})
+          }
+        }
+      })
+      .catch(error => {
+        console.error(error)
+        dispatchFeedback(
+          setSnackbar({
+            status: "error",
+            message: `There was a problem ${
+              action === "delete" ? "deleting" : "saving"
+            } your information, please try again.`,
+          })
+        )
+      })
+      .finally(() => {
+        setLoading(null)
+      })
   }
 
   // styled components
@@ -397,6 +423,8 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
                       setErrors={setDetailErrors}
                       setChangesMade={setDetailChangesMade}
                       edit
+                      checkout
+                      subscription
                     />
                   </Grid>
                 </Grid>
@@ -418,6 +446,8 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
                       setErrors={setLocationErrors}
                       setChangesMade={setLocationChangesMade}
                       edit
+                      checkout
+                      subscription
                     />
                   </Grid>
                 </Grid>
