@@ -1,18 +1,9 @@
-import {
-  Grid,
-  Button,
-  useTheme,
-  Typography,
-  IconButton,
-  CircularProgress,
-} from "@mui/material"
-import { styled } from "@mui/material/styles"
-import saveIcon from "../../images/save.svg"
-import DeleteIcon from "../../images/Delete"
+import { Grid, Button, useTheme, Typography } from "@mui/material"
 import React, { useState, useContext, useCallback } from "react"
 import axios from "axios"
 import { FeedbackContext, UserContext } from "../../contexts"
 import { setSnackbar, setUser } from "../../contexts/actions"
+import Actions from "./Actions"
 
 const CheckoutNavigation = ({
   steps,
@@ -54,15 +45,6 @@ const CheckoutNavigation = ({
         opacity: 0.5,
       },
     },
-    actions: {
-      position: "absolute",
-      right: 0,
-    },
-    iconButton: {
-      [theme.breakpoints.down("sm")]: {
-        padding: "6px",
-      },
-    },
     text: {
       [theme.breakpoints.down("sm")]: {
         fontSize: "1.25rem",
@@ -77,6 +59,7 @@ const CheckoutNavigation = ({
     },
   }
 
+  // functions
   const handleAction = useCallback(
     action => {
       if (steps[selectedStep].error && action !== "delete") {
@@ -152,25 +135,6 @@ const CheckoutNavigation = ({
     ]
   )
 
-  // styled components
-  const Icon = styled("img")(() => ({
-    height: "2.25rem",
-    width: "2.25rem",
-    [theme.breakpoints.down("sm")]: {
-      height: "1.75rem",
-      width: "1.75rem",
-    },
-  }))
-
-  const DeleteIconWrapper = styled("span")(() => ({
-    height: "2rem",
-    width: "2rem",
-    [theme.breakpoints.down("sm")]: {
-      height: "1.5rem",
-      width: "1.5rem",
-    },
-  }))
-
   return (
     <Grid
       item
@@ -206,36 +170,7 @@ const CheckoutNavigation = ({
         </Button>
       </Grid>
       {steps[selectedStep].hasActions && user.name !== "Guest" && (
-        <Grid item sx={sx.actions}>
-          <Grid container>
-            <Grid item>
-              {loading === "save" ? (
-                <CircularProgress />
-              ) : (
-                <IconButton
-                  sx={sx.iconButton}
-                  onClick={() => handleAction("save")}
-                >
-                  <Icon src={saveIcon} alt="save" />
-                </IconButton>
-              )}
-            </Grid>
-            <Grid item>
-              {loading === "delete" ? (
-                <CircularProgress />
-              ) : (
-                <IconButton
-                  sx={sx.iconButton}
-                  onClick={() => handleAction("delete")}
-                >
-                  <DeleteIconWrapper>
-                    <DeleteIcon color="#fff" />
-                  </DeleteIconWrapper>
-                </IconButton>
-              )}
-            </Grid>
-          </Grid>
-        </Grid>
+        <Actions loading={loading} handleAction={handleAction} />
       )}
     </Grid>
   )

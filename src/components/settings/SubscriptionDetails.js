@@ -18,6 +18,7 @@ import editIcon from "../../images/edit.svg"
 import Details from "./Details"
 import Location from "./Location"
 import { UserContext } from "../../contexts"
+import Actions from "../cart/Actions"
 
 const SubscriptionDetails = ({ subscription, open, setOpen }) => {
   const theme = useTheme()
@@ -44,6 +45,7 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
   const [locationErrors, setLocationErrors] = useState({})
   const [detailChangesMade, setDetailChangesMade] = useState(false)
   const [locationChangesMade, setLocationChangesMade] = useState(false)
+  const [loading, setLoading] = useState(null)
   const details = useMemo(
     () => [
       {
@@ -167,6 +169,7 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
     editContainer: {
       width: "100%",
       height: "30rem",
+      position: "relative",
     },
     dialogContent: {
       padding: 0,
@@ -182,7 +185,7 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
     },
     button: {
       color: "#fff",
-      fontSize: "1rem",
+      fontSize: "1.25rem",
       fontWeight: "600",
     },
   }
@@ -194,13 +197,70 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
     setEdit(null)
   }
 
+  const handleAction = (action, type) => {
+    console.log(type)
+    // if (steps[selectedStep].error && action !== "delete") {
+    //   dispatchFeedback(
+    //     setSnackbar({
+    //       status: "error",
+    //       message: "All fields must be valid before saving",
+    //     })
+    //   )
+    //   return
+    // }
+    // setLoading(action)
+    // const isDetails = steps[selectedStep].title === "Contact Info"
+    // const isLocation = steps[selectedStep].title === "Address"
+    // axios
+    //   .put(
+    //     `${process.env.STRAPI_API_URL}/api/user/settings`,
+    //     {
+    //       details: isDetails && action !== "delete" ? details : undefined,
+    //       detailSlot: isDetails ? detailSlot : undefined,
+    //       location: isLocation && action !== "delete" ? location : undefined,
+    //       locationSlot: isLocation ? locationSlot : undefined,
+    //     },
+    //     {
+    //       headers: { Authorization: `Bearer ${user.jwt}` },
+    //     }
+    //   )
+    //   .then(response => {
+    //     dispatchFeedback(
+    //       setSnackbar({
+    //         status: "success",
+    //         message: `Information ${
+    //           action === "delete" ? "Deleted" : "Saved"
+    //         } Successfully`,
+    //       })
+    //     )
+    //     dispatchUser(
+    //       setUser({ ...response.data, jwt: user.jwt, onboarding: true })
+    //     )
+    //     if (action === "delete") {
+    //       setErrors({})
+    //     }
+    //   })
+    //   .catch(error => {
+    //     console.error(error)
+    //     dispatchFeedback(
+    //       setSnackbar({
+    //         status: "error",
+    //         message: `There was a problem ${
+    //           action === "delete" ? "deleting" : "saving"
+    //         } your information, please try again.`,
+    //       })
+    //     )
+    //   })
+    //   .finally(() => {
+    //     setLoading(null)
+    //   })
+  }
+
   // styled components
   const EditIcon = styled("img")(() => ({
     height: "1.5rem",
     width: "1.5rem",
   }))
-
-  console.log(subscription)
 
   return (
     <Fragment>
@@ -322,6 +382,11 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
               <Grid container direction="column" alignItems="center">
                 <Grid item sx={sx.editWrapper}>
                   <Grid container justifyContent="center" sx={sx.editContainer}>
+                    <Actions
+                      loading={loading}
+                      handleAction={handleAction}
+                      type="details"
+                    />
                     <Details
                       user={user}
                       values={detailValues}
@@ -338,6 +403,11 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
                 <Grid item sx={sx.dialogSpacer} />
                 <Grid item sx={sx.editWrapper}>
                   <Grid container justifyContent="center" sx={sx.editContainer}>
+                    <Actions
+                      loading={loading}
+                      handleAction={handleAction}
+                      type="location"
+                    />
                     <Location
                       user={user}
                       values={locationValues}
