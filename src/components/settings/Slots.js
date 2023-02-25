@@ -1,7 +1,7 @@
 import { Button, Grid, Typography, useTheme } from "@mui/material"
 import React, { useCallback } from "react"
 
-const Slots = ({ slot, setSlot, checkout, noLabel }) => {
+const Slots = ({ slot, setSlot, checkout, noLabel, name }) => {
   const theme = useTheme()
 
   // sx prop
@@ -89,7 +89,7 @@ const Slots = ({ slot, setSlot, checkout, noLabel }) => {
       {checkout && !noLabel && (
         <Grid item>
           <Typography variant="body1" sx={sx.shipping}>
-            Shipping
+            {name || "Shipping"}
           </Typography>
         </Grid>
       )}

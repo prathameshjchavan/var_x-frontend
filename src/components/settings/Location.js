@@ -133,7 +133,7 @@ const Location = ({
   }, [user, slot, setValues, noSlots])
 
   useEffect(() => {
-    if (!checkout || subscription) {
+    if (!checkout || !!subscription) {
       const changed = Object.keys(user.locations[slot]).some(
         field => values[field] !== user.locations[slot][field]
       )
@@ -216,7 +216,7 @@ const Location = ({
           justifyContent={checkout ? "space-between" : undefined}
           sx={sx.slotContainer}
         >
-          <Slots slot={slot} setSlot={setSlot} checkout />
+          <Slots slot={slot} setSlot={setSlot} checkout name={subscription} />
           {checkout && !subscription && (
             <Grid item>
               <FormControlLabel

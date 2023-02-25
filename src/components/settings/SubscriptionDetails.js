@@ -342,7 +342,7 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
               {subscription?.billingAddress.state}{" "}
               {subscription?.billingAddress.zip}
             </Typography>
-            <IconButton onClick={() => setEdit("billing")} sx={sx.edit}>
+            <IconButton onClick={() => setEdit("Billing")} sx={sx.edit}>
               <EditIcon src={editIcon} alt="edit" />
             </IconButton>
           </Grid>
@@ -364,7 +364,7 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
               {subscription?.shippingAddress.state}{" "}
               {subscription?.shippingAddress.zip}
             </Typography>
-            <IconButton onClick={() => setEdit("shipping")} sx={sx.edit}>
+            <IconButton onClick={() => setEdit("Shipping")} sx={sx.edit}>
               <EditIcon src={editIcon} alt="edit" />
             </IconButton>
           </Grid>
@@ -401,7 +401,9 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
         </Grid>
       </SwipeableDrawer>
       <Dialog open={!!edit} sx={sx.dialog} maxWidth="lg" onClose={handleClose}>
-        <DialogTitle variant="h2">Change {edit} details</DialogTitle>
+        <DialogTitle variant="h2">
+          Change {edit?.toLowerCase()} details
+        </DialogTitle>
         <DialogContent>
           <Grid container direction="column">
             <Grid item>
@@ -424,7 +426,7 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
                       setChangesMade={setDetailChangesMade}
                       edit
                       checkout
-                      subscription
+                      subscription={edit}
                     />
                   </Grid>
                 </Grid>
@@ -447,7 +449,7 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
                       setChangesMade={setLocationChangesMade}
                       edit
                       checkout
-                      subscription
+                      subscription={edit}
                     />
                   </Grid>
                 </Grid>

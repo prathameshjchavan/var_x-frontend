@@ -136,7 +136,7 @@ const Details = ({
   }, [slot, noSlots, user.name, user.contactInfo, setValues, checkout])
 
   useEffect(() => {
-    if (!checkout || subscription) {
+    if (!checkout || !!subscription) {
       const changed = Object.keys(user.contactInfo[slot]).some(
         field => values[field] !== user.contactInfo[slot][field]
       )
@@ -205,7 +205,12 @@ const Details = ({
           justifyContent={checkout ? "space-between" : undefined}
           sx={sx.slotContainer}
         >
-          <Slots slot={slot} setSlot={setSlot} checkout={checkout} />
+          <Slots
+            slot={slot}
+            setSlot={setSlot}
+            checkout={checkout}
+            name={subscription}
+          />
           {checkout && !subscription && (
             <Grid item>
               <FormControlLabel
