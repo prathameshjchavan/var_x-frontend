@@ -10,6 +10,7 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  CircularProgress,
 } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import React, {
@@ -31,10 +32,9 @@ import validate from "../ui/validate"
 
 const SubscriptionDetails = ({ subscription, open, setOpen }) => {
   const theme = useTheme()
-  const { user } = useContext(UserContext)
   const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
   const { dispatchFeedback } = useContext(FeedbackContext)
-  const { dispatchUser } = useContext(UserContext)
+  const { user, dispatchUser } = useContext(UserContext)
   const iOS =
     typeof navigator !== "undefined" &&
     /iPad|iPhone|iPod/.test(navigator.userAgent)
@@ -289,10 +289,65 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
       return
     }
 
-    setLoading(true)
-  }
+    setLoading("submit")
 
-  console.log(subscription)
+    axios
+      .put(
+        `${process.env.STRAPI_API_URL}/api/subscriptions/${subscription.id}`,
+        {
+          data: {
+            shippingInfo: edit === "Shipping" ? detailValues : undefined,
+            shippingAddress: edit === "Shipping" ? locationValues : undefined,
+            billingInfo: edit === "Billing" ? detailValues : undefined,
+            billingAddress: edit === "Billing" ? locationValues : undefined,
+          },
+        },
+        {
+          headers: { Authorization: `Bearer ${user.jwt}` },
+        }
+      )
+      .then(response => {
+        dispatchFeedback(
+          setSnackbar({
+            status: "success",
+            message: `${edit} Details Saved Successfully`,
+          })
+        )
+
+        const { billingInfo, billingAddress, shippingInfo, shippingAddress } =
+          response.data.data.attributes
+        const subscriptions = user.subscriptions
+        const index = subscriptions.findIndex(
+          item => item.id === subscription.id
+        )
+        subscriptions[index] = {
+          ...subscriptions[index],
+          billingInfo,
+          billingAddress,
+          shippingInfo,
+          shippingAddress,
+        }
+
+        dispatchUser(setUser({ ...user, subscriptions }))
+      })
+      .catch(error => {
+        console.error(error)
+        dispatchFeedback(
+          setSnackbar({
+            status: "error",
+            message: `There was a problem saving your ${edit.toLowerCase()} details, please try again.`,
+          })
+        )
+      })
+      .finally(() => {
+        setDetailErrors({})
+        setLocationErrors({})
+        setDetailSlot(0)
+        setLocationSlot(0)
+        setLoading(null)
+        setEdit(null)
+      })
+  }
 
   // styled components
   const EditIcon = styled("img")(() => ({
@@ -479,13 +534,17 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
                     </Button>
                   </Grid>
                   <Grid item>
-                    <Button
-                      sx={sx.button}
-                      variant="contained"
-                      onClick={handleSubmit}
-                    >
-                      Save
-                    </Button>
+                    {loading === "submit" ? (
+                      <CircularProgress />
+                    ) : (
+                      <Button
+                        sx={sx.button}
+                        variant="contained"
+                        onClick={handleSubmit}
+                      >
+                        Save
+                      </Button>
+                    )}
                   </Grid>
                 </Grid>
               </Grid>
