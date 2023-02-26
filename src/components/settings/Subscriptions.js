@@ -247,6 +247,7 @@ const Subscriptions = ({ setSelectedSetting }) => {
       />
       <SubscriptionDetails
         subscription={subscription}
+        setSubscriptions={setSubscriptions}
         open={open}
         setOpen={setOpen}
       />

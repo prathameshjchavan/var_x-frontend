@@ -30,7 +30,12 @@ import Actions from "../cart/Actions"
 import axios from "axios"
 import validate from "../ui/validate"
 
-const SubscriptionDetails = ({ subscription, open, setOpen }) => {
+const SubscriptionDetails = ({
+  subscription,
+  open,
+  setOpen,
+  setSubscriptions,
+}) => {
   const theme = useTheme()
   const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
   const { dispatchFeedback } = useContext(FeedbackContext)
@@ -316,19 +321,22 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
 
         const { billingInfo, billingAddress, shippingInfo, shippingAddress } =
           response.data.data.attributes
-        const subscriptions = user.subscriptions
-        const index = subscriptions.findIndex(
-          item => item.id === subscription.id
-        )
-        subscriptions[index] = {
-          ...subscriptions[index],
-          billingInfo,
-          billingAddress,
-          shippingInfo,
-          shippingAddress,
-        }
 
-        dispatchUser(setUser({ ...user, subscriptions }))
+        setSubscriptions(subscriptions => {
+          const index = subscriptions.findIndex(
+            item => item.id === subscription.id
+          )
+
+          subscriptions[index] = {
+            ...subscriptions[index],
+            billingInfo,
+            billingAddress,
+            shippingInfo,
+            shippingAddress,
+          }
+
+          return subscriptions
+        })
       })
       .catch(error => {
         console.error(error)
