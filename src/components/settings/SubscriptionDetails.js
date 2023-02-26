@@ -59,8 +59,6 @@ const SubscriptionDetails = ({
   const [locationSlot, setLocationSlot] = useState(0)
   const [detailErrors, setDetailErrors] = useState({})
   const [locationErrors, setLocationErrors] = useState({})
-  const [detailChangesMade, setDetailChangesMade] = useState(false)
-  const [locationChangesMade, setLocationChangesMade] = useState(false)
   const [loading, setLoading] = useState(null)
   const details = useMemo(
     () => [
@@ -499,7 +497,6 @@ const SubscriptionDetails = ({
                       setSlot={setDetailSlot}
                       errors={detailErrors}
                       setErrors={setDetailErrors}
-                      setChangesMade={setDetailChangesMade}
                       edit
                       checkout
                       subscription={edit}
@@ -523,7 +520,6 @@ const SubscriptionDetails = ({
                       setSlot={setLocationSlot}
                       errors={locationErrors}
                       setErrors={setLocationErrors}
-                      setChangesMade={setLocationChangesMade}
                       edit
                       checkout
                       subscription={edit}
