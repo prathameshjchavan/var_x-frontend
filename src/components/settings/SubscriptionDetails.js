@@ -235,12 +235,12 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
         {
           details:
             detailChangesMade && action !== "delete" ? detailValues : undefined,
-          detailSlot: detailChangesMade ? detailSlot : undefined,
+          detailSlot: type === "details" ? detailSlot : undefined,
           location:
             locationChangesMade && action !== "delete"
               ? locationValues
               : undefined,
-          locationSlot: locationChangesMade ? locationSlot : undefined,
+          locationSlot: type === "location" ? locationSlot : undefined,
         },
         {
           headers: { Authorization: `Bearer ${user.jwt}` },
