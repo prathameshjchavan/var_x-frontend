@@ -233,13 +233,9 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
       .put(
         `${process.env.STRAPI_API_URL}/api/user/settings`,
         {
-          details:
-            detailChangesMade && action !== "delete" ? detailValues : undefined,
+          details: action !== "delete" ? detailValues : undefined,
           detailSlot: type === "details" ? detailSlot : undefined,
-          location:
-            locationChangesMade && action !== "delete"
-              ? locationValues
-              : undefined,
+          location: action !== "delete" ? locationValues : undefined,
           locationSlot: type === "location" ? locationSlot : undefined,
         },
         {
@@ -281,6 +277,22 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
         setLoading(null)
       })
   }
+
+  const handleSubmit = () => {
+    if (errorHelper(detailValues) || errorHelper(locationValues)) {
+      dispatchFeedback(
+        setSnackbar({
+          status: "error",
+          message: "All detail and location fields must be valid before saving",
+        })
+      )
+      return
+    }
+
+    setLoading(true)
+  }
+
+  console.log(subscription)
 
   // styled components
   const EditIcon = styled("img")(() => ({
@@ -414,6 +426,7 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
                       loading={loading}
                       handleAction={handleAction}
                       type="details"
+                      spinnerColor="secondary"
                     />
                     <Details
                       user={user}
@@ -437,6 +450,7 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
                       loading={loading}
                       handleAction={handleAction}
                       type="location"
+                      spinnerColor="secondary"
                     />
                     <Location
                       user={user}
@@ -465,7 +479,11 @@ const SubscriptionDetails = ({ subscription, open, setOpen }) => {
                     </Button>
                   </Grid>
                   <Grid item>
-                    <Button sx={sx.button} variant="contained">
+                    <Button
+                      sx={sx.button}
+                      variant="contained"
+                      onClick={handleSubmit}
+                    >
                       Save
                     </Button>
                   </Grid>

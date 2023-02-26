@@ -4,7 +4,7 @@ import { styled } from "@mui/material/styles"
 import saveIcon from "../../images/save.svg"
 import DeleteIcon from "../../images/Delete"
 
-const Actions = ({ loading, handleAction, type }) => {
+const Actions = ({ loading, handleAction, type, spinnerColor }) => {
   const theme = useTheme()
 
   // sx prop
@@ -44,8 +44,8 @@ const Actions = ({ loading, handleAction, type }) => {
     <Grid item sx={sx.actions}>
       <Grid container>
         <Grid item>
-          {loading === "save" ? (
-            <CircularProgress />
+          {loading === "save" || loading === `${type}-save` ? (
+            <CircularProgress color={spinnerColor} />
           ) : (
             <IconButton
               sx={sx.iconButton}
@@ -56,8 +56,8 @@ const Actions = ({ loading, handleAction, type }) => {
           )}
         </Grid>
         <Grid item>
-          {loading === "delete" ? (
-            <CircularProgress />
+          {loading === "delete" || loading === `${type}-delete` ? (
+            <CircularProgress color={spinnerColor} />
           ) : (
             <IconButton
               sx={sx.iconButton}
