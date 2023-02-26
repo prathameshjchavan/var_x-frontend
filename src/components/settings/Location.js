@@ -52,7 +52,8 @@ const Location = ({
   const sx = {
     locationContainer: {
       position: "relative",
-      borderBottom: matchesVertical ? "4px solid #fff" : undefined,
+      borderBottom:
+        matchesVertical && !subscription ? "4px solid #fff" : undefined,
       height: matchesVertical ? (!checkout ? "30rem" : "100%") : "100%",
     },
     icon: { marginBottom: checkout ? "1rem" : "3rem" },

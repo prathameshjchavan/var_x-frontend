@@ -174,6 +174,9 @@ const SubscriptionDetails = ({
       "& .MuiDialogTitle-root": {
         backgroundColor: theme.palette.secondary.main,
         padding: "2rem",
+        [theme.breakpoints.down("md")]: {
+          fontSize: "1.75rem",
+        },
       },
       "& .MuiDialogContent-root": {
         padding: 0,
@@ -473,7 +476,13 @@ const SubscriptionDetails = ({
           )}
         </Grid>
       </SwipeableDrawer>
-      <Dialog open={!!edit} sx={sx.dialog} maxWidth="lg" onClose={handleClose}>
+      <Dialog
+        open={!!edit}
+        sx={sx.dialog}
+        fullScreen={matchesSM}
+        maxWidth="lg"
+        onClose={handleClose}
+      >
         <DialogTitle variant="h2">
           Change {edit?.toLowerCase()} details
         </DialogTitle>

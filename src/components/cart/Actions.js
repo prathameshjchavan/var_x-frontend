@@ -11,7 +11,7 @@ const Actions = ({ loading, handleAction, type, spinnerColor }) => {
   const sx = {
     actions: {
       position: "absolute",
-      right: 0,
+      right: type ? "1rem" : 0,
       zIndex: 999,
     },
     iconButton: {

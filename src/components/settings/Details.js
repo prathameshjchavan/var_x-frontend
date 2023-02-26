@@ -79,7 +79,8 @@ const Details = ({
   const sx = {
     detailsContainer: {
       position: "relative",
-      borderBottom: matchesVertical ? "4px solid #fff" : undefined,
+      borderBottom:
+        matchesVertical && !subscription ? "4px solid #fff" : undefined,
       height: matchesVertical ? (!checkout ? "30rem" : "100%") : "100%",
     },
     visibleIcon: {
@@ -136,7 +137,9 @@ const Details = ({
   }, [slot, noSlots, user.name, user.contactInfo, setValues, checkout])
 
   useEffect(() => {
-    if (!checkout || !subscription) {
+    if (!checkout) {
+      if (subscription) return
+
       const changed = Object.keys(user.contactInfo[slot]).some(
         field => values[field] !== user.contactInfo[slot][field]
       )
