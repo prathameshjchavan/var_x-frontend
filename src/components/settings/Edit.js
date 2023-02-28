@@ -21,6 +21,8 @@ const Edit = ({
   locations,
   detailSlot,
   locationSlot,
+  billingSlot,
+  cardElement,
   changesMade,
   detailValues,
   setDetailValues,

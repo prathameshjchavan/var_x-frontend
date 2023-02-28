@@ -26,9 +26,13 @@ import { setSnackbar, setUser } from "../../contexts/actions"
 const Payments = ({
   user,
   slot,
+  edit,
   setSlot,
   saveCard,
   setSaveCard,
+  addCard,
+  setAddCard,
+  setCardElement,
   setCardError,
   checkout,
   visible,
@@ -119,16 +123,23 @@ const Payments = ({
 
   const handleCardChange = useCallback(
     async event => {
+      if (event.empty) setAddCard(false)
+      else if (!addCard) setAddCard(true)
       if (event.complete) {
         const cardElement = elements.getElement(CardElement)
-        const { paymentMethod } = await stripe.createPaymentMethod({
-          type: "card",
-          card: cardElement,
-        })
-        setCard({
-          brand: paymentMethod.card.brand,
-          last4: paymentMethod.card.last4,
-        })
+
+        if (edit) {
+          setCardElement(cardElement)
+        } else {
+          const { paymentMethod } = await stripe.createPaymentMethod({
+            type: "card",
+            card: cardElement,
+          })
+          setCard({
+            brand: paymentMethod.card.brand,
+            last4: paymentMethod.card.last4,
+          })
+        }
         setCardError(false)
       } else {
         setCardError(true)
@@ -254,14 +265,16 @@ const Payments = ({
         <img src={cardIcon} alt="payment settings" />
       </Grid>
       <Grid item container justifyContent="center" sx={sx.numberWrapper}>
-        {checkout && !card.last4 && cardWrapper}
+        {(checkout || edit) && !card.last4 && cardWrapper}
         <Grid item>
           <Typography align="center" variant="h3" sx={sx.number}>
             {card.last4
               ? `${card.brand.toUpperCase()} **** **** **** ${card.last4}`
               : checkout
               ? null
-              : "Add A New Card During Checkout"}
+              : !edit
+              ? "Click on Edit Icon to Add New Card"
+              : null}
           </Typography>
         </Grid>
         {card.last4 && (

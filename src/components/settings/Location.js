@@ -134,7 +134,9 @@ const Location = ({
   }, [user, slot, setValues, noSlots])
 
   useEffect(() => {
-    if (!checkout || !subscription) {
+    if (!checkout) {
+      if (subscription) return
+
       const changed = Object.keys(user.locations[slot]).some(
         field => values[field] !== user.locations[slot][field]
       )

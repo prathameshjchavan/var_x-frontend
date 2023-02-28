@@ -19,10 +19,12 @@ import { Elements } from "@stripe/react-stripe-js"
 import { loadStripe } from "@stripe/stripe-js"
 import { CartContext } from "../../contexts"
 
-const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PK)
-
 const CheckoutPortal = ({ user }) => {
   const theme = useTheme()
+  const stripePromise = useMemo(
+    () => loadStripe(process.env.GATSBY_STRIPE_PK),
+    []
+  )
   const { cart } = useContext(CartContext)
   const matchesXL = useMediaQuery(theme.breakpoints.down("xl"))
   const hasSubscriptionCart = cart.some(item => item.subscription)

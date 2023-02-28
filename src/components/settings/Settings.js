@@ -35,11 +35,17 @@ const Settings = ({ setSelectedSetting }) => {
   const [billingSlot, setBillingSlot] = useState(0)
   const [detailErrors, setDetailErrors] = useState({})
   const [locationErrors, setLocationErrors] = useState({})
+  const [cardElement, setCardElement] = useState(null)
+  const [cardError, setCardError] = useState(false)
+  const [addCard, setAddCard] = useState(false)
   const isError = useMemo(() => {
     const allErrors = { ...detailErrors, ...locationErrors }
     return Object.keys(allErrors).some(error => allErrors[error] === true)
   }, [detailErrors, locationErrors])
-  const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PK)
+  const stripePromise = useMemo(
+    () => loadStripe(process.env.GATSBY_STRIPE_PK),
+    []
+  )
   const hasSubscriptionActive = user?.subscriptions?.length > 0
 
   // sx prop
@@ -51,6 +57,9 @@ const Settings = ({ setSelectedSetting }) => {
       height: "50%",
     },
   }
+
+  console.log(cardElement)
+  console.log(addCard)
 
   // useEffects
   useEffect(() => {
@@ -78,9 +87,14 @@ const Settings = ({ setSelectedSetting }) => {
         <Elements stripe={stripePromise}>
           <Payments
             user={user}
+            edit={edit}
             slot={billingSlot}
             setSlot={setBillingSlot}
             hasSubscriptionActive={hasSubscriptionActive}
+            setCardElement={setCardElement}
+            setCardError={setCardError}
+            addCard={addCard}
+            setAddCard={setAddCard}
           />
         </Elements>
       </Grid>
@@ -108,6 +122,8 @@ const Settings = ({ setSelectedSetting }) => {
           locations={locationValues}
           detailSlot={detailSlot}
           locationSlot={locationSlot}
+          billingSlot={billingSlot}
+          cardElement={cardElement}
           detailValues={detailValues}
           setDetailValues={setDetailValues}
         />

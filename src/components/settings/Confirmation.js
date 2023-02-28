@@ -146,7 +146,7 @@ const Confirmation = ({
     <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
       <DialogTitle disableTypography>
         <Typography
-          align={matchesSM ? "center" : "undefined"}
+          align={matchesSM ? "center" : "inherit"}
           variant="h3"
           sx={sx.title}
         >
