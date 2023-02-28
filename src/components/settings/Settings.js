@@ -36,7 +36,7 @@ const Settings = ({ setSelectedSetting }) => {
   const [detailErrors, setDetailErrors] = useState({})
   const [locationErrors, setLocationErrors] = useState({})
   const [cardElement, setCardElement] = useState(null)
-  const [cardError, setCardError] = useState(false)
+  const [cardError, setCardError] = useState(true)
   const [addCard, setAddCard] = useState(false)
   const isError = useMemo(() => {
     const allErrors = { ...detailErrors, ...locationErrors }
@@ -57,9 +57,6 @@ const Settings = ({ setSelectedSetting }) => {
       height: "50%",
     },
   }
-
-  console.log(cardElement)
-  console.log(addCard)
 
   // useEffects
   useEffect(() => {
@@ -110,23 +107,30 @@ const Settings = ({ setSelectedSetting }) => {
           errors={locationErrors}
           setErrors={setLocationErrors}
         />
-        <Edit
-          edit={edit}
-          setEdit={setEdit}
-          isError={isError}
-          user={user}
-          dispatchUser={dispatchUser}
-          setSelectedSetting={setSelectedSetting}
-          changesMade={changesMade}
-          details={detailValues}
-          locations={locationValues}
-          detailSlot={detailSlot}
-          locationSlot={locationSlot}
-          billingSlot={billingSlot}
-          cardElement={cardElement}
-          detailValues={detailValues}
-          setDetailValues={setDetailValues}
-        />
+        <Elements stripe={stripePromise}>
+          <Edit
+            edit={edit}
+            setEdit={setEdit}
+            addCard={addCard}
+            isError={isError}
+            user={user}
+            dispatchUser={dispatchUser}
+            setSelectedSetting={setSelectedSetting}
+            changesMade={changesMade}
+            details={detailValues}
+            locations={locationValues}
+            detailSlot={detailSlot}
+            locationSlot={locationSlot}
+            billingSlot={billingSlot}
+            cardElement={cardElement}
+            cardError={cardError}
+            detailValues={detailValues}
+            setDetailValues={setDetailValues}
+            setAddCard={setAddCard}
+            setCardError={setCardError}
+            setCardElement={setCardElement}
+          />
+        </Elements>
       </Grid>
     </Fragment>
   )

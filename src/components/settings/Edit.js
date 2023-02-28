@@ -1,5 +1,5 @@
 import { Grid, IconButton, useMediaQuery } from "@mui/material"
-import React, { useCallback, useContext, useState } from "react"
+import React, { useContext, useState } from "react"
 import { styled } from "@mui/material/styles"
 import axios from "axios"
 import CircularProgress from "@mui/material/CircularProgress"
@@ -9,6 +9,7 @@ import editIcon from "../../images/edit.svg"
 import saveIcon from "../../images/save.svg"
 import { setSnackbar, setUser } from "../../contexts/actions"
 import Confirmation from "./Confirmation"
+import { useStripe } from "@stripe/react-stripe-js"
 
 const Edit = ({
   setSelectedSetting,
@@ -21,16 +22,22 @@ const Edit = ({
   locations,
   detailSlot,
   locationSlot,
+  addCard,
   billingSlot,
   cardElement,
+  cardError,
   changesMade,
   detailValues,
   setDetailValues,
+  setAddCard,
+  setCardError,
+  setCardElement,
 }) => {
   const { dispatchFeedback } = useContext(FeedbackContext)
   const [loading, setLoading] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
   const matchesVertical = useMediaQuery("(max-width: 1300px)")
+  const stripe = useStripe()
 
   // sx prop
   const sx = {
@@ -45,8 +52,8 @@ const Edit = ({
   }
 
   // functions
-  const handleEdit = useCallback(() => {
-    if (edit && isError) {
+  const handleEdit = async () => {
+    if ((edit && isError) || (addCard && (!cardElement || cardError))) {
       return dispatchFeedback(
         setSnackbar({
           status: "error",
@@ -62,8 +69,17 @@ const Edit = ({
       setDialogOpen(true)
     }
 
-    if (edit && changesMade) {
+    if (edit && (changesMade || addCard)) {
+      let newPaymentMethod = null
       setLoading(true)
+
+      if (addCard) {
+        const { paymentMethod } = await stripe.createPaymentMethod({
+          type: "card",
+          card: cardElement,
+        })
+        newPaymentMethod = paymentMethod
+      }
 
       axios
         .put(
@@ -85,9 +101,14 @@ const Edit = ({
               message: "Settings Saved Successfully",
             })
           )
-          dispatchUser(
-            setUser({ ...response.data, jwt: user.jwt, onboarding: true })
-          )
+          let newUser = { ...response.data, jwt: user.jwt, onboarding: true }
+          if (addCard) {
+            newUser.paymentMethods[billingSlot] = {
+              brand: newPaymentMethod.card.brand,
+              last4: newPaymentMethod.card.last4,
+            }
+          }
+          dispatchUser(setUser(newUser))
         })
         .catch(error => {
           console.error(error)
@@ -101,21 +122,12 @@ const Edit = ({
         })
         .finally(() => {
           setLoading(false)
+          setAddCard(false)
+          setCardError(true)
+          setCardElement(null)
         })
     }
-  }, [
-    edit,
-    setEdit,
-    changesMade,
-    detailSlot,
-    details,
-    dispatchFeedback,
-    dispatchUser,
-    locationSlot,
-    locations,
-    user.jwt,
-    isError,
-  ])
+  }
 
   // styled components
   const IconWrapper = styled("span")(() => sx.icon)

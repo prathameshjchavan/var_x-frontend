@@ -125,6 +125,7 @@ const Payments = ({
     async event => {
       if (event.empty) setAddCard(false)
       else if (!addCard) setAddCard(true)
+
       if (event.complete) {
         const cardElement = elements.getElement(CardElement)
 
@@ -145,7 +146,7 @@ const Payments = ({
         setCardError(true)
       }
     },
-    [elements, stripe]
+    [elements, stripe, edit]
   )
 
   // styled components
