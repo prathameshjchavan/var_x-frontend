@@ -78,7 +78,27 @@ const Edit = ({
           type: "card",
           card: cardElement,
         })
-        newPaymentMethod = paymentMethod
+
+        await axios
+          .post(
+            `${process.env.STRAPI_API_URL}/api/orders/savePaymentMethod`,
+            {
+              paymentMethod,
+              customer: user,
+            },
+            {
+              headers: { Authorization: `Bearer ${user.jwt}` },
+            }
+          )
+          .then(response => {
+            newPaymentMethod = {
+              brand: response.data.card.brand,
+              last4: response.data.card.last4,
+            }
+          })
+          .catch(error => {
+            console.log(error)
+          })
       }
 
       axios
@@ -89,6 +109,8 @@ const Edit = ({
             detailSlot,
             location: locations,
             locationSlot,
+            paymentMethod: newPaymentMethod || undefined,
+            paymentMethodSlot: billingSlot || undefined,
           },
           {
             headers: { Authorization: `Bearer ${user.jwt}` },
@@ -101,12 +123,9 @@ const Edit = ({
               message: "Settings Saved Successfully",
             })
           )
-          let newUser = { ...response.data, jwt: user.jwt, onboarding: true }
+          let newUser = { ...user, ...response.data }
           if (addCard) {
-            newUser.paymentMethods[billingSlot] = {
-              brand: newPaymentMethod.card.brand,
-              last4: newPaymentMethod.card.last4,
-            }
+            newUser.paymentMethods[billingSlot] = newPaymentMethod
           }
           dispatchUser(setUser(newUser))
         })

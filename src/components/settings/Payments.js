@@ -14,6 +14,7 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react"
 import cardIcon from "../../images/card.svg"
@@ -44,6 +45,7 @@ const Payments = ({
   const stripe = useStripe()
   const elements = useElements()
   const [loading, setLoading] = useState(false)
+  const editRef = useRef(edit)
   const { dispatchFeedback } = useContext(FeedbackContext)
   const { dispatchUser } = useContext(UserContext)
   const matchesVertical = useMediaQuery("(max-width: 1300px)")
@@ -121,6 +123,25 @@ const Payments = ({
       })
   }
 
+  const handlePaymentMethod = useCallback(
+    async cardElement => {
+      if (editRef.current) {
+        setCardElement(cardElement)
+      } else {
+        const { paymentMethod } = await stripe.createPaymentMethod({
+          type: "card",
+          card: cardElement,
+        })
+
+        setCard({
+          brand: paymentMethod.card.brand,
+          last4: paymentMethod.card.last4,
+        })
+      }
+    },
+    [edit, stripe]
+  )
+
   const handleCardChange = useCallback(
     async event => {
       if (event.empty) setAddCard(false)
@@ -129,24 +150,13 @@ const Payments = ({
       if (event.complete) {
         const cardElement = elements.getElement(CardElement)
 
-        if (edit) {
-          setCardElement(cardElement)
-        } else {
-          const { paymentMethod } = await stripe.createPaymentMethod({
-            type: "card",
-            card: cardElement,
-          })
-          setCard({
-            brand: paymentMethod.card.brand,
-            last4: paymentMethod.card.last4,
-          })
-        }
+        handlePaymentMethod(cardElement)
         setCardError(false)
       } else {
         setCardError(true)
       }
     },
-    [elements, stripe, edit]
+    [elements, stripe]
   )
 
   // styled components
@@ -251,6 +261,10 @@ const Payments = ({
     }
   }, [slot])
 
+  useEffect(() => {
+    editRef.current = edit
+  }, [edit])
+
   return (
     <Grid
       item
@@ -266,7 +280,7 @@ const Payments = ({
         <img src={cardIcon} alt="payment settings" />
       </Grid>
       <Grid item container justifyContent="center" sx={sx.numberWrapper}>
-        {(checkout || edit) && !card.last4 && cardWrapper}
+        {(checkout || edit || addCard) && !card.last4 && cardWrapper}
         <Grid item>
           <Typography align="center" variant="h3" sx={sx.number}>
             {card.last4
@@ -274,7 +288,9 @@ const Payments = ({
               : checkout
               ? null
               : !edit
-              ? "Click on Edit Icon to Add New Card"
+              ? !addCard
+                ? "Click on Edit Icon to Add New Card"
+                : null
               : null}
           </Typography>
         </Grid>
