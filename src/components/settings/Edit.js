@@ -77,6 +77,10 @@ const Edit = ({
         const { paymentMethod } = await stripe.createPaymentMethod({
           type: "card",
           card: cardElement,
+          billing_details: {
+            name: user.name,
+            email: user.email,
+          },
         })
 
         await axios
@@ -98,6 +102,13 @@ const Edit = ({
           })
           .catch(error => {
             console.log(error)
+            dispatchFeedback(
+              setSnackbar({
+                status: "error",
+                message:
+                  "There was a problem saving your payment method, please try again.",
+              })
+            )
           })
       }
 
@@ -110,7 +121,7 @@ const Edit = ({
             location: locations,
             locationSlot,
             paymentMethod: newPaymentMethod || undefined,
-            paymentMethodSlot: billingSlot || undefined,
+            paymentMethodSlot: billingSlot,
           },
           {
             headers: { Authorization: `Bearer ${user.jwt}` },

@@ -105,7 +105,14 @@ const Payments = ({
           setUser({ ...response.data, jwt: user.jwt, onboarding: true })
         )
         setCardError(true)
-        setCard({ brand: "", last4: "" })
+        if (!editRef) setCard({ brand: "", last4: "" })
+
+        dispatchFeedback(
+          setSnackbar({
+            status: "success",
+            message: "Card Removed Successfully.",
+          })
+        )
       })
       .catch(error => {
         console.error(error)
