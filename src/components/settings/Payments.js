@@ -151,8 +151,10 @@ const Payments = ({
 
   const handleCardChange = useCallback(
     async event => {
-      if (event.empty) setAddCard(false)
-      else if (!addCard) setAddCard(true)
+      if (editRef.current) {
+        if (event.empty) setAddCard(false)
+        else if (!addCard) setAddCard(true)
+      }
 
       if (event.complete) {
         const cardElement = elements.getElement(CardElement)
