@@ -71,10 +71,13 @@ const Payments = ({
     const subscriptionPayment = user.subscriptions.find(
       subscription => subscription.paymentMethod.last4 === card.last4
     )
+    const remainingSubscriptionPaymentMethods = user.paymentMethods.filter(
+      method => method.last4 === subscriptionPayment.paymentMethod.last4
+    )
 
     if (
       (hasSubscriptionActive && remaining.length === 1) ||
-      subscriptionPayment
+      (subscriptionPayment && remainingSubscriptionPaymentMethods === 1)
     ) {
       dispatchFeedback(
         setSnackbar({
@@ -101,9 +104,7 @@ const Payments = ({
         }
       )
       .then(response => {
-        dispatchUser(
-          setUser({ ...response.data, jwt: user.jwt, onboarding: true })
-        )
+        dispatchUser(setUser({ ...user, ...response.data }))
         setCardError(true)
         if (!editRef) setCard({ brand: "", last4: "" })
 
