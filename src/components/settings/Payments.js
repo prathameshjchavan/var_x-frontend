@@ -38,6 +38,7 @@ const Payments = ({
   checkout,
   visible,
   setCard,
+  subscription,
   hasSubscriptionCart,
   hasSubscriptionActive,
 }) => {
@@ -71,9 +72,11 @@ const Payments = ({
     const subscriptionPayment = user.subscriptions.find(
       subscription => subscription.paymentMethod.last4 === card.last4
     )
-    const remainingSubscriptionPaymentMethods = user.paymentMethods.filter(
-      method => method.last4 === subscriptionPayment.paymentMethod.last4
-    )
+    const remainingSubscriptionPaymentMethods = subscriptionPayment
+      ? user.paymentMethods.filter(
+          method => method.last4 === subscriptionPayment.paymentMethod.last4
+        )
+      : null
 
     if (
       (hasSubscriptionActive && remaining.length === 1) ||
@@ -205,7 +208,12 @@ const Payments = ({
   const sx = {
     paymentContainer: {
       display: checkout && !visible ? "none" : "flex",
-      borderLeft: !matchesVertical && !checkout ? "4px solid #fff" : undefined,
+      borderLeft:
+        !matchesVertical && !checkout
+          ? !subscription
+            ? "4px solid #fff"
+            : undefined
+          : undefined,
       position: "relative",
       height: matchesVertical ? (!checkout ? "30rem" : "100%") : "100%",
     },
@@ -281,7 +289,7 @@ const Payments = ({
       container
       sx={sx.paymentContainer}
       direction="column"
-      lg={checkout ? 12 : 6}
+      lg={checkout || subscription ? 12 : 6}
       xs={12}
       alignItems="center"
       justifyContent="center"
@@ -299,12 +307,14 @@ const Payments = ({
               ? null
               : !edit
               ? !addCard
-                ? "Click on Edit Icon to Add New Card"
+                ? subscription
+                  ? "Add New Card from Settings Page"
+                  : "Click on Edit Icon to Add New Card"
                 : null
               : null}
           </Typography>
         </Grid>
-        {card.last4 && (
+        {card.last4 && !subscription && (
           <Grid item sx={sx.spinner}>
             {loading ? (
               <CircularProgress color="secondary" />

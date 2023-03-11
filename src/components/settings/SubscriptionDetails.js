@@ -29,6 +29,9 @@ import { setSnackbar, setUser } from "../../contexts/actions"
 import Actions from "../cart/Actions"
 import axios from "axios"
 import validate from "../ui/validate"
+import Payments from "./Payments"
+import { Elements } from "@stripe/react-stripe-js"
+import { loadStripe } from "@stripe/stripe-js"
 
 const SubscriptionDetails = ({
   subscription,
@@ -57,6 +60,7 @@ const SubscriptionDetails = ({
   })
   const [detailSlot, setDetailSlot] = useState(0)
   const [locationSlot, setLocationSlot] = useState(0)
+  const [paymentSlot, setPaymentSlot] = useState(0)
   const [detailErrors, setDetailErrors] = useState({})
   const [locationErrors, setLocationErrors] = useState({})
   const [loading, setLoading] = useState(null)
@@ -95,6 +99,11 @@ const SubscriptionDetails = ({
           }
         : null,
     [subscription]
+  )
+  const hasSubscriptionActive = user?.subscriptions?.length > 0
+  const stripePromise = useMemo(
+    () => loadStripe(process.env.GATSBY_STRIPE_PK),
+    []
   )
 
   // sx prop
@@ -204,6 +213,18 @@ const SubscriptionDetails = ({
       color: "#fff",
       fontSize: "1.25rem",
       fontWeight: "600",
+    },
+    hover: {
+      "&:hover": {
+        backgroundColor: "#fff",
+        "& .MuiChip-label": {
+          color: theme.palette.secondary.main,
+        },
+      },
+    },
+    paymentContainer: {
+      width: "100%",
+      height: "30rem",
     },
   }
 
@@ -460,8 +481,17 @@ const SubscriptionDetails = ({
               <Grid item sx={sx.detailValue}>
                 <Chip
                   label={detail.string || `$${detail.value}`}
+                  onClick={() =>
+                    detail.label === "Payment Method"
+                      ? setEdit("Payment Method")
+                      : undefined
+                  }
                   color="secondary"
-                  sx={sx.bold}
+                  sx={
+                    detail.label === "Payment Method"
+                      ? { ...sx.bold, ...sx.hover }
+                      : sx.bold
+                  }
                 />
               </Grid>
             </Grid>
@@ -484,57 +514,81 @@ const SubscriptionDetails = ({
         onClose={handleClose}
       >
         <DialogTitle variant="h2">
-          Change {edit?.toLowerCase()} details
+          Change {edit === "Payment Method" ? edit : `${edit || ""} Details`}
         </DialogTitle>
         <DialogContent>
           <Grid container direction="column">
             <Grid item>
               <Grid container direction="column" alignItems="center">
-                <Grid item sx={sx.editWrapper}>
-                  <Grid container justifyContent="center" sx={sx.editContainer}>
-                    <Actions
-                      loading={loading}
-                      handleAction={handleAction}
-                      type="details"
-                      spinnerColor="secondary"
-                    />
-                    <Details
-                      user={user}
-                      values={detailValues}
-                      setValues={setDetailValues}
-                      slot={detailSlot}
-                      setSlot={setDetailSlot}
-                      errors={detailErrors}
-                      setErrors={setDetailErrors}
-                      edit
-                      checkout
-                      subscription={edit}
-                    />
+                {edit === "Payment Method" ? (
+                  <Grid item sx={sx.paymentContainer}>
+                    <Elements stripe={stripePromise}>
+                      <Payments
+                        subscription
+                        user={user}
+                        slot={paymentSlot}
+                        setSlot={setPaymentSlot}
+                        hasSubscriptionActive={hasSubscriptionActive}
+                      />
+                    </Elements>
                   </Grid>
-                </Grid>
-                <Grid item sx={sx.dialogSpacer} />
-                <Grid item sx={sx.editWrapper}>
-                  <Grid container justifyContent="center" sx={sx.editContainer}>
-                    <Actions
-                      loading={loading}
-                      handleAction={handleAction}
-                      type="location"
-                      spinnerColor="secondary"
-                    />
-                    <Location
-                      user={user}
-                      values={locationValues}
-                      setValues={setLocationValues}
-                      slot={locationSlot}
-                      setSlot={setLocationSlot}
-                      errors={locationErrors}
-                      setErrors={setLocationErrors}
-                      edit
-                      checkout
-                      subscription={edit}
-                    />
-                  </Grid>
-                </Grid>
+                ) : (
+                  <Fragment>
+                    <Grid item sx={sx.editWrapper}>
+                      <Grid
+                        container
+                        justifyContent="center"
+                        sx={sx.editContainer}
+                      >
+                        <Actions
+                          loading={loading}
+                          handleAction={handleAction}
+                          type="details"
+                          spinnerColor="secondary"
+                        />
+                        <Details
+                          user={user}
+                          values={detailValues}
+                          setValues={setDetailValues}
+                          slot={detailSlot}
+                          setSlot={setDetailSlot}
+                          errors={detailErrors}
+                          setErrors={setDetailErrors}
+                          edit
+                          checkout
+                          subscription={edit}
+                        />
+                      </Grid>
+                    </Grid>
+                    <Grid item sx={sx.dialogSpacer} />
+                    <Grid item sx={sx.editWrapper}>
+                      <Grid
+                        container
+                        justifyContent="center"
+                        sx={sx.editContainer}
+                      >
+                        <Actions
+                          loading={loading}
+                          handleAction={handleAction}
+                          type="location"
+                          spinnerColor="secondary"
+                        />
+                        <Location
+                          user={user}
+                          values={locationValues}
+                          setValues={setLocationValues}
+                          slot={locationSlot}
+                          setSlot={setLocationSlot}
+                          errors={locationErrors}
+                          setErrors={setLocationErrors}
+                          edit
+                          checkout
+                          subscription={edit}
+                        />
+                      </Grid>
+                    </Grid>
+                  </Fragment>
+                )}
                 <Grid
                   item
                   container
