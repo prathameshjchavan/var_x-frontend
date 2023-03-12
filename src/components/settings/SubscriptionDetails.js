@@ -305,8 +305,16 @@ const SubscriptionDetails = ({
       })
   }
 
+  const disableCardSubmit = useCallback(() => {
+    const paymentMethod = user.paymentMethods[paymentSlot]
+    return paymentMethod.brand === "" || paymentMethod.last4 === ""
+  }, [user, paymentSlot])
+
   const handleSubmit = () => {
-    if (errorHelper(detailValues) || errorHelper(locationValues)) {
+    if (
+      edit !== "Payment Method" &&
+      (errorHelper(detailValues) || errorHelper(locationValues))
+    ) {
       dispatchFeedback(
         setSnackbar({
           status: "error",
@@ -327,6 +335,10 @@ const SubscriptionDetails = ({
             shippingAddress: edit === "Shipping" ? locationValues : undefined,
             billingInfo: edit === "Billing" ? detailValues : undefined,
             billingAddress: edit === "Billing" ? locationValues : undefined,
+            paymentMethod:
+              edit === "Payment Method"
+                ? user.paymentMethods[paymentSlot]
+                : undefined,
           },
         },
         {
@@ -341,8 +353,13 @@ const SubscriptionDetails = ({
           })
         )
 
-        const { billingInfo, billingAddress, shippingInfo, shippingAddress } =
-          response.data.data.attributes
+        const {
+          billingInfo,
+          billingAddress,
+          shippingInfo,
+          shippingAddress,
+          paymentMethod,
+        } = response.data.data.attributes
 
         setSubscriptions(subscriptions => {
           const index = subscriptions.findIndex(
@@ -355,6 +372,7 @@ const SubscriptionDetails = ({
             billingAddress,
             shippingInfo,
             shippingAddress,
+            paymentMethod,
           }
 
           return subscriptions
@@ -376,6 +394,7 @@ const SubscriptionDetails = ({
         setLocationSlot(0)
         setLoading(null)
         setEdit(null)
+        setPaymentSlot(0)
       })
   }
 
@@ -607,6 +626,11 @@ const SubscriptionDetails = ({
                       <Button
                         sx={sx.button}
                         variant="contained"
+                        disabled={
+                          edit === "Payment Method"
+                            ? disableCardSubmit()
+                            : false
+                        }
                         onClick={handleSubmit}
                       >
                         Save
