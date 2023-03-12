@@ -17,6 +17,7 @@ const QtyButton = ({
   isCart,
   white,
   hideCartButton,
+  quantity,
   round,
   override,
 }) => {
@@ -27,7 +28,7 @@ const QtyButton = ({
     () => cart.find(item => item.variant.id === variant.id),
     [cart, variant]
   )
-  const [qty, setQtyState] = useState(isCart ? existingItem.qty : 1)
+  const [qty, setQtyState] = useState(isCart ? existingItem.qty : quantity || 1)
   let setQty
   if (override) {
     setQty = value => {

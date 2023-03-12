@@ -8,6 +8,7 @@ import SettingsGrid from "./SettingsGrid"
 import QtyButton from "../product-list/QtyButton"
 import DeleteIcon from "../../images/Delete"
 import pauseIcon from "../../images/pause.svg"
+import detailsIcon from "../../images/details.svg"
 import SubscriptionDetails from "./SubscriptionDetails"
 
 const Subscriptions = ({ setSelectedSetting }) => {
@@ -91,7 +92,7 @@ const Subscriptions = ({ setSelectedSetting }) => {
     width: "2.5rem",
   }))
 
-  const Pause = styled("img")(() => ({
+  const Icon = styled("img")(() => ({
     height: "3rem",
     width: "3rem",
   }))
@@ -153,6 +154,7 @@ const Subscriptions = ({ setSelectedSetting }) => {
           stock={{ attributes: { quantity: value.variant.quantity } }}
           variant={value.variant}
           name={value.name}
+          quantity={value.quantity}
           hideCartButton
           round
           white
@@ -194,7 +196,7 @@ const Subscriptions = ({ setSelectedSetting }) => {
       field: "",
       width: 250,
       sortable: false,
-      renderCell: () => (
+      renderCell: ({ id }) => (
         <Grid container>
           <Grid item>
             <IconButton sx={sx.iconButton}>
@@ -205,7 +207,12 @@ const Subscriptions = ({ setSelectedSetting }) => {
           </Grid>
           <Grid item>
             <IconButton sx={sx.iconButton}>
-              <Pause src={pauseIcon} alt="pause subscription" />
+              <Icon src={pauseIcon} alt="pause subscription" />
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <IconButton onClick={() => setOpen(id)}>
+              <Icon src={detailsIcon} alt="subcription details" />
             </IconButton>
           </Grid>
         </Grid>
@@ -244,6 +251,7 @@ const Subscriptions = ({ setSelectedSetting }) => {
         rows={rows}
         columns={columns}
         rowsPerPage={3}
+        subscriptions
       />
       <SubscriptionDetails
         subscription={subscription}

@@ -10,6 +10,7 @@ const SettingsGrid = ({
   rows,
   columns,
   rowsPerPage,
+  subscriptions,
 }) => {
   const theme = useTheme()
 
@@ -120,7 +121,9 @@ const SettingsGrid = ({
       </Grid>
       <DataGrid
         hideFooterSelectedRowCount
-        onRowClick={event => (setOpen ? setOpen(event.row.id) : null)}
+        onRowClick={event =>
+          !subscriptions && (setOpen ? setOpen(event.row.id) : null)
+        }
         sx={sx.dataGrid}
         columns={columns}
         rows={rows}
