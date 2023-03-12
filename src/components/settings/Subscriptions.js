@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react"
+import React, { useState, useEffect, useContext, useCallback } from "react"
 import { Chip, Grid, Typography, IconButton } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import axios from "axios"
@@ -15,6 +15,7 @@ const Subscriptions = ({ setSelectedSetting }) => {
   const { user } = useContext(UserContext)
   const { dispatchFeedback } = useContext(FeedbackContext)
   const [subscriptions, setSubscriptions] = useState([])
+  const [editedSubscriptions, setEditedSubscriptons] = useState([])
   const [open, setOpen] = useState(null)
   const subscription = subscriptions.find(
     subscription => subscription.id === open
@@ -80,6 +81,26 @@ const Subscriptions = ({ setSelectedSetting }) => {
         total: (variant.price * quantity * 1.075).toFixed(2),
       })
     )
+
+  const handleQtyChange = useCallback(
+    (id, value) => {
+      const subscriptionIndex = editedSubscriptions.findIndex(
+        item => item.id === id
+      )
+
+      if (subscriptionIndex === -1) {
+        setEditedSubscriptons(prevState => [
+          ...prevState,
+          { id, quantity: value },
+        ])
+      } else {
+        const newState = [...editedSubscriptions]
+        newState[subscriptionIndex].quantity = value
+        setEditedSubscriptons(newState)
+      }
+    },
+    [editedSubscriptions]
+  )
 
   // styled components
   const ProductImage = styled("img")(() => ({
@@ -149,17 +170,22 @@ const Subscriptions = ({ setSelectedSetting }) => {
       headerName: "Quantity",
       width: 250,
       sortable: false,
-      renderCell: ({ value }) => (
-        <QtyButton
-          stock={{ attributes: { quantity: value.variant.quantity } }}
-          variant={value.variant}
-          name={value.name}
-          quantity={value.quantity}
-          hideCartButton
-          round
-          white
-        />
-      ),
+      renderCell: ({ id, value }) => {
+        const setQty = value => handleQtyChange(id, value)
+
+        return (
+          <QtyButton
+            stock={{ attributes: { quantity: value.variant.quantity } }}
+            variant={value.variant}
+            name={value.name}
+            quantity={value.quantity}
+            override={{ setValue: setQty }}
+            hideCartButton
+            round
+            white
+          />
+        )
+      },
     },
     {
       field: "frequency",
