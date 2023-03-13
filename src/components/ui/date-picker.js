@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import { Chip, Grid, useTheme } from "@mui/material"
+import React, { useRef, useState, useEffect, useCallback } from "react"
+import { Chip, Grid, Grow, useTheme } from "@mui/material"
 import dayjs from "dayjs"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
@@ -7,6 +7,7 @@ import { DateCalendar } from "@mui/x-date-pickers/DateCalendar"
 
 const DatePicker = ({ id, value, open, setOpen }) => {
   const theme = useTheme()
+  const datepickerRef = useRef(null)
   const [date, setDate] = useState(dayjs(value))
 
   // sx prop
@@ -44,6 +45,28 @@ const DatePicker = ({ id, value, open, setOpen }) => {
     },
   }
 
+  // functions
+  const handleClickOutside = useCallback(
+    event => {
+      if (
+        datepickerRef.current &&
+        !datepickerRef.current.contains(event.target)
+      ) {
+        setOpen(null)
+      }
+    },
+    [datepickerRef, setOpen]
+  )
+
+  useEffect(() => {
+    if (open !== id) return
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [datepickerRef, open, id, setOpen, handleClickOutside])
+
   return (
     <Grid container justifyContent="center">
       <Grid item>
@@ -53,13 +76,19 @@ const DatePicker = ({ id, value, open, setOpen }) => {
             onClick={() => setOpen(id)}
             sx={sx.chip}
           />
-          {open === id && (
+          {/* {open === id && ( */}
+          <Grow in={open === id}>
             <Grid container sx={sx.datepickerContainer}>
               <Grid item sx={sx.datepickerWrapper}>
-                <DateCalendar sx={sx.datepicker} value={date} />
+                <DateCalendar
+                  ref={datepickerRef}
+                  sx={sx.datepicker}
+                  value={date}
+                />
               </Grid>
             </Grid>
-          )}
+          </Grow>
+          {/* )} */}
         </LocalizationProvider>
       </Grid>
     </Grid>
