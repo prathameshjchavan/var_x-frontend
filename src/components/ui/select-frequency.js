@@ -1,9 +1,10 @@
-import React, { useMemo } from "react"
+import React, { useMemo, useState, useCallback } from "react"
 import { Select, Chip, MenuItem, useMediaQuery, useTheme } from "@mui/material"
 
-const SelectFrequency = ({ value, setValue, chip }) => {
+const SelectFrequency = ({ value, setValue, chip, subscription }) => {
   const theme = useTheme()
   const matches500 = useMediaQuery("(max-width: 500px)")
+  const [frequency, setFrequency] = useState(value)
 
   // sx prop
   const sx = {
@@ -42,10 +43,29 @@ const SelectFrequency = ({ value, setValue, chip }) => {
     },
   }
 
+  // functions
+  const handleChange = useCallback(
+    event => {
+      setFrequency(event.target.value)
+      setValue(event.target.value)
+    },
+    [setValue]
+  )
+
   // data
   const frequencies = useMemo(
-    () => ["Week", "Two Weeks", "Month", "Three Months", "Six Months", "Year"],
-    []
+    () =>
+      subscription
+        ? [
+            "one week",
+            "two weeks",
+            "one month",
+            "three months",
+            "six months",
+            "annually",
+          ]
+        : ["Week", "Two Weeks", "Month", "Three Months", "Six Months", "Year"],
+    [subscription]
   )
 
   return (
@@ -53,8 +73,8 @@ const SelectFrequency = ({ value, setValue, chip }) => {
       sx={{ ...sx.select, ...sx.frequency }}
       IconComponent={() => null}
       MenuProps={{ sx: sx.menu }}
-      value={value}
-      onChange={event => setValue(event.target.value)}
+      value={frequency}
+      onChange={handleChange}
       renderValue={selected => chip || <Chip label={selected} sx={sx.chip} />}
     >
       {frequencies.map(frequency => (

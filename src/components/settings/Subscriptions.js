@@ -10,6 +10,7 @@ import DeleteIcon from "../../images/Delete"
 import pauseIcon from "../../images/pause.svg"
 import detailsIcon from "../../images/details.svg"
 import SubscriptionDetails from "./SubscriptionDetails"
+import SelectFrequency from "../ui/select-frequency"
 
 const Subscriptions = ({ setSelectedSetting }) => {
   const { user } = useContext(UserContext)
@@ -82,8 +83,8 @@ const Subscriptions = ({ setSelectedSetting }) => {
       })
     )
 
-  const handleQtyChange = useCallback(
-    (id, value) => {
+  const handleChange = useCallback(
+    (id, value, field) => {
       const subscriptionIndex = editedSubscriptions.findIndex(
         item => item.id === id
       )
@@ -91,11 +92,11 @@ const Subscriptions = ({ setSelectedSetting }) => {
       if (subscriptionIndex === -1) {
         setEditedSubscriptons(prevState => [
           ...prevState,
-          { id, quantity: value },
+          { id, [field]: value },
         ])
       } else {
         const newState = [...editedSubscriptions]
-        newState[subscriptionIndex].quantity = value
+        newState[subscriptionIndex][field] = value
         setEditedSubscriptons(newState)
       }
     },
@@ -171,7 +172,7 @@ const Subscriptions = ({ setSelectedSetting }) => {
       width: 250,
       sortable: false,
       renderCell: ({ id, value }) => {
-        const setQty = value => handleQtyChange(id, value)
+        const setQty = value => handleChange(id, value, "quantity")
 
         return (
           <QtyButton
@@ -192,13 +193,17 @@ const Subscriptions = ({ setSelectedSetting }) => {
       headerName: "Frequency",
       width: 250,
       sortable: false,
-      renderCell: ({ value }) => (
-        <Chip
-          label={value.split("_").join(" ")}
-          color="secondary"
-          sx={sx.chip}
-        />
-      ),
+      renderCell: ({ id, value }) => {
+        const setFrequency = value => handleChange(id, value, "frequency")
+
+        return (
+          <SelectFrequency
+            value={value.split("_").join(" ")}
+            setValue={setFrequency}
+            subscription
+          />
+        )
+      },
     },
     {
       field: "next_delivery",
