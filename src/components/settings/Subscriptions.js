@@ -19,6 +19,7 @@ const Subscriptions = ({ setSelectedSetting }) => {
   const [subscriptions, setSubscriptions] = useState([])
   const [editedSubscriptions, setEditedSubscriptons] = useState([])
   const [open, setOpen] = useState(null)
+  const [openDatePicker, setOpenDatePicker] = useState(null)
   const subscription = subscriptions.find(
     subscription => subscription.id === open
   )
@@ -210,8 +211,15 @@ const Subscriptions = ({ setSelectedSetting }) => {
       field: "next_delivery",
       headerName: "Next Order",
       width: 250,
-      renderCell: ({ value }) => {
-        return <DatePicker value={value} />
+      renderCell: ({ id, value }) => {
+        return (
+          <DatePicker
+            id={id}
+            value={value}
+            open={openDatePicker}
+            setOpen={setOpenDatePicker}
+          />
+        )
       },
     },
     {

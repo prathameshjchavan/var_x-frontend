@@ -5,14 +5,12 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar"
 
-const DatePicker = ({ value }) => {
+const DatePicker = ({ id, value, open, setOpen }) => {
   const theme = useTheme()
   const [date, setDate] = useState(dayjs(value))
-  const [open, setOpen] = useState(false)
 
   // sx prop
   const sx = {
-    container: {},
     chip: {
       backgroundColor: "#fff",
       height: "3rem",
@@ -24,27 +22,41 @@ const DatePicker = ({ value }) => {
         cursor: "pointer",
       },
     },
-    datePickerContainer: {
+    datepickerContainer: {
       position: "absolute",
       backgroundColor: "#fff",
+      borderRadius: 5,
       width: "auto",
       zIndex: 999,
+    },
+    datepickerWrapper: {
+      width: "22rem",
+      height: "22rem",
+    },
+    datepicker: {
+      "& .MuiIconButton-root": {
+        "&.MuiSvgIcon-root": {
+          fill: "#747474",
+        },
+      },
+      width: "100%",
+      height: "100%",
     },
   }
 
   return (
-    <Grid container justifyContent="center" sx={sx.container}>
+    <Grid container justifyContent="center">
       <Grid item>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Chip
             label={new Date(value).toLocaleDateString()}
-            onClick={() => setOpen(!open)}
+            onClick={() => setOpen(id)}
             sx={sx.chip}
           />
-          {open && (
-            <Grid container sx={sx.datePickerContainer}>
-              <Grid item>
-                <DateCalendar value={date} />
+          {open === id && (
+            <Grid container sx={sx.datepickerContainer}>
+              <Grid item sx={sx.datepickerWrapper}>
+                <DateCalendar sx={sx.datepicker} value={date} />
               </Grid>
             </Grid>
           )}
