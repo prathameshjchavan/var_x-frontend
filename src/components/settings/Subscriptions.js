@@ -11,6 +11,7 @@ import pauseIcon from "../../images/pause.svg"
 import detailsIcon from "../../images/details.svg"
 import SubscriptionDetails from "./SubscriptionDetails"
 import SelectFrequency from "../ui/select-frequency"
+import DatePicker from "../ui/date-picker"
 
 const Subscriptions = ({ setSelectedSetting }) => {
   const { user } = useContext(UserContext)
@@ -209,7 +210,9 @@ const Subscriptions = ({ setSelectedSetting }) => {
       field: "next_delivery",
       headerName: "Next Order",
       width: 250,
-      renderCell: ({ value }) => new Date(value).toLocaleDateString(),
+      renderCell: ({ value }) => {
+        return <DatePicker value={value} />
+      },
     },
     {
       field: "total",
