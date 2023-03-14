@@ -25,6 +25,7 @@ const DatePicker = ({ id, value, open, setOpen }) => {
     },
     datepickerContainer: {
       position: "absolute",
+      marginTop: "0.5rem",
       backgroundColor: "#fff",
       borderRadius: 5,
       width: "auto",
@@ -35,10 +36,11 @@ const DatePicker = ({ id, value, open, setOpen }) => {
       height: "22rem",
     },
     datepicker: {
-      "& .MuiIconButton-root": {
-        "&.MuiSvgIcon-root": {
-          fill: "#747474",
-        },
+      "& .MuiIconButton-root .MuiSvgIcon-root": {
+        fill: "#747474 !important",
+      },
+      "& .MuiPickersYear-root": {
+        color: "#000",
       },
       width: "100%",
       height: "100%",
