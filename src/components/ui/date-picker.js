@@ -60,8 +60,15 @@ const DatePicker = ({ id, value, setValue, open, setOpen }) => {
     [datepickerRef, setOpen]
   )
 
+  const formatDate = useCallback(
+    num => (num.length === 1 ? `0${num}` : num),
+    []
+  )
+
   const handleChange = newDate => {
-    const date = `${newDate.$y}-${newDate.$M}-${newDate.$D}`
+    const date = `${newDate.year()}-${formatDate(
+      (newDate.month() + 1).toString()
+    )}-${formatDate(newDate.date().toString())}`
     setValue(date)
     setDate(dayjs(date))
     setOpen(null)

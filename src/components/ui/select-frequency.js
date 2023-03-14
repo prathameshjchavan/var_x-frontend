@@ -4,7 +4,9 @@ import { Select, Chip, MenuItem, useMediaQuery, useTheme } from "@mui/material"
 const SelectFrequency = ({ value, setValue, chip, subscription }) => {
   const theme = useTheme()
   const matches500 = useMediaQuery("(max-width: 500px)")
-  const [frequency, setFrequency] = useState(value)
+  const [frequency, setFrequency] = useState(
+    subscription ? value.split("_").join(" ") : value
+  )
 
   // sx prop
   const sx = {
@@ -47,9 +49,13 @@ const SelectFrequency = ({ value, setValue, chip, subscription }) => {
   const handleChange = useCallback(
     event => {
       setFrequency(event.target.value)
-      setValue(event.target.value)
+      setValue(
+        subscription
+          ? event.target.value.split(" ").join("_")
+          : event.target.value
+      )
     },
-    [setValue]
+    [setValue, subscription]
   )
 
   // data

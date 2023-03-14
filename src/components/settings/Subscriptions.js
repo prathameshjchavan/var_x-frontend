@@ -106,6 +106,40 @@ const Subscriptions = ({ setSelectedSetting }) => {
     [editedSubscriptions]
   )
 
+  const handleEditSubscription = changesMade => {
+    const { id, ...fields } = changesMade
+    axios
+      .put(
+        `${process.env.STRAPI_API_URL}/api/subscriptions/${id}`,
+        {
+          data: {
+            ...fields,
+          },
+        },
+        { headers: { Authorization: `Bearer ${user.jwt}` } }
+      )
+      .then(response => {
+        console.log(response.data)
+
+        dispatchFeedback(
+          setSnackbar({
+            status: "success",
+            message: "Subscription Details Saved Successfully.",
+          })
+        )
+      })
+      .catch(error => {
+        console.error(error)
+        dispatchFeedback(
+          setSnackbar({
+            status: "error",
+            message:
+              "There was a problem saving your details. Please try again.",
+          })
+        )
+      })
+  }
+
   // styled components
   const ProductImage = styled("img")(() => ({
     height: "10rem",
@@ -200,11 +234,7 @@ const Subscriptions = ({ setSelectedSetting }) => {
         const setFrequency = value => handleChange(id, value, "frequency")
 
         return (
-          <SelectFrequency
-            value={value.split("_").join(" ")}
-            setValue={setFrequency}
-            subscription
-          />
+          <SelectFrequency value={value} setValue={setFrequency} subscription />
         )
       },
     },
@@ -266,7 +296,7 @@ const Subscriptions = ({ setSelectedSetting }) => {
             </Grid>
             {changesMade && (
               <Grid item sx={{ marginLeft: "5rem" }}>
-                <IconButton>
+                <IconButton onClick={() => handleEditSubscription(changesMade)}>
                   <Icon src={saveIcon} alt="save subscription" />
                 </IconButton>
               </Grid>
