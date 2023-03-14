@@ -212,10 +212,13 @@ const Subscriptions = ({ setSelectedSetting }) => {
       headerName: "Next Order",
       width: 250,
       renderCell: ({ id, value }) => {
+        const setDate = value => handleChange(id, value, "next_delivery")
+
         return (
           <DatePicker
             id={id}
             value={value}
+            setValue={setDate}
             open={openDatePicker}
             setOpen={setOpenDatePicker}
           />

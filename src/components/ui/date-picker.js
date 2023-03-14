@@ -5,7 +5,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar"
 
-const DatePicker = ({ id, value, open, setOpen }) => {
+const DatePicker = ({ id, value, setValue, open, setOpen }) => {
   const theme = useTheme()
   const datepickerRef = useRef(null)
   const [date, setDate] = useState(dayjs(value))
@@ -60,6 +60,13 @@ const DatePicker = ({ id, value, open, setOpen }) => {
     [datepickerRef, setOpen]
   )
 
+  const handleChange = newDate => {
+    const date = `${newDate.$y}-${newDate.$M}-${newDate.$D}`
+    setValue(date)
+    setDate(dayjs(date))
+    setOpen(null)
+  }
+
   useEffect(() => {
     if (open !== id) return
 
@@ -74,7 +81,7 @@ const DatePicker = ({ id, value, open, setOpen }) => {
       <Grid item>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Chip
-            label={new Date(value).toLocaleDateString()}
+            label={new Date(date).toLocaleDateString()}
             onClick={() => setOpen(id)}
             sx={sx.chip}
           />
@@ -85,6 +92,7 @@ const DatePicker = ({ id, value, open, setOpen }) => {
                 <DateCalendar
                   ref={datepickerRef}
                   sx={sx.datepicker}
+                  onChange={newDate => handleChange(newDate)}
                   value={date}
                 />
               </Grid>
