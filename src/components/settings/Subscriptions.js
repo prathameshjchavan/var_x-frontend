@@ -9,6 +9,7 @@ import QtyButton from "../product-list/QtyButton"
 import DeleteIcon from "../../images/Delete"
 import pauseIcon from "../../images/pause.svg"
 import detailsIcon from "../../images/details.svg"
+import saveIcon from "../../images/save.svg"
 import SubscriptionDetails from "./SubscriptionDetails"
 import SelectFrequency from "../ui/select-frequency"
 import DatePicker from "../ui/date-picker"
@@ -239,29 +240,40 @@ const Subscriptions = ({ setSelectedSetting }) => {
     },
     {
       field: "",
-      width: 250,
+      width: 450,
       sortable: false,
-      renderCell: ({ id }) => (
-        <Grid container>
-          <Grid item>
-            <IconButton sx={sx.iconButton}>
-              <DeleteWrapper>
-                <DeleteIcon />
-              </DeleteWrapper>
-            </IconButton>
+      renderCell: ({ id }) => {
+        const changesMade = editedSubscriptions.find(item => item.id === id)
+
+        return (
+          <Grid container>
+            <Grid item>
+              <IconButton sx={sx.iconButton}>
+                <DeleteWrapper>
+                  <DeleteIcon />
+                </DeleteWrapper>
+              </IconButton>
+            </Grid>
+            <Grid item>
+              <IconButton sx={sx.iconButton}>
+                <Icon src={pauseIcon} alt="pause subscription" />
+              </IconButton>
+            </Grid>
+            <Grid item>
+              <IconButton onClick={() => setOpen(id)}>
+                <Icon src={detailsIcon} alt="subcription details" />
+              </IconButton>
+            </Grid>
+            {changesMade && (
+              <Grid item sx={{ marginLeft: "5rem" }}>
+                <IconButton>
+                  <Icon src={saveIcon} alt="save subscription" />
+                </IconButton>
+              </Grid>
+            )}
           </Grid>
-          <Grid item>
-            <IconButton sx={sx.iconButton}>
-              <Icon src={pauseIcon} alt="pause subscription" />
-            </IconButton>
-          </Grid>
-          <Grid item>
-            <IconButton onClick={() => setOpen(id)}>
-              <Icon src={detailsIcon} alt="subcription details" />
-            </IconButton>
-          </Grid>
-        </Grid>
-      ),
+        )
+      },
     },
   ]
 
