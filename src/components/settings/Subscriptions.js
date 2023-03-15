@@ -54,11 +54,6 @@ const Subscriptions = ({ setSelectedSetting }) => {
         fontWeight: 600,
       },
     },
-    iconButton: {
-      "&:hover": {
-        background: "transparent",
-      },
-    },
     save: { marginLeft: "5rem" },
   }
 
@@ -117,7 +112,7 @@ const Subscriptions = ({ setSelectedSetting }) => {
   const handleEditSubscription = changesMade => {
     const { id, ...fields } = changesMade
 
-    setLoading(id)
+    setLoading(`edit-${id}`)
 
     axios
       .put(
@@ -130,8 +125,6 @@ const Subscriptions = ({ setSelectedSetting }) => {
         { headers: { Authorization: `Bearer ${user.jwt}` } }
       )
       .then(response => {
-        console.log(response.data)
-
         const newSubscriptions = structuredClone(editedSubscriptions)
         const index = newSubscriptions.findIndex(item => item.id === id)
         newSubscriptions.splice(index, 1)
@@ -151,6 +144,41 @@ const Subscriptions = ({ setSelectedSetting }) => {
             status: "error",
             message:
               "There was a problem saving your details. Please try again.",
+          })
+        )
+      })
+      .finally(() => {
+        setLoading(null)
+      })
+  }
+
+  const handleDelete = id => {
+    setLoading(`delete-${id}`)
+
+    axios
+      .delete(`${process.env.STRAPI_API_URL}/api/subscriptions/${id}`, {
+        headers: { Authorization: `Bearer ${user.jwt}` },
+      })
+      .then(response => {
+        const newSubscriptions = structuredClone(subscriptions)
+        const index = newSubscriptions.findIndex(item => item.id === id)
+        newSubscriptions.splice(index, 1)
+        setSubscriptions(newSubscriptions)
+
+        dispatchFeedback(
+          setSnackbar({
+            status: "success",
+            message: "Subscription Removed Successfully",
+          })
+        )
+      })
+      .catch(error => {
+        console.error(error)
+        dispatchFeedback(
+          setSnackbar({
+            status: "error",
+            message:
+              "There was a problem removing your subscription. Please try again.",
           })
         )
       })
@@ -297,14 +325,21 @@ const Subscriptions = ({ setSelectedSetting }) => {
         return (
           <Grid container alignItems="center">
             <Grid item>
-              <IconButton sx={sx.iconButton}>
-                <DeleteWrapper>
-                  <DeleteIcon />
-                </DeleteWrapper>
-              </IconButton>
+              {loading === `delete-${id}` ? (
+                <CircularProgress color="secondary" />
+              ) : (
+                <IconButton
+                  onClick={() => handleDelete(id)}
+                  disabled={!!loading}
+                >
+                  <DeleteWrapper>
+                    <DeleteIcon />
+                  </DeleteWrapper>
+                </IconButton>
+              )}
             </Grid>
             <Grid item>
-              <IconButton sx={sx.iconButton}>
+              <IconButton>
                 <Icon src={pauseIcon} alt="pause subscription" />
               </IconButton>
             </Grid>
@@ -315,7 +350,7 @@ const Subscriptions = ({ setSelectedSetting }) => {
             </Grid>
             {changesMade && (
               <Grid item sx={sx.save}>
-                {loading === id ? (
+                {loading === `edit-${id}` ? (
                   <CircularProgress color="secondary" />
                 ) : (
                   <IconButton
