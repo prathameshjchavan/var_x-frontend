@@ -187,6 +187,47 @@ const Subscriptions = ({ setSelectedSetting }) => {
       })
   }
 
+  const handlePause = id => {
+    setLoading(`pause-${id}`)
+
+    axios
+      .put(
+        `${process.env.STRAPI_API_URL}/api/subscriptions/${id}`,
+        {
+          data: {
+            status: "inactive",
+          },
+        },
+        { headers: { Authorization: `Bearer ${user.jwt}` } }
+      )
+      .then(response => {
+        const newSubscriptions = structuredClone(subscriptions)
+        const index = newSubscriptions.findIndex(item => item.id === id)
+        newSubscriptions[index].status = "inactive"
+        setSubscriptions(newSubscriptions)
+
+        dispatchFeedback(
+          setSnackbar({
+            status: "success",
+            message: "Subscription Paused Successfully",
+          })
+        )
+      })
+      .catch(error => {
+        console.error(error)
+        dispatchFeedback(
+          setSnackbar({
+            status: "error",
+            message:
+              "There was a problem pausing your subscription. Please try again.",
+          })
+        )
+      })
+      .finally(() => {
+        setLoading(null)
+      })
+  }
+
   // styled components
   const ProductImage = styled("img")(() => ({
     height: "10rem",
@@ -339,9 +380,16 @@ const Subscriptions = ({ setSelectedSetting }) => {
               )}
             </Grid>
             <Grid item>
-              <IconButton>
-                <Icon src={pauseIcon} alt="pause subscription" />
-              </IconButton>
+              {loading === `pause-${id}` ? (
+                <CircularProgress color="secondary" />
+              ) : (
+                <IconButton
+                  onClick={() => handlePause(id)}
+                  disabled={!!loading}
+                >
+                  <Icon src={pauseIcon} alt="pause subscription" />
+                </IconButton>
+              )}
             </Grid>
             <Grid item>
               <IconButton onClick={() => setOpen(id)}>
