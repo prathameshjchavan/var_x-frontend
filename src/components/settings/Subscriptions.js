@@ -1,5 +1,11 @@
 import React, { useState, useEffect, useContext, useCallback } from "react"
-import { Chip, Grid, Typography, IconButton } from "@mui/material"
+import {
+  Chip,
+  Grid,
+  Typography,
+  CircularProgress,
+  IconButton,
+} from "@mui/material"
 import { styled } from "@mui/material/styles"
 import axios from "axios"
 import { UserContext, FeedbackContext } from "../../contexts"
@@ -20,6 +26,7 @@ const Subscriptions = ({ setSelectedSetting }) => {
   const [subscriptions, setSubscriptions] = useState([])
   const [editedSubscriptions, setEditedSubscriptons] = useState([])
   const [open, setOpen] = useState(null)
+  const [loading, setLoading] = useState(null)
   const [openDatePicker, setOpenDatePicker] = useState(null)
   const subscription = subscriptions.find(
     subscription => subscription.id === open
@@ -108,6 +115,9 @@ const Subscriptions = ({ setSelectedSetting }) => {
 
   const handleEditSubscription = changesMade => {
     const { id, ...fields } = changesMade
+
+    setLoading(id)
+
     axios
       .put(
         `${process.env.STRAPI_API_URL}/api/subscriptions/${id}`,
@@ -120,6 +130,11 @@ const Subscriptions = ({ setSelectedSetting }) => {
       )
       .then(response => {
         console.log(response.data)
+
+        const newSubscriptions = structuredClone(editedSubscriptions)
+        const index = newSubscriptions.findIndex(item => item.id === id)
+        newSubscriptions.splice(index, 1)
+        setEditedSubscriptons(newSubscriptions)
 
         dispatchFeedback(
           setSnackbar({
@@ -137,6 +152,9 @@ const Subscriptions = ({ setSelectedSetting }) => {
               "There was a problem saving your details. Please try again.",
           })
         )
+      })
+      .finally(() => {
+        setLoading(null)
       })
   }
 
@@ -296,9 +314,16 @@ const Subscriptions = ({ setSelectedSetting }) => {
             </Grid>
             {changesMade && (
               <Grid item sx={{ marginLeft: "5rem" }}>
-                <IconButton onClick={() => handleEditSubscription(changesMade)}>
-                  <Icon src={saveIcon} alt="save subscription" />
-                </IconButton>
+                {loading === id ? (
+                  <CircularProgress color="secondary" />
+                ) : (
+                  <IconButton
+                    onClick={() => handleEditSubscription(changesMade)}
+                    disabled={!!loading}
+                  >
+                    <Icon src={saveIcon} alt="save subscription" />
+                  </IconButton>
+                )}
               </Grid>
             )}
           </Grid>
