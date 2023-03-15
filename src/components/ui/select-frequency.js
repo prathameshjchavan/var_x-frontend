@@ -19,6 +19,9 @@ const SelectFrequency = ({ value, setValue, chip, subscription }) => {
       },
       "&:hover": {
         cursor: "pointer",
+        backgroundColor: subscription
+          ? theme.palette.secondary.light
+          : undefined,
       },
     },
     select: {

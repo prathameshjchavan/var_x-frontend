@@ -59,6 +59,7 @@ const Subscriptions = ({ setSelectedSetting }) => {
         background: "transparent",
       },
     },
+    save: { marginLeft: "5rem" },
   }
 
   // functions
@@ -288,13 +289,13 @@ const Subscriptions = ({ setSelectedSetting }) => {
     },
     {
       field: "",
-      width: 450,
+      width: 400,
       sortable: false,
       renderCell: ({ id }) => {
         const changesMade = editedSubscriptions.find(item => item.id === id)
 
         return (
-          <Grid container>
+          <Grid container alignItems="center">
             <Grid item>
               <IconButton sx={sx.iconButton}>
                 <DeleteWrapper>
@@ -313,7 +314,7 @@ const Subscriptions = ({ setSelectedSetting }) => {
               </IconButton>
             </Grid>
             {changesMade && (
-              <Grid item sx={{ marginLeft: "5rem" }}>
+              <Grid item sx={sx.save}>
                 {loading === id ? (
                   <CircularProgress color="secondary" />
                 ) : (
