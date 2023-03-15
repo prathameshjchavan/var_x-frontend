@@ -14,6 +14,7 @@ import SettingsGrid from "./SettingsGrid"
 import QtyButton from "../product-list/QtyButton"
 import DeleteIcon from "../../images/Delete"
 import pauseIcon from "../../images/pause.svg"
+import resumeIcon from "../../images/resume.svg"
 import detailsIcon from "../../images/details.svg"
 import saveIcon from "../../images/save.svg"
 import SubscriptionDetails from "./SubscriptionDetails"
@@ -72,6 +73,7 @@ const Subscriptions = ({ setSelectedSetting }) => {
         quantity,
         frequency,
         next_delivery,
+        status,
       }) => ({
         id,
         details: {
@@ -86,6 +88,7 @@ const Subscriptions = ({ setSelectedSetting }) => {
         frequency,
         next_delivery,
         total: (variant.price * quantity * 1.075).toFixed(2),
+        status,
       })
     )
 
@@ -187,15 +190,15 @@ const Subscriptions = ({ setSelectedSetting }) => {
       })
   }
 
-  const handlePause = id => {
-    setLoading(`pause-${id}`)
+  const handleSubscription = (id, action) => {
+    setLoading(`subscription-${id}`)
 
     axios
       .put(
         `${process.env.STRAPI_API_URL}/api/subscriptions/${id}`,
         {
           data: {
-            status: "inactive",
+            status: action === "pause" ? "inactive" : "active",
           },
         },
         { headers: { Authorization: `Bearer ${user.jwt}` } }
@@ -203,13 +206,16 @@ const Subscriptions = ({ setSelectedSetting }) => {
       .then(response => {
         const newSubscriptions = structuredClone(subscriptions)
         const index = newSubscriptions.findIndex(item => item.id === id)
-        newSubscriptions[index].status = "inactive"
+        newSubscriptions[index].status =
+          action === "pause" ? "inactive" : "active"
         setSubscriptions(newSubscriptions)
 
         dispatchFeedback(
           setSnackbar({
             status: "success",
-            message: "Subscription Paused Successfully",
+            message: `Subscription ${
+              action === "pause" ? "Paused" : "Resumed"
+            } Successfully`,
           })
         )
       })
@@ -218,8 +224,9 @@ const Subscriptions = ({ setSelectedSetting }) => {
         dispatchFeedback(
           setSnackbar({
             status: "error",
-            message:
-              "There was a problem pausing your subscription. Please try again.",
+            message: `There was a problem ${
+              action === "pause" ? "pausing" : "resuming"
+            } your subscription. Please try again.`,
           })
         )
       })
@@ -357,10 +364,11 @@ const Subscriptions = ({ setSelectedSetting }) => {
       ),
     },
     {
-      field: "",
+      field: "status",
+      headerName: "",
       width: 400,
       sortable: false,
-      renderCell: ({ id }) => {
+      renderCell: ({ id, value }) => {
         const changesMade = editedSubscriptions.find(item => item.id === id)
 
         return (
@@ -380,14 +388,24 @@ const Subscriptions = ({ setSelectedSetting }) => {
               )}
             </Grid>
             <Grid item>
-              {loading === `pause-${id}` ? (
+              {loading === `subscription-${id}` ? (
                 <CircularProgress color="secondary" />
               ) : (
                 <IconButton
-                  onClick={() => handlePause(id)}
+                  onClick={() =>
+                    handleSubscription(
+                      id,
+                      value === "active" ? "pause" : "resume"
+                    )
+                  }
                   disabled={!!loading}
                 >
-                  <Icon src={pauseIcon} alt="pause subscription" />
+                  <Icon
+                    src={value === "active" ? pauseIcon : resumeIcon}
+                    alt={`${
+                      value === "active" ? "pause" : "resume"
+                    } subscription`}
+                  />
                 </IconButton>
               )}
             </Grid>
