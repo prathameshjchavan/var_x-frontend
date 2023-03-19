@@ -15,10 +15,9 @@ import frame from "../../images/product-frame-grid.svg"
 import { useQuery } from "@apollo/client"
 import { GET_DETAILS } from "../../apollo/queries"
 
-const FeaturedProduct = ({ node, index }) => {
+const FeaturedProduct = ({ node, index, expanded, setExpanded }) => {
   const theme = useTheme()
   const [rating, setRating] = useState(0)
-  const [expanded, setExpanded] = useState(null)
   const matchesLG = useMediaQuery(theme.breakpoints.down("lg"))
   const alignment = matchesLG
     ? "center"

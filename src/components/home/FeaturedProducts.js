@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { useStaticQuery, graphql } from "gatsby"
 import { Grid, useTheme, useMediaQuery } from "@mui/material"
 import featuredAdornment from "../../images/featured-adornment.svg"
@@ -7,6 +7,7 @@ import FeaturedProduct from "./FeaturedProduct"
 const FeaturedProducts = () => {
   const theme = useTheme()
   const matchesLG = useMediaQuery(theme.breakpoints.down("lg"))
+  const [expanded, setExpanded] = useState(null)
   const data = useStaticQuery(graphql`
     query MyQuery {
       allStrapiProduct(filter: { featured: { eq: true } }) {
@@ -53,7 +54,13 @@ const FeaturedProducts = () => {
       sx={sx.mainContainer}
     >
       {data.allStrapiProduct.edges.map(({ node }, index) => (
-        <FeaturedProduct key={node.strapi_id} node={node} index={index} />
+        <FeaturedProduct
+          key={node.strapi_id}
+          node={node}
+          index={index}
+          expanded={expanded}
+          setExpanded={setExpanded}
+        />
       ))}
     </Grid>
   )
