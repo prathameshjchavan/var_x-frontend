@@ -9,6 +9,7 @@ const SettingsGrid = ({
   setOpen,
   rows,
   columns,
+  initialState,
   rowsPerPage,
   subscriptions,
 }) => {
@@ -120,6 +121,7 @@ const SettingsGrid = ({
         </IconButton>
       </Grid>
       <DataGrid
+        initialState={initialState}
         hideFooterSelectedRowCount
         onRowClick={event =>
           !subscriptions && (setOpen ? setOpen(event.row.id) : null)

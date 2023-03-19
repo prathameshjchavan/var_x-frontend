@@ -75,6 +75,11 @@ const OrderHistory = ({ setSelectedSetting }) => {
     },
   ]
   const rows = createData(orders)
+  const initialState = {
+    sorting: {
+      sortModel: [{ field: "date", sort: "desc" }],
+    },
+  }
 
   // useEffect
   useEffect(() => {
@@ -97,6 +102,7 @@ const OrderHistory = ({ setSelectedSetting }) => {
         setOpen={setOpen}
         rows={rows}
         columns={columns}
+        initialState={initialState}
       />
       <OrderDetails order={order} open={open} setOpen={setOpen} />
     </Grid>
