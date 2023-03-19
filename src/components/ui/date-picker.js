@@ -92,12 +92,19 @@ const DatePicker = ({ id, value, setValue, open, setOpen }) => {
             onClick={() => setOpen(id)}
             sx={sx.chip}
           />
-          {/* {open === id && ( */}
           <Grow in={open === id}>
             <Grid container sx={sx.datepickerContainer}>
               <Grid item sx={sx.datepickerWrapper}>
                 <DateCalendar
                   disablePast
+                  disableHighlightToday
+                  shouldDisableDate={date => {
+                    const dateString = `${date.year()}-${formatDate(
+                      (date.month() + 1).toString()
+                    )}-${formatDate(date.date().toString())}`
+                    const today = new Date().toISOString().split("T")[0]
+                    return dateString === today
+                  }}
                   ref={datepickerRef}
                   sx={sx.datepicker}
                   onChange={newDate => handleChange(newDate)}
@@ -106,7 +113,6 @@ const DatePicker = ({ id, value, setValue, open, setOpen }) => {
               </Grid>
             </Grid>
           </Grow>
-          {/* )} */}
         </LocalizationProvider>
       </Grid>
     </Grid>
