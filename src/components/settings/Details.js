@@ -95,7 +95,7 @@ const Details = ({
       marginBottom: matchesXS ? "1rem" : "2rem",
       "& > :not(:first-of-type)": {
         marginLeft: !matchesXS ? "5rem" : undefined,
-        marginTop: "1rem",
+        marginTop: matchesXS ? "1rem" : undefined,
       },
     },
     fieldContainerCart: {
