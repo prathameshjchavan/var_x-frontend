@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react"
+import React, { useState, useContext, useMemo } from "react"
 import {
   AppBar,
   Toolbar,
@@ -30,17 +30,20 @@ const Header = ({ categories }) => {
   const iOS =
     typeof navigator !== "undefined" &&
     /iPad|iPhone|iPod/.test(navigator.userAgent)
-  const routes = [
-    ...categories.map(({ node }) => node),
-    { name: "Contact Us", strapi_id: "contact", link: "/contact" },
-  ]
+  const routes = useMemo(
+    () => [
+      ...categories.map(({ node }) => node),
+      { name: "Contact Us", strapi_id: "contact", link: "/contact" },
+    ],
+    [categories]
+  )
   const actions = [
-    { icon: searchIcon, alt: "search", visible: true },
+    { icon: searchIcon, alt: "search", visible: !matchesSmall },
     { icon: cartIcon, alt: "cart", visible: true, link: "/cart" },
     {
       icon: accountIcon,
       alt: "account",
-      visible: !matchesSmall,
+      visible: true,
       link: "/account",
     },
     {
