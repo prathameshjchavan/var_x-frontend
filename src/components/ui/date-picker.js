@@ -97,6 +97,7 @@ const DatePicker = ({ id, value, setValue, open, setOpen }) => {
             <Grid container sx={sx.datepickerContainer}>
               <Grid item sx={sx.datepickerWrapper}>
                 <DateCalendar
+                  disablePast
                   ref={datepickerRef}
                   sx={sx.datepicker}
                   onChange={newDate => handleChange(newDate)}
