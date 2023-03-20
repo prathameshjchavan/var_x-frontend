@@ -67,7 +67,10 @@ const Confirmation = ({
       cart.reduce((total, item) => total + item.variant.price * item.qty, 0),
     [cart]
   )
-  const tax = useMemo(() => subtotal * 0.075, [subtotal])
+  const tax = useMemo(
+    () => (subtotal + shipping?.price) * 0.075,
+    [subtotal, shipping]
+  )
 
   // sx prop
   const sx = {
