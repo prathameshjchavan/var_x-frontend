@@ -14,6 +14,7 @@ import explore from "../../images/explore.svg"
 import frame from "../../images/product-frame-grid.svg"
 import { useQuery } from "@apollo/client"
 import { GET_DETAILS } from "../../apollo/queries"
+import { Link } from "gatsby"
 
 const FeaturedProduct = ({ node, index, expanded, setExpanded }) => {
   const theme = useTheme()
@@ -154,7 +155,15 @@ const FeaturedProduct = ({ node, index, expanded, setExpanded }) => {
           />
         </Grid>
         <Grid item sx={sx.exploreContainer}>
-          <Button sx={sx.exploreButton}>
+          <Button
+            component={Link}
+            to={`/${node.category.name.toLowerCase()}/${
+              node.name.split(" ")[0]
+            }?color=${node.variants[0].colorLabel}${
+              node.variants[0].style ? `&style=${node.variants[0].style}` : ""
+            }`}
+            sx={sx.exploreButton}
+          >
             <Typography variant="h5">Details</Typography>
             <ExploreIcon src={explore} alt="go to product details" />
           </Button>

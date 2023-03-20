@@ -10,6 +10,10 @@ const Account = () => {
   const theme = useTheme()
   const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
   const matchesXS = useMediaQuery("(max-width: 500px)")
+  const matchesMD = useMediaQuery(theme.breakpoints.down("md"))
+
+  const items = <CartItems />
+  const checkout = <CheckoutPortal user={user} />
 
   // sx prop
   const sx = {
@@ -35,8 +39,8 @@ const Account = () => {
           </Typography>
         </Grid>
         <Grid item container>
-          <CartItems />
-          <CheckoutPortal user={user} />
+          {matchesMD ? checkout : items}
+          {matchesMD ? items : checkout}
         </Grid>
       </Grid>
     </Layout>

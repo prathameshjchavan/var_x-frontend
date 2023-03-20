@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography"
 import Button from "@mui/material/Button"
 import IconButton from "@mui/material/IconButton"
 import Carousel from "react-spring-3d-carousel"
-import { useStaticQuery, graphql } from "gatsby"
+import { useStaticQuery, graphql, Link } from "gatsby"
 import { styled } from "@mui/material/styles"
 import promoAdornment from "../../images/promo-adornment.svg"
 import explore from "../../images/explore.svg"
@@ -22,6 +22,9 @@ const PromotionalProducts = () => {
             name
             strapi_id
             description
+            category {
+              name
+            }
             variants {
               images {
                 url
@@ -130,13 +133,14 @@ const PromotionalProducts = () => {
           <Grid item>
             {selectedSlide === i ? (
               <Typography variant="h1" sx={sx.productName}>
-                {node.name.split("-")[0]}
+                {node.category.name.toLowerCase()}
               </Typography>
             ) : null}
           </Grid>
         </Grid>
       ),
       description: node.description,
+      url: `/${node.category.name.toLowerCase()}`,
     }
   })
 
@@ -155,7 +159,7 @@ const PromotionalProducts = () => {
         <Typography variant="h2" paragraph>
           {slides[selectedSlide].description}
         </Typography>
-        <Button>
+        <Button component={Link} to={slides[selectedSlide].url}>
           <Typography variant="h4" sx={sx.explore}>
             Explore
           </Typography>

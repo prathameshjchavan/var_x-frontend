@@ -14,9 +14,14 @@ const FeaturedProducts = () => {
         edges {
           node {
             strapi_id
+            category {
+              name
+            }
             name
             variants {
+              style
               price
+              colorLabel
               images {
                 url
               }
