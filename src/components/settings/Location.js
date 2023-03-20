@@ -106,11 +106,11 @@ const Location = ({
       .then(response => {
         const { place_name, admin_name1 } = response.data.records[0].fields
 
-        setValues(values => ({
+        handleValues({
           ...values,
           city: place_name,
           state: admin_name1,
-        }))
+        })
       })
       .catch(error => {
         console.error(error)
@@ -124,7 +124,15 @@ const Location = ({
       .finally(() => {
         setLoading(false)
       })
-  }, [values.zip, setValues, dispatchFeedback])
+  }, [values, setValues, dispatchFeedback])
+
+  const handleValues = values => {
+    if (billing === slot && !noSlots) {
+      setBillingValues(values)
+    }
+
+    setValues(values)
+  }
 
   // useEffects
   useEffect(() => {
@@ -147,7 +155,7 @@ const Location = ({
     if (values.zip.length === 5 && !values.city) {
       getLocation()
     } else if (values.zip.length < 5 && values.city) {
-      setValues(values => ({ ...values, city: "", state: "" }))
+      handleValues({ ...values, city: "", state: "" })
     }
   }, [user, slot, values, setChangesMade, getLocation, setValues, checkout])
 
@@ -191,9 +199,7 @@ const Location = ({
         <Fields
           fields={fields}
           values={billing === slot && !noSlots ? billingValues : values}
-          setValues={
-            billing === slot && !noSlots ? setBillingValues : setValues
-          }
+          setValues={handleValues}
           errors={errors}
           setErrors={setErrors}
           isWhite

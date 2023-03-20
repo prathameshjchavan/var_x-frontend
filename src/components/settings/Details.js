@@ -75,6 +75,15 @@ const Details = ({
     ]
   }
 
+  // functions
+  const handleValues = values => {
+    if (billing === slot && !noSlots) {
+      setBillingValues(values)
+    }
+
+    setValues(values)
+  }
+
   // sx prop
   const sx = {
     detailsContainer: {
@@ -190,9 +199,7 @@ const Details = ({
           <Fields
             fields={pair}
             values={billing === slot && !noSlots ? billingValues : values}
-            setValues={
-              billing === slot && !noSlots ? setBillingValues : setValues
-            }
+            setValues={handleValues}
             errors={errors}
             setErrors={setErrors}
             isWhite
